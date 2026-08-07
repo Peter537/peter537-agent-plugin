@@ -1,0 +1,7 @@
+interface:
+  display_name: "Deep Code Audit"
+  short_description: "Audit code quality, security, and dependencies"
+  default_prompt: "Use $deep-code-audit to perform a deep, evidence-backed audit of this repository and report prioritized findings."
+
+policy:
+  allow_implicit_invocation: true

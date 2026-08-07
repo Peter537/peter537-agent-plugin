@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Planning"
+  short_description: "Research and clarify software implementation work"
+  default_prompt: "Use $deep-planning to research this software change, clarify material decisions, and prepare the requested planning deliverable."

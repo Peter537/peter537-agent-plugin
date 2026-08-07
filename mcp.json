@@ -1,0 +1,39 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "context7": {
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "microsoft-learn": {
+      "type": "streamable-http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.79"
+      ]
+    },
+    "web-forager": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--python",
+        ">=3.10,<3.14",
+        "--from",
+        "web-forager==3.0.1",
+        "--with",
+        "fastmcp==3.4.6",
+        "--with",
+        "mcp==1.29.0",
+        "--with",
+        "pydantic-settings==2.14.2",
+        "web-forager",
+        "serve"
+      ]
+    }
+  }
+}

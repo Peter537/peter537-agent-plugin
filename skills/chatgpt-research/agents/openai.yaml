@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChatGPT Research"
+  short_description: "Capture reproducible external research"
+  default_prompt: "Use $chatgpt-research to research this topic and preserve verifiable evidence."

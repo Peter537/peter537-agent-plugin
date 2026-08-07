@@ -1,0 +1,7 @@
+interface:
+  display_name: "Docs Audit"
+  short_description: "Audit and rebuild repository documentation"
+  default_prompt: "Use $docs-audit to audit this repository against its implementation and rebuild its documentation."
+
+policy:
+  allow_implicit_invocation: true

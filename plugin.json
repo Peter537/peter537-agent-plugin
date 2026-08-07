@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "peter537-agent-plugin",
+  "version": "0.1.0",
+  "description": "Portable agent skills and MCP integrations for research, planning, audits, documentation, UI design, and development workflows.",
+  "author": {
+    "name": "Peter537",
+    "url": "https://github.com/Peter537"
+  },
+  "homepage": "https://github.com/Peter537/peter537-agent-plugin#readme",
+  "repository": "https://github.com/Peter537/peter537-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "mcp",
+    "research",
+    "planning",
+    "code-audit",
+    "documentation",
+    "ui-design",
+    "software-development"
+  ]
+}

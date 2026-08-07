@@ -1,0 +1,40 @@
+{
+  "name": "peter537-agent-plugin",
+  "version": "0.1.0",
+  "description": "Portable agent skills and MCP integrations for research, planning, audits, documentation, UI design, and development workflows.",
+  "author": {
+    "name": "Peter537",
+    "url": "https://github.com/Peter537"
+  },
+  "homepage": "https://github.com/Peter537/peter537-agent-plugin#readme",
+  "repository": "https://github.com/Peter537/peter537-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "mcp",
+    "research",
+    "planning",
+    "code-audit",
+    "documentation",
+    "ui-design"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Peter537 Agent Plugin",
+    "shortDescription": "Research, planning, audits, docs, and UI workflows",
+    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, code and documentation audits, and accessible UI design.",
+    "developerName": "Peter537",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/Peter537/peter537-agent-plugin",
+    "defaultPrompt": [
+      "Use $deep-planning to plan this repository change.",
+      "Use $deep-code-audit to audit this codebase.",
+      "Use $ui-design-and-polish to improve this product UI."
+    ]
+  }
+}
