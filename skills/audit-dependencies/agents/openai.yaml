@@ -1,0 +1,7 @@
+interface:
+  display_name: "Dependency & Package Review"
+  short_description: "Audit dependencies and supply-chain risk"
+  default_prompt: "Use $audit-dependencies to review every dependency and software supply-chain input in this repository."
+
+policy:
+  allow_implicit_invocation: true

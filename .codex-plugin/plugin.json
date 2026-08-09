@@ -1,7 +1,7 @@
 {
   "name": "peter537-agent-plugin",
   "version": "0.1.0",
-  "description": "Portable agent skills and MCP integrations for research, planning, audits, documentation, UI design, and development workflows.",
+  "description": "Portable agent skills and MCP integrations for research, planning, code and dependency audits, supply-chain security, documentation, UI design, and development workflows.",
   "author": {
     "name": "Peter537",
     "url": "https://github.com/Peter537"
@@ -15,14 +15,17 @@
     "research",
     "planning",
     "code-audit",
+    "dependency-audit",
+    "supply-chain-security",
     "documentation",
-    "ui-design"
+    "ui-design",
+    "software-development"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Peter537 Agent Plugin",
-    "shortDescription": "Research, planning, audits, docs, and UI workflows",
-    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, code and documentation audits, and accessible UI design.",
+    "shortDescription": "Research, planning, audits, UI, and supply-chain security",
+    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, code and dependency audits, supply-chain security, documentation, and accessible UI design.",
     "developerName": "Peter537",
     "category": "Developer Tools",
     "capabilities": [
@@ -33,7 +36,7 @@
     "websiteURL": "https://github.com/Peter537/peter537-agent-plugin",
     "defaultPrompt": [
       "Use $deep-planning to plan this repository change.",
-      "Use $deep-code-audit to audit this codebase.",
+      "Use $audit-dependencies to review this repository's software supply chain.",
       "Use $ui-design-and-polish to improve this product UI."
     ]
   }

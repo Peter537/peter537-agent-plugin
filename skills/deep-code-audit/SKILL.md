@@ -1,6 +1,6 @@
 ---
 name: deep-code-audit
-description: Perform evidence-backed audits of software repositories or explicitly scoped changes for correctness, security, maintainability, readability, testability, performance, architecture, file organization, and dependency risk. Use for comprehensive codebase audits, security reviews, dependency reviews, or deep review of a diff, branch, pull request, file, or subsystem. Do not use for routine implementation, simple style feedback, or a narrowly specified fix that does not request an audit.
+description: Perform evidence-backed audits of software repositories or explicitly scoped changes for correctness, security, maintainability, readability, testability, performance, architecture, file organization, and dependency risk within a broader code assessment. Use for comprehensive codebase audits, security reviews, or deep review of a diff, branch, pull request, file, or subsystem. Do not use for dedicated dependency or package reviews, pre-addition supply-chain gates, routine implementation, simple style feedback, or a narrowly specified fix that does not request an audit.
 ---
 
 # Deep Code Audit
@@ -33,6 +33,7 @@ Perform a non-mutating, coverage-aware audit. Report demonstrated risks and wort
 - Prioritize authentication, authorization, untrusted input, parsers, persistence, filesystem/network/process access, public APIs, concurrency, secrets, deployment controls, complex or highly coupled code, weak tests, and dependency boundaries.
 - Use file size, churn, complexity, duplication, test gaps, and dependency centrality as navigation signals, not automatic findings.
 - Read [references/review-domains.md](references/review-domains.md) for any source-code or test audit. Read [references/security-supply-chain.md](references/security-supply-chain.md) for whole-repository, security, dependency, configuration, CI, or public-interface audits. Apply only relevant domains.
+- Keep proportionate dependency-risk coverage in broad audits. Route a dedicated dependency-only review or a pre-addition supply-chain gate to `$audit-dependencies` when that skill is available.
 
 ## Coordinate subagents deliberately
 

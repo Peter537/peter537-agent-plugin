@@ -1,13 +1,14 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills and MCP integrations for software research, planning, audits, documentation, UI design, and development workflows. Codex displays it as **Peter537 Agent Plugin**.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills and MCP integrations for software research, planning, code and dependency audits, supply-chain security, documentation, UI design, and development workflows. Codex displays it as **Peter537 Agent Plugin**.
 
 ## Included skills
 
 | Skill | Purpose |
 | --- | --- |
+| `audit-dependencies` | Review every dependency and software supply-chain input before package changes or on request. |
 | `chatgpt-research` | Orchestrate and verify multi-source ChatGPT Deep Research. |
-| `deep-code-audit` | Audit correctness, security, architecture, dependencies, and maintainability. |
+| `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
 | `deep-planning` | Research and clarify complex software changes before implementation. |
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
@@ -24,6 +25,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 ## Requirements and trust
 
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
+- `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
 - `playwright` requires Node.js 18 or newer.
 - `web-forager` requires `uv` and provisions a supported Python 3.10-3.13 runtime through `uvx`.
 - The MCP servers use the network, and Playwright can interact with a browser. Review tool calls and third-party terms before use.
@@ -59,6 +61,7 @@ Clone or download this repository and follow the installation workflow provided 
 
 ## Example requests
 
+- `Use $audit-dependencies to review every dependency and software supply-chain input in this repository.`
 - `Use $deep-planning to plan this repository change.`
 - `Use $deep-code-audit to audit this codebase.`
 - `Use $docs-audit to refresh this project's documentation.`

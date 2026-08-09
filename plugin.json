@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "peter537-agent-plugin",
   "version": "0.1.0",
-  "description": "Portable agent skills and MCP integrations for research, planning, audits, documentation, UI design, and development workflows.",
+  "description": "Portable agent skills and MCP integrations for research, planning, code and dependency audits, supply-chain security, documentation, UI design, and development workflows.",
   "author": {
     "name": "Peter537",
     "url": "https://github.com/Peter537"
@@ -16,6 +16,8 @@
     "research",
     "planning",
     "code-audit",
+    "dependency-audit",
+    "supply-chain-security",
     "documentation",
     "ui-design",
     "software-development"
