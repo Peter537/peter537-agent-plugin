@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills and MCP integrations for software research, planning, code and dependency audits, supply-chain security, documentation, UI design, and development workflows. Codex displays it as **Peter537 Agent Plugin**.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, supply-chain security, documentation, and UI design. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -31,25 +31,26 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 - The MCP servers use the network, and Playwright can interact with a browser. Review tool calls and third-party terms before use.
 - If Node.js or `uv` is unavailable, the affected local MCP server may be disabled while the skills and other MCP servers remain usable.
 
-## Install in ChatGPT/Codex desktop
+## Install the complete GitHub edition
 
-### Local repository
+The GitHub marketplace edition contains all six skills and all four MCP servers. The Codex CLI is not required.
 
-1. Clone or download this repository and open it as the active repository in Codex.
-2. Restart the ChatGPT desktop app so it discovers `.agents/plugins/marketplace.json`.
-3. Open **Plugins**, choose **Peter537 Plugins**, open **Peter537 Agent Plugin**, and select the plus button to install it.
-4. Start a new task so the installed skills and MCP tools are loaded.
+1. In ChatGPT/Codex desktop, open **Plugins**, open the **Add** menu, and select **Add plugin marketplace**.
+2. Enter `Peter537/peter537-agent-plugin` as the source.
+3. Enter `v0.1.0` as the Git ref.
+4. Leave **Sparse paths** empty and add the marketplace.
+5. Open **Peter537 Plugins**, install **Peter537 Agent Plugin**, and start a new task so its skills and MCP tools are loaded.
 
-### Public directory
+## Install the skills-only public edition
 
-After the plugin is published to the shared Plugins Directory, search for **Peter537 Agent Plugin**, open its details, and select the plus button to install it.
+When the plugin is available in the shared Plugins Directory, search for **Peter537 Agent Plugin**, open its details, and select the plus button to install it. The public-directory edition contains all six skills but does not include the four MCP servers.
 
 ## Optional: Codex CLI
 
-The Codex CLI is not required to use this plugin in the ChatGPT desktop app. If you already use the CLI, run these commands from the repository root to add its local marketplace and install the plugin:
+The Codex CLI is not required to install either desktop edition. Existing CLI users can instead add and install the GitHub marketplace with:
 
 ```powershell
-codex plugin marketplace add .
+codex plugin marketplace add Peter537/peter537-agent-plugin --ref v0.1.0
 codex plugin add peter537-agent-plugin@peter537
 ```
 
@@ -71,6 +72,10 @@ Clone or download this repository and follow the installation workflow provided 
 ## Version
 
 Current version: `0.1.0`.
+
+## Support, privacy, and terms
+
+See [Support](SUPPORT.md), [Privacy](PRIVACY.md), and [Terms](TERMS.md) before installing or reporting an issue.
 
 ## License
 

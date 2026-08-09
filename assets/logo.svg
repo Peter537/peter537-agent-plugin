@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">Peter537 Agent Plugin logo</title>
+  <desc id="description">A white P537 monogram on a deep navy square with cyan and violet connection accents.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="1" stop-color="#15183B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#020617" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="224" fill="url(#background)"/>
+  <path d="M158 264 C270 154 392 128 512 128 C674 128 800 208 866 336" fill="none" stroke="url(#accent)" stroke-width="24" stroke-linecap="round" opacity="0.9"/>
+  <path d="M866 688 C800 816 674 896 512 896 C366 896 244 830 174 720" fill="none" stroke="url(#accent)" stroke-width="24" stroke-linecap="round" opacity="0.9"/>
+  <circle cx="158" cy="264" r="32" fill="#22D3EE"/>
+  <circle cx="866" cy="336" r="32" fill="#8B5CF6"/>
+  <circle cx="866" cy="688" r="32" fill="#22D3EE"/>
+  <circle cx="174" cy="720" r="32" fill="#8B5CF6"/>
+  <rect x="142" y="324" width="740" height="376" rx="96" fill="#0B1730" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="4" filter="url(#shadow)"/>
+  <text x="512" y="570" fill="#FFFFFF" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="218" font-weight="800" letter-spacing="-12" text-anchor="middle">P537</text>
+  <rect x="320" y="620" width="384" height="18" rx="9" fill="url(#accent)"/>
+</svg>

@@ -34,10 +34,14 @@
       "Write"
     ],
     "websiteURL": "https://github.com/Peter537/peter537-agent-plugin",
+    "privacyPolicyURL": "https://github.com/Peter537/peter537-agent-plugin/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/Peter537/peter537-agent-plugin/blob/main/TERMS.md",
     "defaultPrompt": [
-      "Use $deep-planning to plan this repository change.",
-      "Use $audit-dependencies to review this repository's software supply chain.",
-      "Use $ui-design-and-polish to improve this product UI."
-    ]
+      "Use $deep-planning to plan a complex repository change with evidence, tradeoffs, and acceptance gates.",
+      "Use $deep-code-audit to audit this repository for correctness, security, maintainability, and architecture risks.",
+      "Use $audit-dependencies to review every dependency and software supply-chain input before this package change."
+    ],
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png"
   }
 }
