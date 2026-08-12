@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, supply-chain security, documentation, and UI design. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -11,6 +11,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 | `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
 | `deep-planning` | Research and clarify complex software changes before implementation. |
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
+| `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
 
 ## Included MCP servers
@@ -33,7 +34,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 
 ## Install the complete GitHub edition
 
-The GitHub marketplace edition contains all six skills and all four MCP servers. The Codex CLI is not required.
+The GitHub marketplace edition contains all included skills and all four MCP servers. The Codex CLI is not required.
 
 1. In ChatGPT/Codex desktop, open **Plugins**, open the **Add** menu, and select **Add plugin marketplace**.
 2. Enter `Peter537/peter537-agent-plugin` as the source.
@@ -66,12 +67,13 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $deep-planning to plan this repository change.`
 - `Use $deep-code-audit to audit this codebase.`
 - `Use $docs-audit to refresh this project's documentation.`
+- `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`
 - `Use $ui-design-and-polish to improve this product UI.`
 - `Use $chatgpt-research to compare the current official guidance.`
 
 ## Version
 
-Current version: `0.1.0`.
+Current version: `0.2.0`.
 
 ## Support, privacy, and terms
 

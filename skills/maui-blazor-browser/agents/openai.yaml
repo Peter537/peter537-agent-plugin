@@ -1,0 +1,7 @@
+interface:
+  display_name: "MAUI Blazor Browser"
+  short_description: "Develop MAUI Blazor UI through a web host"
+  default_prompt: "Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable."
+
+policy:
+  allow_implicit_invocation: true

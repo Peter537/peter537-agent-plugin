@@ -12,11 +12,13 @@ The client that runs the plugin, including ChatGPT, Codex, or another Agent Plug
 
 ## Skills-only public edition
 
-The public-directory edition contains six instruction-based skills and no MCP servers. Skills may inspect content that the user places in the active conversation, workspace, or repository, subject to the permissions and controls of the client.
+The public-directory edition contains instruction-based skills and no MCP servers. Skills may inspect content that the user places in the active conversation, workspace, or repository, subject to the permissions and controls of the client.
 
 The `chatgpt-research` skill may submit an explicitly authorized, non-sensitive research topic to ChatGPT Deep Research. It prohibits transmitting private repository content, personal files, credentials, sensitive data, or browsing history without explicit authorization for the exact data and destination.
 
 The `audit-dependencies` and `deep-code-audit` skills may research public package names and exact versions through public registries, advisory databases, and official sources. They prohibit automatically transmitting private package names, private registries, manifests, lockfiles, SBOMs, credentials, source code, or internal repository data.
+
+The `maui-blazor-browser` skill may configure or run a local development Web host so shared MAUI Blazor Hybrid UI can be inspected in a browser. Browser-visible fixture data is processed by the local development host and browser. Its default guidance restricts temporary harnesses to loopback access, deterministic non-sensitive fixtures, isolated writable state, and release-excluded paths; using real data or side-effecting services requires explicit authorization and stronger protections.
 
 ## Complete GitHub edition
 
