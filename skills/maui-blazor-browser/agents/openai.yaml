@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
