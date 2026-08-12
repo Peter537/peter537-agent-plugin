@@ -1,0 +1,7 @@
+interface:
+  display_name: "Repository Data Exposure Review"
+  short_description: "Audit repositories for personal and private data"
+  default_prompt: "Use $audit-data-exposure to review this repository for personal data, private artifacts, and one-off migrations."
+
+policy:
+  allow_implicit_invocation: true

@@ -36,6 +36,8 @@ Use this reference for whole-repository, security, dependency, configuration, CI
 
 ## Protect secrets and sensitive data
 
+Keep this section proportionate within a broad code or security audit. Route a dedicated personal-data, anonymization, repository data-exposure, or disposable-migration review to `$audit-data-exposure` when available.
+
 - Search tracked content, history when relevant, configuration, fixtures, examples, logs, CI, and generated artifacts using configured secret-scanning tools where available.
 - Never print or quote a discovered credential. Report its type and location with the value redacted.
 - Treat a committed secret as potentially compromised even if later removed; recommend revocation or rotation according to its authority and exposure.

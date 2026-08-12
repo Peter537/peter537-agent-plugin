@@ -18,6 +18,8 @@ The `chatgpt-research` skill may submit an explicitly authorized, non-sensitive 
 
 The `audit-dependencies` and `deep-code-audit` skills may research public package names and exact versions through public registries, advisory databases, and official sources. They prohibit automatically transmitting private package names, private registries, manifests, lockfiles, SBOMs, credentials, source code, or internal repository data.
 
+The `audit-data-exposure` skill may locally inspect current repository files, uncommitted changes, relevant ignored artifacts, and locally reachable Git history for personal data, private artifacts, anonymization failures, credentials, and disposable migrations. It requires redacted findings and prohibits transmitting repository content, detected values, private paths, or scan reports to external services. Automated discovery is incomplete and cannot guarantee that a repository contains no personal or private data.
+
 The `maui-blazor-browser` skill may configure or run a local development Web host so shared MAUI Blazor Hybrid UI can be inspected in a browser. Browser-visible fixture data is processed by the local development host and browser. Its default guidance restricts temporary harnesses to loopback access, deterministic non-sensitive fixtures, isolated writable state, and release-excluded paths; using real data or side-effecting services requires explicit authorization and stronger protections.
 
 ## Complete GitHub edition

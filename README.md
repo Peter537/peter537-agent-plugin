@@ -1,11 +1,12 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
 | Skill | Purpose |
 | --- | --- |
+| `audit-data-exposure` | Review current repository content and reachable Git history for personal data, private artifacts, anonymization failures, and disposable migrations. |
 | `audit-dependencies` | Review every dependency and software supply-chain input before package changes or on request. |
 | `chatgpt-research` | Orchestrate and verify multi-source ChatGPT Deep Research. |
 | `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
@@ -63,6 +64,7 @@ Clone or download this repository and follow the installation workflow provided 
 
 ## Example requests
 
+- `Use $audit-data-exposure to review this repository and its reachable history for personal data, private artifacts, and one-off migrations.`
 - `Use $audit-dependencies to review every dependency and software supply-chain input in this repository.`
 - `Use $deep-planning to plan this repository change.`
 - `Use $deep-code-audit to audit this codebase.`
