@@ -1,0 +1,7 @@
+interface:
+  display_name: "Evidence-Driven Bug Diagnosis"
+  short_description: "Diagnose hard bugs with reproducible evidence"
+  default_prompt: "Use $diagnose-bugs to reproduce, diagnose, and fix this bug with evidence and a regression guard."
+
+policy:
+  allow_implicit_invocation: true

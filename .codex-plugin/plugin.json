@@ -1,7 +1,7 @@
 {
   "name": "peter537-agent-plugin",
   "version": "0.1.0",
-  "description": "Portable agent skills and MCP integrations for research, planning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, UI design, MAUI Blazor browser development, and development workflows.",
+  "description": "Portable agent skills and MCP integrations for research, planning, evidence-driven bug diagnosis, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, UI design, MAUI Blazor browser development, and development workflows.",
   "author": {
     "name": "Peter537",
     "url": "https://github.com/Peter537"
@@ -14,6 +14,10 @@
     "mcp",
     "research",
     "planning",
+    "debugging",
+    "bug-diagnosis",
+    "root-cause-analysis",
+    "regression-testing",
     "code-audit",
     "dependency-audit",
     "privacy-audit",
@@ -29,8 +33,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Peter537 Agent Plugin",
-    "shortDescription": "Research, privacy, audits, UI, supply chain, and MAUI",
-    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, accessible UI design, and MAUI Blazor browser development.",
+    "shortDescription": "Research, debugging, privacy, audits, UI, and supply chain",
+    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, evidence-driven bug diagnosis, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, accessible UI design, and MAUI Blazor browser development.",
     "developerName": "Peter537",
     "category": "Developer Tools",
     "capabilities": [

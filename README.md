@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, evidence-driven bug diagnosis, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -11,6 +11,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 | `chatgpt-research` | Orchestrate and verify multi-source ChatGPT Deep Research. |
 | `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
 | `deep-planning` | Research and clarify complex software changes before implementation. |
+| `diagnose-bugs` | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. |
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
 | `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
@@ -28,6 +29,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
 - `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
+- `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
 - `playwright` requires Node.js 18 or newer.
 - `web-forager` requires `uv` and provisions a supported Python 3.10-3.13 runtime through `uvx`.
 - The MCP servers use the network, and Playwright can interact with a browser. Review tool calls and third-party terms before use.
@@ -68,6 +70,7 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $audit-dependencies to review every dependency and software supply-chain input in this repository.`
 - `Use $deep-planning to plan this repository change.`
 - `Use $deep-code-audit to audit this codebase.`
+- `Use $diagnose-bugs to reproduce, diagnose, and fix this flaky CI failure.`
 - `Use $docs-audit to refresh this project's documentation.`
 - `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`
 - `Use $ui-design-and-polish to improve this product UI.`

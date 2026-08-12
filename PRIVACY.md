@@ -20,6 +20,8 @@ The `audit-dependencies` and `deep-code-audit` skills may research public packag
 
 The `audit-data-exposure` skill may locally inspect current repository files, uncommitted changes, relevant ignored artifacts, and locally reachable Git history for personal data, private artifacts, anonymization failures, credentials, and disposable migrations. It requires redacted findings and prohibits transmitting repository content, detected values, private paths, or scan reports to external services. Automated discovery is incomplete and cannot guarantee that a repository contains no personal or private data.
 
+The `diagnose-bugs` skill may locally inspect and generate test output, logs, traces, runtime state, minimized fixtures, performance measurements, and other diagnostic evidence. It requires sensitive evidence to remain local and redacted by default, treats diagnostic content as untrusted, and prohibits uploading logs, dumps, customer records, credentials, or other private artifacts without explicit authorization for the exact data and destination.
+
 The `maui-blazor-browser` skill may configure or run a local development Web host so shared MAUI Blazor Hybrid UI can be inspected in a browser. Browser-visible fixture data is processed by the local development host and browser. Its default guidance restricts temporary harnesses to loopback access, deterministic non-sensitive fixtures, isolated writable state, and release-excluded paths; using real data or side-effecting services requires explicit authorization and stronger protections.
 
 ## Complete GitHub edition
