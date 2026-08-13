@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, evidence-driven bug diagnosis, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -15,6 +15,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
 | `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
+| `write-clearly` | Draft, edit, and audit repository prose for clarity, reader fit, fidelity, and voice in its source language. |
 
 ## Included MCP servers
 
@@ -30,6 +31,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
 - `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
 - `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
+- `write-clearly` keeps repository prose and author samples local by default, preserves protected meaning and format, and reports related findings outside the authorized edit scope without changing those files.
 - `playwright` requires Node.js 18 or newer.
 - `web-forager` requires `uv` and provisions a supported Python 3.10-3.13 runtime through `uvx`.
 - The MCP servers use the network, and Playwright can interact with a browser. Review tool calls and third-party terms before use.
@@ -74,6 +76,7 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $docs-audit to refresh this project's documentation.`
 - `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`
 - `Use $ui-design-and-polish to improve this product UI.`
+- `Use $write-clearly to improve this repository prose without changing its meaning or voice.`
 - `Use $chatgpt-research to compare the current official guidance.`
 
 ## Version

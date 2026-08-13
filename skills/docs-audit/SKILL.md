@@ -1,6 +1,6 @@
 ---
 name: docs-audit
-description: Audit and rebuild software-repository documentation against implementation evidence. Use for comprehensive documentation audits or refreshes that may create, rewrite, move, merge, or delete README files and project documentation; reconcile documentation with code, tests, configuration, commands, and public interfaces; redesign documentation structure; update documentation tooling; and add evidence-backed Mermaid diagrams. Do not use for small copy edits, repository-only analysis, or application-code changes.
+description: Audit and rebuild software-repository documentation against implementation evidence. Use for comprehensive documentation audits or refreshes that may create, rewrite, move, merge, or delete README files and project documentation; reconcile documentation with code, tests, configuration, commands, and public interfaces; redesign documentation structure; update documentation tooling; and add evidence-backed Mermaid diagrams. Do not use for ordinary prose drafting, proofreading, copyediting, tone or voice work, repository-only analysis, or application-code changes.
 ---
 
 # Docs Audit
@@ -10,6 +10,7 @@ Audit the implementation before editing its documentation. Produce the clearest 
 ## Honor the authority and its boundaries
 
 - Derive editing authority from the user's request. A broad request to audit, rebuild, refresh, or comprehensively update project documentation authorizes creating, rewriting, renaming, moving, merging, and deleting in-scope documentation without approval for each operation. Keep narrower documentation requests within their requested scope; automatic skill selection alone never expands the user's authorization.
+- Route ordinary prose drafting, proofreading, copyediting, tone, voice, and reader-fit work to `$write-clearly` when that skill is available. Keep comprehensive documentation truth, lifecycle, navigation, and information architecture here, and apply reader-first prose guidance within that broader workflow.
 - Include root and nested READMEs, documentation source trees, Markdown, MDX, reStructuredText, and AsciiDoc guides, contributor and operator guides, documentation-owned examples, and documentation-specific navigation, configuration, dependencies, scripts, and lockfile entries.
 - Keep application source, tests, schemas, runtime configuration, and product dependencies read-only. Change shared manifests, scripts, or lockfiles only for entries required by documentation tooling; do not alter application behavior.
 - Protect `LICENSE`, `NOTICE`, attribution files, `SECURITY`, `CODE_OF_CONDUCT`, changelogs, and accepted ADRs unless the user explicitly names them for modification. Read them when they constrain the documentation.

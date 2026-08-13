@@ -1,0 +1,7 @@
+interface:
+  display_name: "Reader-First Writing"
+  short_description: "Write clear prose without flattening voice"
+  default_prompt: "Use $write-clearly to draft or improve this repository prose for its readers while preserving meaning and voice."
+
+policy:
+  allow_implicit_invocation: true
