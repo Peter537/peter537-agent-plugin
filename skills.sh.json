@@ -12,10 +12,11 @@
     },
     {
       "title": "Engineering quality",
-      "description": "Investigate defects and audit software implementations.",
+      "description": "Investigate defects, audit implementations, and simplify code safely.",
       "skills": [
         "deep-code-audit",
-        "diagnose-bugs"
+        "diagnose-bugs",
+        "reduce-code-slop"
       ]
     },
     {

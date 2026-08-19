@@ -1,0 +1,1 @@
+Use the compact fixture output during this local experiment.

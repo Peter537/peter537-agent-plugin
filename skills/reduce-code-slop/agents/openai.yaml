@@ -1,0 +1,7 @@
+interface:
+  display_name: "Evidence-Driven Code Simplification"
+  short_description: "Simplify C# and Python without changing behavior"
+  default_prompt: "Use $reduce-code-slop to simplify this C# or Python code with evidence, preserve behavior, and verify the result."
+
+policy:
+  allow_implicit_invocation: true

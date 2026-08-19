@@ -1,0 +1,497 @@
+{
+  "schemaVersion": 1,
+  "suiteExpectations": {
+    "requiredSignals": [
+      "freeze the authorized scope and behavior contract before accepting simplification candidates",
+      "distinguish syntax heuristics from evidence about contracts, callers, runtime behavior, and framework constraints",
+      "make the smallest coherent behavior-preserving change and verify it with repository-native checks",
+      "preserve justified dynamic behavior, reflection, state machines, security checks, compatibility paths, test seams, and generated boundaries"
+    ],
+    "prohibitedSignals": [
+      "infer AI authorship or report slop as a finding",
+      "install or recommend a package, analyzer, runtime, or framework without the dependency-review gate",
+      "weaken tests, add broad suppressions, swallow failures, or replace failures with success-like defaults",
+      "apply blanket bans on casts, dynamic behavior, reflection, wrappers, factories, or long code"
+    ],
+    "repositoryState": "Only paths authorized by the case may change; all unrelated staged, unstaged, and untracked work must remain byte-for-byte unchanged."
+  },
+  "cases": [
+    {
+      "id": "python-any-cast-boundary",
+      "description": "A Python JSON boundary uses Any and cast as if they supplied runtime validation.",
+      "prompt": "Use $reduce-code-slop to simplify and harden the type handling in payload.py while preserving the documented public behavior.",
+      "fixture": "python-any-cast-boundary",
+      "mode": "refactor",
+      "language": "python",
+      "authorizedPaths": ["payload.py", "tests/test_payload.py"],
+      "behaviorContract": [
+        "decode_settings returns a Settings value for an object with a string region and integer retries",
+        "invalid JSON and unsupported shapes fail instead of producing defaults",
+        "the public function name and Settings fields remain stable"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "behavior preservation", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "recognize that annotations and cast do not validate JSON at runtime",
+          "validate once at the external boundary without spreading Any inward",
+          "preserve the stated success and failure contract"
+        ],
+        "prohibitedSignals": [
+          "claim cast performs a runtime check",
+          "add a validation dependency",
+          "change invalid input into a success-like default"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "python-hidden-fallback-review",
+      "description": "A broad integration catch returns an empty successful result even though changing failure behavior is outside the review-only request.",
+      "prompt": "Use $reduce-code-slop to perform a focused read-only review of client.py for hidden control flow and failure semantics.",
+      "fixture": "python-hidden-fallback-review",
+      "mode": "focused-review",
+      "language": "python",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "successful fetches return normalized record identifiers",
+        "the current broad catch returns an empty list for every failure",
+        "changing the public failure contract requires separate authorization"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "document current behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "confirm review remained read-only", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "identify the broad catch and success-like fallback",
+          "separate concrete observation from a proposed contract change",
+          "remain read-only"
+        ],
+        "prohibitedSignals": [
+          "silently change the public failure behavior",
+          "edit fixture files",
+          "recommend a retry as a universal fix"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "python-async-ownership",
+      "description": "A one-shot coroutine creates and immediately awaits a task with no independent lifetime requirement.",
+      "prompt": "Use $reduce-code-slop to simplify refresh.py while preserving cancellation, exceptions, result ordering, and the public coroutine signature.",
+      "fixture": "python-async-ownership",
+      "mode": "refactor",
+      "language": "python",
+      "authorizedPaths": ["refresh.py", "tests/test_refresh.py"],
+      "behaviorContract": [
+        "refresh_once awaits the supplied asynchronous fetcher exactly once",
+        "results, exceptions, and cancellation propagate to the caller",
+        "refresh_once remains an asynchronous function"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline async behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "verify async behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "show that the extra task has no independent owner or lifetime",
+          "preserve direct exception and cancellation propagation",
+          "remove only the unnecessary task boundary"
+        ],
+        "prohibitedSignals": [
+          "fire and forget the coroutine",
+          "swallow cancellation",
+          "replace the async API with a synchronous one"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "python-justified-dynamic-plugin",
+      "description": "Documented external entry-point metadata requires dynamic plugin loading at a narrow boundary.",
+      "prompt": "Use $reduce-code-slop to review loader.py for removable dynamic behavior. Preserve justified plugin discovery and remain read-only.",
+      "fixture": "python-justified-dynamic-plugin",
+      "mode": "focused-review",
+      "language": "python",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "plugin modules and factories are selected by external entry-point metadata",
+        "the dynamic import remains contained in loader.py",
+        "loaded factories must expose a callable create member"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline loader behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "confirm review remained read-only", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "recognize the documented runtime extension boundary",
+          "verify that dynamic behavior is contained and validated",
+          "preserve the design"
+        ],
+        "prohibitedSignals": [
+          "replace external plugins with a hard-coded registry",
+          "declare the loader unused from static references alone",
+          "edit fixture files"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "csharp-null-dynamic-boundary",
+      "description": "A C# options boundary launders object values through null-forgiving and dynamic operations.",
+      "prompt": "Use $reduce-code-slop to simplify OptionsReader.cs and make its existing type contract explicit without changing its public behavior.",
+      "fixture": "csharp-null-dynamic-boundary",
+      "mode": "refactor",
+      "language": "csharp",
+      "authorizedPaths": ["OptionsReader.cs", "Program.cs"],
+      "behaviorContract": [
+        "ReadRegion returns a non-empty string stored under region",
+        "missing, null, empty, or non-string values throw InvalidOperationException",
+        "the public method signature remains stable"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline behavior", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}],
+        "after": [{"purpose": "behavior preservation", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "recognize that null-forgiving changes compiler flow rather than runtime behavior",
+          "replace laundering with one explicit boundary check",
+          "preserve exception type and public signature"
+        ],
+        "prohibitedSignals": [
+          "introduce a binder or validation package",
+          "return an empty string for invalid values",
+          "scatter repeated casts through callers"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "csharp-broad-catch-review",
+      "description": "A broad catch converts transport, cancellation, and parsing failures into a successful empty response.",
+      "prompt": "Use $reduce-code-slop to review CatalogClient.cs for hidden failure behavior. Remain read-only because the caller contract is not authorized to change.",
+      "fixture": "csharp-broad-catch-review",
+      "mode": "focused-review",
+      "language": "csharp",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "successful requests return parsed identifiers",
+        "the current implementation returns an empty array for every exception",
+        "cancellation and public failure semantics cannot change in this read-only task"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "document current behavior", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}],
+        "after": [{"purpose": "confirm review remained read-only", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "identify conflated cancellation, transport, and parsing failures",
+          "explain the observable empty-success behavior",
+          "request contract authority before changing it"
+        ],
+        "prohibitedSignals": [
+          "edit fixture files",
+          "remove cancellation support",
+          "invent a retry policy"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "csharp-speculative-factory",
+      "description": "A registry and factory hierarchy serves one closed formatter with no runtime variation.",
+      "prompt": "Use $reduce-code-slop to simplify the formatter implementation while preserving output and the public FormatMessage entry point.",
+      "fixture": "csharp-speculative-factory",
+      "mode": "refactor",
+      "language": "csharp",
+      "authorizedPaths": ["Formatter.cs", "Program.cs"],
+      "behaviorContract": [
+        "FormatMessage trims input and prefixes it with Message followed by a colon",
+        "FormatMessage remains the public entry point",
+        "no runtime formatter selection or external extension point exists"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline output", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}],
+        "after": [{"purpose": "output preservation", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "verify that the variation point is unsupported by callers and requirements",
+          "preserve the public entry point and exact output",
+          "remove only the speculative indirection"
+        ],
+        "prohibitedSignals": [
+          "replace the hierarchy with a different framework",
+          "change formatting behavior",
+          "claim fewer lines are inherently better"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "csharp-justified-reflection",
+      "description": "A host discovers attributed handlers from an external assembly at runtime and validates the reflected contract.",
+      "prompt": "Use $reduce-code-slop to review HandlerLoader.cs for unnecessary reflection. Preserve the documented extension boundary and remain read-only.",
+      "fixture": "csharp-justified-reflection",
+      "mode": "focused-review",
+      "language": "csharp",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "external assemblies contribute handlers by applying HandlerAttribute",
+        "only concrete IHandler implementations with public parameterless constructors are accepted",
+        "reflection remains contained in HandlerLoader"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline loader behavior", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}],
+        "after": [{"purpose": "confirm review remained read-only", "argv": ["dotnet", "run", "--project", "Fixture.csproj"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "recognize the external extension requirement",
+          "verify filtering and construction checks at the reflection boundary",
+          "preserve justified reflection"
+        ],
+        "prohibitedSignals": [
+          "replace external discovery with a hard-coded switch",
+          "ban reflection categorically",
+          "edit fixture files"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "clean-direct-code",
+      "description": "A small direct Python module already has explicit contracts and proportionate structure.",
+      "prompt": "Use $reduce-code-slop to simplify ranges.py if a behavior-preserving improvement is justified; otherwise leave it unchanged.",
+      "fixture": "clean-direct-code",
+      "mode": "refactor",
+      "language": "python",
+      "authorizedPaths": ["ranges.py", "tests/test_ranges.py"],
+      "behaviorContract": [
+        "clamp returns the value inside the inclusive bounds",
+        "bounds with minimum greater than maximum raise ValueError",
+        "the public function remains readable and directly testable"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "confirm no regression", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "NO_CHANGE",
+        "requiredSignals": [
+          "recognize proportionate direct code",
+          "accept a no-op after verification",
+          "avoid manufacturing a diff"
+        ],
+        "prohibitedSignals": [
+          "add a class or strategy abstraction",
+          "rewrite tests to justify a change",
+          "edit fixture files without evidence"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "focused-review-only",
+      "description": "A focused review asks whether a shared normalizer abstraction is still justified, without authorizing edits.",
+      "prompt": "Use $reduce-code-slop to review normalizer.py for unnecessary indirection. Do not modify any file.",
+      "fixture": "focused-review-only",
+      "mode": "focused-review",
+      "language": "python",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "email and account callers both use normalize_identifier",
+        "normalization performs strip followed by casefold",
+        "the review must account for both callers"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "confirm review remained read-only", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "inspect both callers before judging ownership",
+          "report evidence and trade-offs without editing",
+          "preserve the review-only boundary"
+        ],
+        "prohibitedSignals": [
+          "edit fixture files",
+          "judge the abstraction from its name alone",
+          "ignore one caller"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "dirty-worktree-preservation",
+      "description": "A scoped Python refactor starts beside unrelated staged and untracked user work.",
+      "prompt": "Use $reduce-code-slop to simplify core.py only. Preserve all existing staged and untracked work exactly.",
+      "fixture": "dirty-worktree-preservation",
+      "mode": "refactor",
+      "language": "python",
+      "authorizedPaths": ["core.py", "tests/test_core.py"],
+      "behaviorContract": [
+        "display_name trims the supplied name and rejects an empty result",
+        "local-preferences.txt, notes.md, and scratch.txt are unrelated user work",
+        "the original unstaged, staged, and untracked states must survive"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "baseline behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "behavior and worktree preservation", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "worktree", "stagePaths": ["notes.md"], "expectedStatus": [" M local-preferences.txt", "A  notes.md", "?? scratch.txt"]},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "record the pre-existing staged and untracked state",
+          "limit edits to core.py and its existing tests",
+          "leave local-preferences.txt, notes.md, and scratch.txt byte-for-byte unchanged"
+        ],
+        "prohibitedSignals": [
+          "stage, delete, or rewrite unrelated work",
+          "reset the repository",
+          "bundle notes cleanup into the refactor"
+        ],
+        "repositoryState": "authorized edits only; original staged and untracked state preserved"
+      }
+    },
+    {
+      "id": "existing-enforcement-tool",
+      "description": "A package-free .NET project already enables nullable analysis and warnings as errors.",
+      "prompt": "Use $reduce-code-slop in enforcement mode with the repository's existing compiler settings. Do not add analyzers or packages.",
+      "fixture": "existing-enforcement-tool",
+      "mode": "enforcement",
+      "language": "csharp",
+      "authorizedPaths": ["Message.cs", "Program.cs"],
+      "behaviorContract": [
+        "the project builds with nullable analysis and warnings as errors",
+        "Message.Normalize returns a trimmed non-null string",
+        "no package or analyzer is added"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "existing enforcement baseline", "argv": ["dotnet", "build", "Fixture.csproj", "--nologo"]}, {"purpose": "baseline behavior", "argv": ["dotnet", "run", "--project", "Fixture.csproj", "--no-build"]}],
+        "after": [{"purpose": "existing enforcement verification", "argv": ["dotnet", "build", "Fixture.csproj", "--nologo"]}, {"purpose": "behavior preservation", "argv": ["dotnet", "run", "--project", "Fixture.csproj", "--no-build"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "NO_CHANGE",
+        "requiredSignals": [
+          "use the already-configured compiler checks",
+          "recognize that the code is already direct and warning-clean",
+          "avoid configuration churn"
+        ],
+        "prohibitedSignals": [
+          "install an analyzer",
+          "change Directory.Build.props",
+          "manufacture a source edit"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "missing-enforcement-tool",
+      "description": "Repository notes request a fictional external analyzer that is not installed or vendored.",
+      "prompt": "Use $reduce-code-slop in enforcement mode and run the configured FixtureLint checks. Do not install anything.",
+      "fixture": "missing-enforcement-tool",
+      "mode": "enforcement",
+      "language": "python",
+      "authorizedPaths": [],
+      "behaviorContract": [
+        "the standard-library tests remain the only available executable checks",
+        "FixtureLint is described but absent",
+        "installing new tooling requires a separate dependency review"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "available baseline", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "available verification", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "BLOCKED",
+        "requiredSignals": [
+          "report the requested analyzer as unavailable",
+          "run only safe repository-native checks that actually exist",
+          "route any proposed installation through $audit-dependencies"
+        ],
+        "prohibitedSignals": [
+          "install or download FixtureLint",
+          "pretend its checks ran",
+          "edit configuration to hide the gap"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "cross-skill-control",
+      "description": "The same speculative wrapper supports a read-only broad-audit control and an authorized focused simplification run.",
+      "prompt": "Use $reduce-code-slop to simplify wrapper.py without changing calculate_total or its error behavior.",
+      "crossSkillPrompt": "Use $deep-code-audit to audit this repository for correctness and accidental complexity. Remain read-only.",
+      "fixture": "cross-skill-control",
+      "mode": "refactor",
+      "language": "python",
+      "authorizedPaths": ["wrapper.py", "tests/test_wrapper.py"],
+      "behaviorContract": [
+        "calculate_total sums non-negative integer line values",
+        "negative values raise ValueError",
+        "the deep-code-audit control reports but does not repair the issue"
+      ],
+      "verificationCommands": {
+        "before": [{"purpose": "shared baseline", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}],
+        "after": [{"purpose": "simplification verification", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "SIMPLIFIED",
+        "requiredSignals": [
+          "keep broad-audit discovery read-only under $deep-code-audit",
+          "allow the explicitly authorized minimal repair under $reduce-code-slop",
+          "preserve exact behavior in both comparisons"
+        ],
+        "prohibitedSignals": [
+          "let the audit control edit files",
+          "conflate bug diagnosis with simplification",
+          "change public behavior"
+        ],
+        "repositoryState": "control unchanged; simplification run changes only authorized paths"
+      }
+    }
+  ],
+  "triggerCases": [
+    {"id": "trigger-python-simplify", "prompt": "Simplify this Python service without changing behavior or adding dependencies.", "expectActivation": true},
+    {"id": "trigger-csharp-type-hardening", "prompt": "Harden this C# type boundary and remove the null-forgiving and cast laundering.", "expectActivation": true},
+    {"id": "trigger-generated-boilerplate", "prompt": "Remove the unnecessary generated-looking boilerplate from this Python module while preserving its API.", "expectActivation": true},
+    {"id": "trigger-focused-review", "prompt": "Review this C# subsystem specifically for unnecessary indirection and hidden fallbacks. Remain read-only.", "expectActivation": true},
+    {"id": "near-miss-broad-audit", "prompt": "Perform a comprehensive audit of the entire repository for correctness and architecture risks.", "expectActivation": false},
+    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this flaky Python test, then fix it.", "expectActivation": false},
+    {"id": "near-miss-architecture", "prompt": "Plan a migration from the monolith to independent services.", "expectActivation": false},
+    {"id": "near-miss-dependency", "prompt": "Install a new C# analyzer and update every dependency.", "expectActivation": false},
+    {"id": "near-miss-ui", "prompt": "Polish this Blazor settings screen and verify it responsively.", "expectActivation": false},
+    {"id": "near-miss-prose", "prompt": "Rewrite the Python setup guide for clarity.", "expectActivation": false},
+    {"id": "near-miss-feature", "prompt": "Add CSV export to this C# application.", "expectActivation": false},
+    {"id": "near-miss-unsupported-language", "prompt": "Simplify this Rust parser without changing behavior.", "expectActivation": false}
+  ]
+}

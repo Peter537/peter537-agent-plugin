@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, behavior-preserving code simplification, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -14,6 +14,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 | `diagnose-bugs` | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. |
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
 | `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
+| `reduce-code-slop` | Review and simplify scoped C# and Python code without changing behavior or hiding diagnostics. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
 | `write-clearly` | Draft, edit, and audit repository prose for clarity, reader fit, fidelity, and voice in its source language. |
 
@@ -31,6 +32,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
 - `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
 - `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
+- `reduce-code-slop` inspects source, tests, and existing verification output locally, preserves justified complexity, and does not install analyzers or dependencies.
 - `write-clearly` keeps repository prose and author samples local by default, preserves protected meaning and format, and reports related findings outside the authorized edit scope without changing those files.
 - `playwright` requires Node.js 18 or newer.
 - `web-forager` requires `uv` and provisions a supported Python 3.10-3.13 runtime through `uvx`.
@@ -39,7 +41,7 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 
 ## Install the complete GitHub edition
 
-The GitHub marketplace edition contains all included skills and all four MCP servers. The Codex CLI is not required.
+The published `v0.2.0` GitHub marketplace edition contains ten skills and all four MCP servers. The Codex CLI is not required.
 
 1. In ChatGPT/Codex desktop, open **Plugins**, open the **Add** menu, and select **Add plugin marketplace**.
 2. Enter `Peter537/peter537-agent-plugin` as the source.
@@ -103,6 +105,7 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $diagnose-bugs to reproduce, diagnose, and fix this flaky CI failure.`
 - `Use $docs-audit to refresh this project's documentation.`
 - `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`
+- `Use $reduce-code-slop to simplify this C# or Python code without changing its behavior.`
 - `Use $ui-design-and-polish to improve this product UI.`
 - `Use $write-clearly to improve this repository prose without changing its meaning or voice.`
 - `Use $chatgpt-research to compare the current official guidance.`
