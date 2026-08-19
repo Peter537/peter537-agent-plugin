@@ -29,7 +29,7 @@ Use clear, direct, informative prose for a broad audience. Put the main message 
 
 ### Plain technical
 
-Use restrained, approachable technical prose for readers who may be scanning or reading in an additional language. Keep terminology stable, conditions close to their consequences, instructions explicit, and rhetoric subordinate to information.
+Use restrained, approachable technical prose for readers who may be scanning or reading in an additional language. Lead with the answer, outcome, or action the section exists to provide. Keep terminology stable, name the responsible actor when it affects understanding, use imperative steps for reader actions, and place conditions before or close to the actions and consequences they govern. Prefer claims supported by repository evidence, define necessary unfamiliar terms, and keep rhetoric subordinate to information. Do not sacrifice a technical distinction merely to shorten the prose.
 
 ### Reference-austere
 

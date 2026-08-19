@@ -37,7 +37,7 @@ Diagnose the underlying communication defect rather than searching for forbidden
 
 ## Model and workflow residue
 
-Remove acknowledgments, restatements of the request, process narration, generic courtesy sign-offs, unrequested alternative versions, placeholders, and tool residue when they are not part of the intended document. Do not label them as proof of machine authorship.
+Remove acknowledgments, restatements of the request, process narration, generic courtesy sign-offs, unrequested alternative versions, placeholders, and tool residue when they are not part of the intended document. Also question answer-shaped scaffolding that addresses an absent conversation, and synthetic completeness that adds symmetrical sections, exhaustive-looking lists, repeated summaries, or a conclusion solely to make the document appear finished. Preserve any structure that serves an actual reader task, contractual requirement, navigation need, or evidenced author voice. Do not label these patterns as proof of machine authorship.
 
 ## Formatting defects
 

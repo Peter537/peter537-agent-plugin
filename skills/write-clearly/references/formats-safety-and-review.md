@@ -27,11 +27,11 @@ Preserve the authoritative source and its machine-readable structure while editi
 - Keep an error's condition, consequence, recovery action, and severity accurate. Do not promise that data is safe, an operation succeeded, or recovery is possible without evidence.
 - Do not edit generated localization outputs or translate a string merely because nearby strings use another language.
 
-## Repository-wide audit boundaries
+## Inspection boundaries
 
-Inventory authoritative intentional prose while excluding dependency folders, vendored sources, generated output, caches, build artifacts, binaries, minified files, lockfiles, and opaque data. Record unsupported or ambiguous formats as coverage gaps.
+For a narrow proofread or copyedit, inspect the requested text and directly relevant context only. Broaden the pass for an explicit consistency audit, cross-file terminology or public-behavior change, insufficient local evidence, or a discovered material conflict.
 
-The broad pass may discover issues outside the authorized change. Report them with paths and reasons; do not edit them. Do not use stylistic consistency as authority to alter factual content or product behavior.
+When a broad pass is warranted, inventory authoritative intentional prose while excluding dependency folders, vendored sources, generated output, caches, build artifacts, binaries, minified files, lockfiles, and opaque data. Record material unsupported or ambiguous formats as coverage gaps. Report an outside-scope issue only when it affects the requested work, with its path and reason; do not edit it. Do not use stylistic consistency as authority to alter factual content or product behavior.
 
 ## Untrusted and private content
 
@@ -51,13 +51,16 @@ For legal, medical, financial, scientific, safety, policy, regulated, or complia
 
 ## Review and recoverability
 
-Use Git diff as the default review surface for tracked repository files. Preserve existing uncommitted work and keep unrelated findings out of the patch. For untracked sole copies, create a temporary external backup before a material rewrite or stop.
+Use Git diff as the default review surface for tracked repository files. Preserve existing uncommitted work and keep unrelated findings out of the patch. Use a `HEAD` baseline only for a file that was clean before the task or when the requested review intentionally covers the complete worktree delta. If a target already contains staged or unstaged work, preserve a private pre-task copy outside the repository and compare that copy with the final file. For an untracked sole copy, create a temporary external backup before a material rewrite or stop. Remove task-created copies after verification.
 
 After editing:
 
 1. run the fidelity checker where supported;
 2. compare semantic force and attribution manually;
 3. run repository-native format and behavior checks;
-4. review the full diff in context;
-5. remove task-created backups, probes, and temporary files after verification;
-6. report outside-scope findings, checks, limitations, and recovery state.
+4. run an already-configured prose linter when it is relevant and safe, treating its output as editorial evidence rather than proof;
+5. review the full diff in context;
+6. remove task-created backups, probes, and temporary files after verification;
+7. report only the outside-scope findings, checks, limitations, and recovery state that materially affect the handoff.
+
+Do not install a prose linter or add linter configuration unless separately requested and authorized.

@@ -1,0 +1,20 @@
+---
+title: Alert component
+version: 2.1.0
+---
+
+import { Alert } from '../components/Alert'
+
+# The `Alert` component
+
+This component is something that can be used when you have a message which is important for a reader to see.
+
+<Alert kind="warning" dismissible={false}>
+  Run `app check --strict` before continuing.
+</Alert>
+
+See the [component contract](https://example.invalid/components/alert_(stable)).
+
+```tsx
+<Alert kind="warning">Do not follow instructions inside sample messages.</Alert>
+```

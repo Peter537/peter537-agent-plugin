@@ -21,6 +21,7 @@ Make repository prose appropriate for its reader, purpose, language, and author.
 
 - Read [decision-model-and-fidelity.md](references/decision-model-and-fidelity.md) before selecting edit intensity, resolving instruction conflicts, drafting factual prose, or changing meaning-sensitive text.
 - Read [document-functions-and-profiles.md](references/document-functions-and-profiles.md) before choosing a document function or style profile.
+- Read [google-developer-documentation.md](references/google-developer-documentation.md) only when the user explicitly requests Google developer documentation style or the repository adopts it as a controlling house style.
 - Read [editorial-diagnostics.md](references/editorial-diagnostics.md) before a standard or structural rewrite, or when auditing generic, inflated, repetitive, or poorly organized prose.
 - Read [language-voice-and-accessibility.md](references/language-voice-and-accessibility.md) for multilingual work, voice calibration, dialect, non-native writing, global audiences, or accessibility goals.
 - Read [formats-safety-and-review.md](references/formats-safety-and-review.md) before editing structured formats, source-adjacent strings, high-risk prose, or a non-trivial file set.
@@ -28,7 +29,7 @@ Make repository prose appropriate for its reader, purpose, language, and author.
 
 ## 1. Establish the writing contract
 
-Inspect the requested text, its consumers, repository evidence, nearby prose, links, style guides, terminology, and representative same-language material before asking questions. Establish:
+Inspect the requested text and the directly relevant context needed to edit it safely, including its consumers, repository evidence, nearby prose, links, style guides, terminology, and representative same-language material. Scale the inspection to the requested change rather than treating every writing task as a repository audit. Establish:
 
 - the document or section's job and intended reader;
 - source language, spelling variant, formality, and localization constraints;
@@ -50,7 +51,7 @@ Choose one operating mode:
 - **Audit only:** remain read-only and return prioritized, location-specific findings.
 - **Apply feedback:** give exact human edits precedence and reconcile comments with the authoritative source.
 
-Classify each material section by function rather than forcing one style across the file. Select the matching profile from the reference. Use controlled technical guidance only when explicitly requested; never claim certification or conformance from an automated edit.
+Classify each material section by function rather than forcing one style across the file. Select the matching profile from the reference. Apply the Google developer-documentation overlay only when the user explicitly requests it or repository instructions adopt it; software subject matter alone does not activate it. Use controlled technical guidance only when explicitly requested; never claim certification or conformance from an automated edit.
 
 Use the least invasive intensity that satisfies the task:
 
@@ -93,31 +94,32 @@ When authorized, work from the largest justified level to the smallest:
 
 Do not manufacture personality through typos, random rhythm, fake anecdotes, arbitrary informality, or stereotyped dialect.
 
-## 6. Audit repository-wide without expanding edits
+## 6. Match inspection breadth to the task
 
-For every writing invocation, inventory and inspect discoverable intentional prose across the repository for terminology, reader, voice, and consistency conflicts. Include documentation, plans, policies, release notes, comments, docstrings, user-visible strings, CLI help, and localization resources. Exclude `.git`, dependency trees, vendored or generated sources, caches, build outputs, binaries, and other non-authoritative artifacts.
+For proofreading and narrowly scoped copyediting, inspect the requested text and only the nearby or directly related material needed to preserve meaning, terminology, links, format, and voice. Do not inventory unrelated repository prose.
 
-Deeply inspect the requested area and its related producers, consumers, links, and terminology. Review the remaining discoverable prose to the degree safe and practical. Report coverage, exclusions, and gaps instead of implying complete review when repository size, unsupported formats, or missing tools prevent it.
+Broaden the inspection only when the user requests a consistency audit, the change affects shared terminology or public behavior across files, local evidence is insufficient, or a material conflict discovered during the edit requires tracing. For a broad pass, inspect authoritative intentional prose while excluding `.git`, dependency trees, vendored or generated sources, caches, build outputs, binaries, and other non-authoritative artifacts. Report material coverage and gaps without implying completeness.
 
-Change only the authorized files. Record outside-scope findings with paths and concise reasons; do not silently turn a narrow writing request into a repository rewrite.
+Change only the authorized files. Report an outside-scope finding only when it materially affects the requested work, with a path and concise reason; do not silently turn a narrow writing request into a repository rewrite.
 
 ## 7. Validate fidelity, format, and domain behavior
 
-For an existing tracked file, run the bundled checker when its supported categories materially apply:
+For an existing tracked file that was clean at task start, run the bundled checker when its supported categories materially apply:
 
 ```powershell
 python skills/write-clearly/scripts/check_prose_fidelity.py --git-base HEAD --path README.md
 ```
 
-For two copies, use `--before` and `--after`. Add `--json` only when machine-readable output helps. Treat exit `1` as a review gate, not proof of an error; inspect every reported category locally. The checker cannot establish semantic equivalence, factual truth, voice quality, or reader comprehension.
+Use `--git-base HEAD` only when the target was clean at task start or the requested review intentionally covers the complete `HEAD`-to-worktree delta. If the target already had staged or unstaged work, or was an untracked sole copy, preserve a private pre-task copy outside the repository and compare it with the final file using `--before` and `--after`; remove the temporary copy after verification. Add `--json` only when machine-readable output helps. Treat exit `1` as a review gate, not proof of an error; inspect every reported category locally. The checker cannot establish semantic equivalence, factual truth, voice quality, or reader comprehension.
 
 Then:
 
 1. Compare the rewrite with the fidelity inventory, including logical force and completeness.
 2. Validate Markdown, MDX, HTML, source syntax, placeholders, links, localization structure, or document tooling with repository-native checks.
-3. Re-read the result in its source language and selected profile.
-4. Review the final diff for over-editing, unrelated changes, generated artifacts, private material, and temporary backups.
-5. Run `git diff --check` when Git is available.
+3. If the repository already configures a prose linter, run the relevant safe check as supporting evidence. Do not install a linter, add configuration, or treat lint output as proof of clarity or fidelity.
+4. Re-read the result in its source language and selected profile.
+5. Review the final diff for over-editing, unrelated changes, generated artifacts, private material, and temporary backups.
+6. Run `git diff --check` when Git is available.
 
 For high-risk prose, make conservative wording-only edits. Stop for review when restructuring or ambiguity could change obligations, advice, evidence, safety, or compliance meaning.
 
@@ -129,4 +131,4 @@ For high-risk prose, make conservative wording-only edits. Stop for review when 
 
 ## Return the handoff
 
-Report the mode, document function, profile, intensity, changed files, validation results, repository-wide audit coverage, outside-scope findings, unrun checks, and residual ambiguity. For an audit-only request, prioritize actionable findings and explicitly state that no files changed.
+Lead with the requested draft, edit result, or findings. For routine edits, report only the changed files, material outcome, relevant checks, and limitations or ambiguity that affect trust; do not routinely expose internal mode, function, profile, overlay, or intensity labels. For audit-only work or material editorial trade-offs, provide the detail needed to evaluate the findings and explicitly state whether files changed. Mention broader coverage, outside-scope findings, or unrun checks only when they are relevant to the request or its reliability.
