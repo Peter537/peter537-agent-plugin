@@ -1,0 +1,46 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Planning & research",
+      "description": "Research and plan complex software and product decisions.",
+      "skills": [
+        "deep-planning",
+        "chatgpt-research"
+      ]
+    },
+    {
+      "title": "Engineering quality",
+      "description": "Investigate defects and audit software implementations.",
+      "skills": [
+        "deep-code-audit",
+        "diagnose-bugs"
+      ]
+    },
+    {
+      "title": "Security & supply chain",
+      "description": "Review dependencies, sensitive data, and repository exposure.",
+      "skills": [
+        "audit-dependencies",
+        "audit-data-exposure"
+      ]
+    },
+    {
+      "title": "Documentation & writing",
+      "description": "Maintain accurate documentation and reader-focused prose.",
+      "skills": [
+        "docs-audit",
+        "write-clearly"
+      ]
+    },
+    {
+      "title": "UI & .NET",
+      "description": "Design product interfaces and develop MAUI Blazor Hybrid UI.",
+      "skills": [
+        "ui-design-and-polish",
+        "maui-blazor-browser"
+      ]
+    }
+  ]
+}

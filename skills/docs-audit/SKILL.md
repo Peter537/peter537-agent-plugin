@@ -1,6 +1,7 @@
 ---
 name: docs-audit
 description: Audit and rebuild software-repository documentation against implementation evidence. Use for comprehensive documentation audits or refreshes that may create, rewrite, move, merge, or delete README files and project documentation; reconcile documentation with code, tests, configuration, commands, and public interfaces; redesign documentation structure; update documentation tooling; and add evidence-backed Mermaid diagrams. Do not use for ordinary prose drafting, proofreading, copyediting, tone or voice work, repository-only analysis, or application-code changes.
+license: MIT
 ---
 
 # Docs Audit

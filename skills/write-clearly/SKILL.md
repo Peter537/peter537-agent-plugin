@@ -1,6 +1,7 @@
 ---
 name: write-clearly
 description: Draft, edit, proofread, audit, and apply human feedback to intentional prose stored in software repositories while preserving meaning, language, voice, and format. Use for any task that materially creates or changes repository prose, including documentation, plans, policies, release notes, comments, docstrings, UI copy, errors, CLI help, localization strings, articles, brand writing, and personal nonfiction; also use for plain-language, clarity, tone, naturalness, audience-fit, house-style, or voice-matching requests in any source language. Do not use for code-only work, translation-only requests, summarization, data extraction, factual verification, or poetry and fiction unless explicitly invoked.
+license: MIT
 ---
 
 # Reader-First Writing

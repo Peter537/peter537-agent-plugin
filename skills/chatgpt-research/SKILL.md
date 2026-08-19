@@ -1,6 +1,7 @@
 ---
 name: chatgpt-research
 description: Orchestrate reproducible, multi-source software and product research through ChatGPT Deep Research and verify the resulting evidence. Use for complex or ambiguous questions requiring synthesis across external sources, official-documentation comparison, vendor or standards evaluation, UI reference analysis, conflicting claims, or traceable capture sets with URLs, dates, and citations. Do not use for a single fact, one-document lookup, ordinary web search, or repository-only investigation.
+license: MIT
 compatibility: Requires ChatGPT Deep Research and signed-in in-app Browser control; designed for ChatGPT and Codex.
 ---
 

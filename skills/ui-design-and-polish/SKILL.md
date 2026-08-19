@@ -1,6 +1,7 @@
 ---
 name: ui-design-and-polish
 description: Design, audit, refine, redesign, create, and polish product user interfaces using repository evidence and rendered verification. Use for dashboards, data tools, forms, settings, workflows, application shells, page hierarchy, UI copy, responsive behavior, accessibility, interaction states, design-system consistency, Streamlit interfaces, and Blazor Web Apps. Do not use for backend-only work, ordinary non-UI framework tasks, documentation-only changes, image-only work, or marketing, editorial, and commerce surfaces.
+license: MIT
 ---
 
 # UI Design and Polish

@@ -1,6 +1,7 @@
 ---
 name: maui-blazor-browser
 description: Prepare, assess, implement, and verify safe browser-development paths for .NET MAUI Blazor Hybrid UI by reusing or creating a companion Blazor Web host, or by creating an isolated temporary browser harness around host-neutral Razor Class Library UI. Use when a MAUI Blazor Hybrid project needs browser inspection, browser-driven development, responsive or DOM verification, shared MAUI-and-Web UI, host-specific service adapters, or diagnosis of a browser host that prerenders but does not become interactive. Do not use for ordinary Blazor Web applications, native-only MAUI/XAML work, visual-polish-only requests, or browser testing unrelated to MAUI Blazor Hybrid.
+license: MIT
 ---
 
 # MAUI Blazor Browser

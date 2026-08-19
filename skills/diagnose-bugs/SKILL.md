@@ -1,6 +1,7 @@
 ---
 name: diagnose-bugs
 description: Diagnose and repair concrete, non-obvious local-repository or CI defects through authentic failure evidence, localization, falsifiable experiments, causal explanation, and regression verification. Use when the user clearly asks to diagnose or debug a specific bug, reproduce an observed defect, investigate a concrete failure, perform root-cause analysis, repair a flaky test or regression, or trace a build, integration, environment, data-dependent, or measured performance failure. Do not use merely because something is broken, throwing, failing, or slow; exclude quick error explanations, lists of possible causes without investigation, issue summaries, proactive code or performance audits, ordinary feature work, known trivial fixes, and active production or security-incident response.
+license: MIT
 ---
 
 # Evidence-Driven Bug Diagnosis

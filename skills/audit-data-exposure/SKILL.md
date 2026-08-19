@@ -1,6 +1,7 @@
 ---
 name: audit-data-exposure
 description: Perform read-only, redacted reviews of repositories, Git changes or ranges, paths, and subsystems for personal data, private records, credentials, developer-machine metadata, re-identifiable samples, anonymization failures, and disposable one-time migrations or conversions. Use only when the user explicitly requests a personal-data, privacy, anonymization, repository-leak, sensitive-data exposure, or disposable-migration review. Do not invoke merely because code is being committed, released, published, or open-sourced, and do not use for ordinary code audits, dependency reviews, performing dataset anonymization, legal-compliance opinions, or implementation work.
+license: MIT
 ---
 
 # Repository Data Exposure Review

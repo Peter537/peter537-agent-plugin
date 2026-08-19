@@ -47,7 +47,35 @@ The GitHub marketplace edition contains all included skills and all four MCP ser
 4. Leave **Sparse paths** empty and add the marketplace.
 5. Open **Peter537 Plugins**, install **Peter537 Agent Plugin**, and start a new task so its skills and MCP tools are loaded.
 
-## Install the skills-only public edition
+## Install from Skills.sh
+
+[![skills.sh](https://skills.sh/b/Peter537/peter537-agent-plugin)](https://skills.sh/Peter537/peter537-agent-plugin)
+
+This route installs the skill directories in this repository. It does not install `plugin.json`, `.codex-plugin/plugin.json`, `.agents/plugins/marketplace.json`, `mcp.json`, or the four optional MCP servers.
+
+List the available skills:
+
+```powershell
+npx skills add Peter537/peter537-agent-plugin --list
+```
+
+Install one skill:
+
+```powershell
+npx skills add Peter537/peter537-agent-plugin --skill deep-planning
+```
+
+Install every discovered skill:
+
+```powershell
+npx skills add Peter537/peter537-agent-plugin --skill "*"
+```
+
+`chatgpt-research` still requires ChatGPT Deep Research and signed-in in-app Browser control; installing it through Skills.sh does not provide those capabilities.
+
+Skills.sh availability is separate from repository compatibility and begins only after Skills.sh has observed a telemetry-enabled installation and refreshed its catalog.
+
+## Install from the OpenAI shared Plugins Directory
 
 The public-directory edition is submitted separately from the GitHub release. Its `v0.2.0` bundle contains all ten skills but does not include the four MCP servers; it becomes available only after OpenAI review and publication. Once available, search for **Peter537 Agent Plugin** in the shared Plugins Directory, open its details, and select the plus button to install it.
 

@@ -1,6 +1,7 @@
 ---
 name: deep-planning
 description: Research and clarify complex software changes before implementation. Use for architecture proposals, migrations and refactors, parity or retirement inventories, sequencing and dependency analysis, scope and tradeoff decisions, ADR candidates, acceptance gates, and other software work that needs repository evidence plus targeted user questions. Do not use for straightforward changes with an already decision-complete specification.
+license: MIT
 ---
 
 # Deep Planning

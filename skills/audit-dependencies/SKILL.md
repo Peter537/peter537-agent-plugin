@@ -1,6 +1,7 @@
 ---
 name: audit-dependencies
 description: Audit every software dependency and supply-chain input in a repository, including direct and transitive packages, nested projects and workspaces, build plugins, CI actions, container images, vendored code, submodules, and runtime-loaded extensions. Use for dependency or package reviews; before adding, installing, upgrading, replacing, or removing dependencies; when manifests or lockfiles change; or when checking exact resolved versions, vulnerabilities, provenance, integrity, licenses, malicious packages, dependency confusion, maintainer risk, or supply-chain attacks. Do not use for broad source-code audits unrelated to dependencies.
+license: MIT
 ---
 
 # Dependency & Package Review

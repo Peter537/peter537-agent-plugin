@@ -1,6 +1,7 @@
 ---
 name: deep-code-audit
 description: Perform evidence-backed audits of software repositories or explicitly scoped changes for correctness, security, maintainability, readability, testability, performance, architecture, file organization, dependency risk, and proportionate sensitive-data risk within a broader code assessment. Use for comprehensive codebase audits, security reviews, or deep review of a diff, branch, pull request, file, or subsystem. Do not use for dedicated bug reproduction or root-cause diagnosis, dependency reviews, personal-data or anonymization reviews, repository data-exposure audits, pre-addition supply-chain gates, routine implementation, simple style feedback, or a narrowly specified fix that does not request an audit.
+license: MIT
 ---
 
 # Deep Code Audit
