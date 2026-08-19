@@ -6,11 +6,13 @@ Use this reference as a routing matrix, not a requirement to manufacture a findi
 
 - Correctness and intent
 - Readability and maintainability
+- State models, data structures, and knowledge ownership
 - Boundaries and interfaces
 - Testability and tests
 - Failure handling and resilience
 - Performance and concurrency
 - Files and project structure
+- Change coherence and minimality
 - Data, APIs, and integrations
 - Configuration and operations
 - Documentation, developer experience, and users
@@ -30,7 +32,17 @@ Use this reference as a routing matrix, not a requirement to manufacture a findi
 - Look for hidden control flow, excessive nesting, distant mutation, boolean-flag APIs, duplicated policy, temporal coupling, global state, and surprising side effects.
 - Prefer the repository's established idioms unless a local pattern creates measurable risk.
 - Distinguish essential domain complexity from accidental structural complexity.
-- Recommend abstraction only when it clarifies a stable concept or removes harmful repetition. Avoid premature generalization and single-use indirection.
+- Recommend abstraction only when it clarifies a stable concept, removes harmful repetition, or protects an evidenced public, platform, security, lifecycle, compatibility, generated-code, or nondeterministic boundary. Avoid premature generalization and unjustified single-use indirection.
+
+## State models, data structures, and knowledge ownership
+
+- Enumerate related booleans, nullable values, tags, statuses, lifecycle markers, and derived fields. Identify reachable invalid, stale, contradictory, or unrepresentable states before recommending a different model.
+- Trace where invariants are established, validated, mutated, serialized, and reconstructed. Prefer one authoritative owner for rules about shape, units, identity, ordering, normalization, and lifecycle.
+- Look for duplicated branching that implements one stable policy. Recommend a map, registry, reducer, command, typed state, or other structure only when it reduces caller knowledge, invalid states, or inconsistent policy rather than hiding branches.
+- Inspect repeated scans, transformations, joins, and lookups. Recommend a different collection or index only when workload, update cost, memory, consistency, and lifecycle evidence make the change material.
+- Trace retry, cancellation, concurrency, and asynchronous state for stale results, lost updates, duplicate completion, ambiguous ownership, and transitions that cannot be made atomic.
+- Measure caller burden through required sequencing, preconditions, exposed representation, failure categories, and duplicated recovery logic.
+- Prefer direct local code when a proposed abstraction adds more concepts, ownership boundaries, migration risk, or indirection than it removes.
 
 ## Boundaries and interfaces
 
@@ -73,6 +85,17 @@ Use this reference as a routing matrix, not a requirement to manufacture a findi
 - Consider merging files when fragmentation creates indirection without independent ownership, reuse, lifecycle, or testing value.
 - Before deleting or moving a file, verify imports, runtime registration, reflection, configuration, generated references, packaging, scripts, documentation links, and external consumers.
 - Judge folder structure by reader tasks, dependency boundaries, and ownership rather than mechanically mirroring types or framework conventions.
+
+## Change coherence and minimality
+
+- Determine whether the reviewed change represents one coherent behavioral intent and whether every material edit contributes to it.
+- Separate unrelated formatting, renames, moves, generated updates, debug residue, and refactoring when they obscure review, rollback, ownership, or causal verification.
+- Prefer the smallest behaviorally complete root-cause change, not the smallest textual diff. Inspect sibling paths and shared policy before accepting a local guard.
+- Require an evidenced present benefit for added abstractions, modes, extension points, configuration, persistent state, background work, public contracts, and operational obligations.
+- Check whether local concision transfers complexity into callers, reflection, framework behavior, configuration, deployment, recovery, or tests.
+- Do not infer authorship from unused constructs, duplicated helpers, invented APIs, hidden dependencies, or broad patch surface. Report only the observable defect and consequence.
+- Preserve explicit duplication when similar code represents different policy or when a shared abstraction is demonstrably unstable. Do not impose a universal duplication threshold.
+- Do not recommend patch reduction unless the alternative preserves relevant behavior, compatibility, security, operations, and verification.
 
 ## Data, APIs, and integrations
 
