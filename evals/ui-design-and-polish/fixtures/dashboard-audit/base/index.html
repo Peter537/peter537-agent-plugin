@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relay Operations</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header><h1>Relay operations</h1><button id="refresh" type="button">Refresh</button></header>
+  <main>
+    <nav aria-label="Dashboard views"><a href="#overview">Overview</a><a href="#failures">Failures</a></nav>
+    <section id="status" aria-live="polite"></section>
+    <section id="overview" aria-labelledby="queue-heading">
+      <h2 id="queue-heading">Queue</h2>
+      <table><thead><tr><th>Relay</th><th>State</th><th>Age</th></tr></thead><tbody id="rows"></tbody></table>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

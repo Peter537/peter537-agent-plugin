@@ -1,7 +1,7 @@
 interface:
   display_name: "UI Design and Polish"
   short_description: "Design and refine accessible product interfaces"
-  default_prompt: "Use $ui-design-and-polish to design or improve this product UI and verify the rendered result."
+  default_prompt: "Use $ui-design-and-polish to audit or improve this product UI within the requested scope and verify the rendered result."
 
 policy:
   allow_implicit_invocation: true

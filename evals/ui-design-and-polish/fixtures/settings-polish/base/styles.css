@@ -1,0 +1,7 @@
+:root { font-family: system-ui, sans-serif; }
+body { margin: 0; }
+main { margin: 3rem auto; max-width: 42rem; padding: 0 1rem; }
+form { border: 1px solid #aaa; display: grid; gap: .45rem; padding: 1rem; }
+input[type="text"], input:not([type]) { min-height: 2rem; }
+button { margin-top: .75rem; min-height: 2.25rem; width: max-content; }
+:focus-visible { outline: 2px solid #1558a6; outline-offset: 2px; }

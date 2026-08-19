@@ -1,0 +1,10 @@
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+body { margin: 0; }
+header { align-items: center; border-bottom: 1px solid #777; display: flex; justify-content: space-between; padding: 1rem; }
+main { display: grid; gap: 1rem; grid-template-columns: 12rem 1fr; padding: 1rem; }
+nav { display: grid; gap: .5rem; }
+a, button { min-height: 2rem; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid #777; padding: .6rem; text-align: left; }
+:focus-visible { outline: 3px solid #1769aa; outline-offset: 2px; }
+@media (max-width: 42rem) { main { grid-template-columns: 1fr; } nav { display: flex; } }

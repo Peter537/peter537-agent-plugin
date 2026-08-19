@@ -23,9 +23,15 @@ Use [WCAG 2.2](https://www.w3.org/TR/WCAG22/) Level AA as the review baseline. A
 
 ## Visual perception
 
-- Verify text, controls, focus indicators, charts, and state indicators against applicable contrast requirements.
+- Use these compact WCAG 2.2 Level AA baselines where applicable:
+  - [Text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html): at least 4.5:1 for normal text and 3:1 for large text, defined as at least 18 point or 14 point bold, subject to the criterion's incidental-text and logo exceptions.
+  - [Non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html): at least 3:1 against adjacent colors for visual information needed to identify controls, states, and meaningful graphics. Include a custom focus treatment when it supplies that identifying state.
+  - [Keyboard focus](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html): every keyboard-operable control exposes a visible focus indicator, and author-created content does not [entirely obscure it](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html).
+  - [Resize text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html): text remains usable at 200% size without loss of content or function, subject to the criterion's exceptions.
+  - [Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html): content avoids two-dimensional scrolling at the equivalent of 320 CSS pixels wide or 256 CSS pixels high, except where a two-dimensional layout is essential to meaning or operation.
+  - [Target size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html): pointer targets are at least 24 by 24 CSS pixels or satisfy the criterion's spacing or other documented exception.
 - Do not communicate status or required action by color alone.
-- Preserve meaning at 200% text zoom and under browser reflow; avoid clipped labels, hidden actions, and overlapping content.
+- Preserve meaning during resize and reflow; avoid clipped labels, hidden actions, and overlapping content.
 - Support high text density without reducing legibility or target usability.
 - Keep essential touch and pointer targets large enough for reliable operation; inspect spacing between adjacent targets.
 

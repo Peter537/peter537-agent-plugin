@@ -1,0 +1,11 @@
+:root { color-scheme: dark; font: 14px/1.35 system-ui, sans-serif; }
+body { background: #10141c; color: #edf2f7; margin: 0; }
+header { background: linear-gradient(90deg, #2d183d, #10141c 45%); border-bottom: 2px solid #b868e0; padding: .8rem 1rem; }
+header h1, header p { display: inline; margin-right: 1rem; }
+main { padding: .75rem 1rem; }
+.summary { display: flex; gap: .5rem; margin-bottom: .75rem; }
+.summary article { border: 1px solid #506079; display: flex; gap: .5rem; padding: .45rem .65rem; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid #39475c; padding: .42rem; text-align: left; }
+.pill { border: 1px solid currentColor; border-radius: 999px; display: inline-block; padding: .1rem .45rem; }
+.critical { color: #ff9ca5; } .warning { color: #ffd27a; }

@@ -1,0 +1,18 @@
+@namespace Fixture.Components
+
+<section class="queue-panel" aria-labelledby="queue-title">
+    <header><h2 id="queue-title">Review queue</h2><span>@Items.Count item(s)</span></header>
+    @if (Items.Count == 0)
+    {
+        <p role="status">No items need review.</p>
+    }
+    else
+    {
+        <ul>@foreach (var item in Items) { <li><button @onclick="() => Select.InvokeAsync(item)" data-testid="select-item">@item</button></li> }</ul>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<string> Items { get; set; } = [];
+    [Parameter] public EventCallback<string> Select { get; set; }
+}

@@ -48,12 +48,14 @@ Use screenshots as evidence, not as the only test. Inspect the DOM, accessible n
 
 ## Bound iteration
 
-Use one baseline pass, one grouped implementation pass, and one confirmation pass. Continue only to correct unresolved:
+Use one baseline pass, one grouped implementation pass, and one confirmation pass. If the confirmation finds an issue that the selected operation requires resolving, correct it and repeat only the affected confirmation evidence:
 
-- `P0` issues that block use, accessibility, or a critical workflow;
-- `P1` issues that materially harm comprehension, navigation, or task completion.
+- `audit`: do not edit; complete the authorized evidence-backed assessment and report findings.
+- `refine`: correct relevant in-scope P0-P2 issues, including hierarchy, accessibility, responsive behavior, state quality, and visible inconsistency.
+- `polish`: correct the requested finishing issues, including relevant P2-P3 details, plus any P0-P1 regression introduced by the change.
+- `create` or `redesign`: correct in-scope P0-P2 issues required by the direction contract, preservation boundaries, and affected states; pursue P3 expression only when requested or established by the design system.
 
-Report remaining P2 and P3 observations rather than entering an open-ended cosmetic loop.
+Report unrelated observations rather than expanding scope or entering an open-ended cosmetic loop. A required issue that remains despite available evidence produces `FAIL`; unavailable evidence required to determine completion produces `BLOCKED` rather than a claim of visual completion.
 
 ## Evidence and handoff
 

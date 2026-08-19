@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Account settings</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <main>
+    <h1>Account settings</h1>
+    <form data-testid="account-settings">
+      <label for="display-name">Display name</label>
+      <input id="display-name" name="displayName" data-testid="display-name" aria-describedby="display-name-error">
+      <p id="display-name-error" role="alert" hidden>Enter a display name.</p>
+      <label><input type="checkbox" name="updates" data-testid="updates"> Weekly product updates</label>
+      <button type="submit" data-testid="save-settings">Save settings</button>
+      <p aria-live="polite" data-testid="save-status"></p>
+    </form>
+  </main>
+  <script src="settings.js"></script>
+</body>
+</html>

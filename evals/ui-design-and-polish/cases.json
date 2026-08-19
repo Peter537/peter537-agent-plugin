@@ -1,0 +1,373 @@
+{
+  "schemaVersion": 1,
+  "suiteExpectations": {
+    "requiredSignals": [
+      "derive visual direction from product and repository evidence instead of applying a generic aesthetic",
+      "preserve authorized behavior, test hooks, familiar conventions, and repository state",
+      "separate rendered evidence from source inspection and state verification",
+      "finish with an operation-specific PASS, FAIL, or BLOCKED result"
+    ],
+    "prohibitedSignals": [
+      "infer AI authorship or use slop as a reportable finding",
+      "ban cards, pills, gradients, dense layouts, neutral styling, or familiar components without context",
+      "use a numerical taste score or pixel-perfect screenshot golden",
+      "claim rendered, responsive, accessibility, or native behavior that was not verified"
+    ],
+    "conditionalOutcomePolicy": "For cases marked required-when-safe, PASS assumes a safe renderer and browser are available; otherwise BLOCKED is correct when the missing rendered evidence is explicit and no visual-completion claim is made.",
+    "repositoryState": "Only paths authorized by the case may change; pre-existing tracked, staged, unstaged, and untracked work must otherwise remain byte-for-byte unchanged.",
+    "blindReviewRubric": [
+      "Does the result make the product's primary job and hierarchy clearer?",
+      "Do product-derived choices make the result more specific without harming familiar interaction patterns?",
+      "Is decoration restrained relative to information and task needs?",
+      "Are before and after captures compared without revealing which implementation produced each image?"
+    ]
+  },
+  "cases": [
+    {
+      "id": "dashboard-audit",
+      "description": "A read-only audit of a compact operations dashboard with responsive and failure states.",
+      "prompt": "Use $ui-design-and-polish to audit this dashboard for hierarchy, responsive behavior, accessibility, interaction states, and product specificity. Remain read-only.",
+      "fixture": "dashboard-audit",
+      "operation": "audit",
+      "authorizedPaths": [],
+      "renderedVerification": "required-when-safe",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "inspect the loading, empty, error, and populated states",
+        "verify keyboard focus and the narrow layout separately",
+        "do not modify the fixture"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "complete the authorized assessment even when findings remain",
+          "distinguish source evidence from rendered evidence",
+          "report concrete hierarchy and state findings without prescribing a generic visual style"
+        ],
+        "prohibitedSignals": [
+          "edit fixture files",
+          "treat the existence of cards as a defect",
+          "claim formal accessibility conformance"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "settings-polish",
+      "description": "A narrow finishing pass on an account settings panel with stable controls and test hooks.",
+      "prompt": "Use $ui-design-and-polish to polish the account settings panel. Preserve every control, data-testid, validation message, and save behavior.",
+      "fixture": "settings-polish",
+      "operation": "polish",
+      "authorizedPaths": [
+        "settings.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "all controls and test hooks remain present",
+        "focus, error, disabled, and saving states remain distinguishable",
+        "the requested P2 and P3 finish issues are not skipped solely because they are non-critical"
+      ],
+      "git": {
+        "mode": "worktree",
+        "stagePaths": ["local-theme-notes.md"],
+        "expectedStatus": [" M local-layout-note.md", "A  local-theme-notes.md", "?? scratch-wireframe.txt"]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "make a bounded finishing pass",
+          "preserve behavior and test hooks",
+          "stop once the requested polish and verification are complete"
+        ],
+        "prohibitedSignals": [
+          "redesign the application shell",
+          "remove validation or disabled states",
+          "continue an open-ended aesthetic loop"
+        ],
+        "repositoryState": "only authorized paths may change; all pre-existing staged, unstaged, and untracked work remains byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "generic-workflow-refine",
+      "description": "A generic card-heavy review workflow needs a product-specific hierarchy while retaining long localized content and a rejection path.",
+      "prompt": "Use $ui-design-and-polish to refine this approval workflow so it serves fast evidence review rather than looking like a generic dashboard. Preserve all behavior and test hooks.",
+      "fixture": "generic-workflow-refine",
+      "operation": "refine",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "the primary evidence-review task becomes visually dominant",
+        "long Danish content remains usable at narrow widths",
+        "approve, reject, keyboard, and error paths remain available"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "derive differentiating choices from the evidence-review job",
+          "classify genericity concerns using evidence rather than pattern bans",
+          "resolve relevant P0 through P2 findings within scope"
+        ],
+        "prohibitedSignals": [
+          "replace every card merely because cards are common",
+          "truncate or replace the localized evidence",
+          "remove the rejection or failure state"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "justified-patterns",
+      "description": "A dense incident console deliberately uses cards, pills, a restrained gradient, and neutral styling for documented operational reasons.",
+      "prompt": "Use $ui-design-and-polish to assess whether this incident console needs visual de-templating. Remain read-only and preserve justified operational conventions.",
+      "fixture": "justified-patterns",
+      "operation": "audit",
+      "authorizedPaths": [],
+      "renderedVerification": "required-when-safe",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "status pills convey severity in addition to text",
+        "dense rows support rapid comparison",
+        "the restrained gradient marks the escalation boundary rather than decorating every surface"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "exempt contextual patterns whose product purpose is evidenced",
+          "preserve familiar incident-response conventions",
+          "avoid manufacturing a redesign"
+        ],
+        "prohibitedSignals": [
+          "ban pills, cards, gradients, or density categorically",
+          "infer authorship from the visual language",
+          "edit fixture files"
+        ],
+        "repositoryState": "clean and unchanged"
+      }
+    },
+    {
+      "id": "application-shell-redesign",
+      "description": "A maintenance application shell needs a coherent redesign grounded in its navigation and current-system evidence.",
+      "prompt": "Use $ui-design-and-polish to redesign this maintenance application shell while preserving routes, labels, focus order, and the existing product vocabulary.",
+      "fixture": "application-shell-redesign",
+      "operation": "redesign",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css",
+        "app.js"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "all navigation targets and test hooks survive",
+        "the direction contract reflects maintenance planning rather than a generic analytics dashboard",
+        "focus order and mobile navigation remain operable"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "state and honor a product-derived direction contract",
+          "retain incumbent system constraints that still serve users",
+          "verify the redesigned shell at representative widths"
+        ],
+        "prohibitedSignals": [
+          "invent product claims or routes",
+          "replace navigation labels for stylistic novelty",
+          "report PASS without rendered evidence unless that evidence is explicitly blocked"
+        ],
+        "repositoryState": "only authorized paths may change"
+      }
+    },
+    {
+      "id": "task-surface-create",
+      "description": "An existing warehouse shell needs a new exception-triage surface with success and non-happy states.",
+      "prompt": "Use $ui-design-and-polish to create the exception-triage surface described in REQUIREMENTS.md inside the existing shell.",
+      "fixture": "task-surface-create",
+      "operation": "create",
+      "authorizedPaths": [
+        "triage.html",
+        "triage.css",
+        "triage.js"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "the new files implement every evidenced requirement and no invented workflow",
+        "empty, error, offline, loading, and success states are represented",
+        "the surface integrates with the documented shell conventions"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "derive the surface from REQUIREMENTS.md and shell evidence",
+          "create only the authorized files",
+          "verify hierarchy, responsive behavior, focus, and high-risk states"
+        ],
+        "prohibitedSignals": [
+          "modify shell.html or REQUIREMENTS.md",
+          "invent backend behavior",
+          "omit the offline or destructive confirmation path"
+        ],
+        "repositoryState": "only authorized new paths may change"
+      }
+    },
+    {
+      "id": "streamlit-preservation",
+      "description": "A Streamlit queue view may be polished only if widget identity, callbacks, state, and rerun behavior are preserved.",
+      "prompt": "Use $ui-design-and-polish to refine this Streamlit queue view without breaking widget identity, callbacks, session state, or test selectors.",
+      "fixture": "streamlit-preservation",
+      "operation": "refine",
+      "authorizedPaths": [
+        "app.py"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "widget keys, callbacks, and session-state keys remain stable",
+        "rerun behavior remains explicit",
+        "the agent uses an existing safe Streamlit path rather than starting an unrequested server"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "preserve Streamlit identity and state invariants",
+          "make only evidence-backed visual changes",
+          "report rendered verification as blocked if no safe app path exists"
+        ],
+        "prohibitedSignals": [
+          "rename widget keys",
+          "introduce unsupported HTML behavior",
+          "claim callbacks were exercised from source inspection"
+        ],
+        "repositoryState": "only app.py may change"
+      }
+    },
+    {
+      "id": "blazor-rendering-blocked",
+      "description": "A Blazor component can be assessed from source, but the fixture intentionally has no safe browser host.",
+      "prompt": "Use $ui-design-and-polish to review and refine QueuePanel.razor. Do not create a browser host or claim rendered verification when none exists.",
+      "fixture": "blazor-rendering-blocked",
+      "operation": "refine",
+      "authorizedPaths": [
+        "Components/QueuePanel.razor",
+        "Components/QueuePanel.razor.css"
+      ],
+      "renderedVerification": "blocked-by-fixture",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "source-level review may proceed",
+        "rendered, callback, and native behavior remain unverified",
+        "creating a browser companion belongs to explicit $maui-blazor-browser work"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "BLOCKED",
+        "requiredSignals": [
+          "separate safe source improvements from blocked rendered evidence",
+          "name the missing host as a verification gap",
+          "avoid broadening scope into host creation"
+        ],
+        "prohibitedSignals": [
+          "create or start a web host",
+          "claim Blazor callbacks or native behavior were verified",
+          "invoke MAUI browser-host mechanics implicitly"
+        ],
+        "repositoryState": "only authorized component paths may change"
+      }
+    }
+  ],
+  "triggerCases": [
+    {
+      "id": "trigger-product-ui-audit",
+      "prompt": "Audit this product dashboard for hierarchy, responsive behavior, states, and accessibility.",
+      "expectActivation": true
+    },
+    {
+      "id": "trigger-polish-settings",
+      "prompt": "Polish this settings workflow while preserving its controls and behavior.",
+      "expectActivation": true
+    },
+    {
+      "id": "trigger-generic-interface",
+      "prompt": "Make this templated-looking operations interface more specific to its actual workflow.",
+      "expectActivation": true
+    },
+    {
+      "id": "trigger-redesign-shell",
+      "prompt": "Redesign this application shell using the existing product and user evidence.",
+      "expectActivation": true
+    },
+    {
+      "id": "near-miss-backend",
+      "prompt": "Optimize the queue-processing backend without changing its interface.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-dependency",
+      "prompt": "Review and upgrade the frontend dependency lockfile.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-documentation",
+      "prompt": "Rebuild the repository documentation and navigation.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-marketing",
+      "prompt": "Design a campaign landing page for our product launch.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-logo",
+      "prompt": "Create a new bitmap logo for this application.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-wording-only",
+      "prompt": "Rewrite this validation message without changing the UI.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-maui-host",
+      "prompt": "Create a temporary MAUI Blazor browser host for this component.",
+      "expectActivation": false
+    },
+    {
+      "id": "near-miss-code-simplification",
+      "prompt": "Simplify this C# view model without changing behavior.",
+      "expectActivation": false
+    }
+  ]
+}

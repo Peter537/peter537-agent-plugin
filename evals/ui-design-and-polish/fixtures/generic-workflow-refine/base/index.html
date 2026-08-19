@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="da">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dokumentkontrol</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <main>
+    <header class="card"><p>Kontrolkø</p><h1>Gennemgå dokumentation</h1><p>12 sager venter</p></header>
+    <section class="cards" aria-label="Sagsoversigt">
+      <article class="card"><h2>Aktuel sag</h2><p data-testid="case-title">Leverandørens erklæring om vedligeholdelse og reservedelsberedskab for det kommende kalenderår</p></article>
+      <article class="card"><h2>Dokumentbevis</h2><p>Erklæringen er modtaget, men datoen afviger fra kontraktens bilag.</p><a href="#source" data-testid="open-source">Åbn kilde</a></article>
+      <article class="card"><h2>Beslutning</h2><button data-testid="approve">Godkend</button><button data-testid="reject">Afvis</button><label for="reason">Begrundelse</label><textarea id="reason"></textarea><p role="alert" data-testid="decision-error" hidden>Vælg en begrundelse før afvisning.</p></article>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+.queue-panel { border: 1px solid #888; padding: 1rem; }
+.queue-panel header { align-items: baseline; display: flex; justify-content: space-between; }
+.queue-panel ul { list-style: none; margin: 0; padding: 0; }
+.queue-panel button { min-height: 2rem; width: 100%; }
