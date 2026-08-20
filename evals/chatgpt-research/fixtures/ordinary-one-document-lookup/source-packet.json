@@ -1,0 +1,4 @@
+{
+  "question": "Which transport does version 3 require?",
+  "source": {"publisher": "Example Protocol Authority", "url": "https://protocol.example.invalid/v3", "text": "Version 3 requires the stream transport."}
+}

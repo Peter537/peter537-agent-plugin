@@ -1,0 +1,7 @@
+{
+  "requestedFilter": "supported",
+  "requestedOrder": "name ascending",
+  "visibleCount": 2,
+  "expandedRows": ["adapter-a"],
+  "note": "Synthetic state; it is not evidence of a live page."
+}

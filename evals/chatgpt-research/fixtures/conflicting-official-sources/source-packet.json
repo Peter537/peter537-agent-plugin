@@ -1,0 +1,7 @@
+{
+  "sources": [
+    {"id": "alpha-v1", "publisher": "Example Standards Board", "url": "https://standards.example.invalid/v1", "version": "1.0", "claim": "Clients must send mode A."},
+    {"id": "alpha-v2", "publisher": "Example Standards Board", "url": "https://standards.example.invalid/v2", "version": "2.0", "claim": "Clients must send mode B."}
+  ],
+  "decisionTarget": "Version is not specified by the request."
+}

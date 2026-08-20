@@ -1,0 +1,4 @@
+{
+  "jobs": [{"id": "synthetic-job-1", "status": "running", "savedConversation": "[UNTRACKED_CONVERSATION_URL]", "tabState": "stale"}],
+  "maximumJobs": 2
+}

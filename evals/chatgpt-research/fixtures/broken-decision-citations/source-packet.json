@@ -1,0 +1,6 @@
+{
+  "sources": [
+    {"id": "support", "url": "https://docs.example.invalid/support", "claim": "The product supports offline export."},
+    {"id": "retention", "url": "https://docs.example.invalid/retention", "claim": "Audit events are retained for 30 days."}
+  ]
+}
