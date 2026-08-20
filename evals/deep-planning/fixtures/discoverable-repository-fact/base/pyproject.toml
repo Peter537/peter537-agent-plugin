@@ -1,0 +1,5 @@
+[tool.example_formatter]
+line_width = 88
+
+[tool.example_tasks]
+check = "python -m unittest discover -s tests"
