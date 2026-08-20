@@ -1,0 +1,7 @@
+interface:
+  display_name: "Evidence-Driven Codebase Pruning"
+  short_description: "Prove and retire dead or obsolete code safely"
+  default_prompt: "Use $prune-codebase to identify proven dead or obsolete repository surface, report stable candidates, and apply only the removals I approve."
+
+policy:
+  allow_implicit_invocation: true

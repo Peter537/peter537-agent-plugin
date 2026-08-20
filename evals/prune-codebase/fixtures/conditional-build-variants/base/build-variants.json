@@ -1,0 +1,4 @@
+{
+  "default": "linux",
+  "supported": ["linux", "windows"]
+}

@@ -1,7 +1,7 @@
 {
   "name": "peter537-agent-plugin",
   "version": "0.2.0",
-  "description": "Portable agent skills and MCP integrations for research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, behavior-preserving code simplification, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, UI design, MAUI Blazor browser development, and development workflows.",
+  "description": "Portable agent skills and MCP integrations for research, planning, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, UI design, MAUI Blazor browser development, and development workflows.",
   "author": {
     "name": "Peter537",
     "url": "https://github.com/Peter537"
@@ -26,6 +26,11 @@
     "code-simplification",
     "type-safety",
     "behavior-preserving-refactoring",
+    "comment-health",
+    "source-comments",
+    "codebase-pruning",
+    "dead-code",
+    "maintenance-drift",
     "code-audit",
     "dependency-audit",
     "privacy-audit",
@@ -41,8 +46,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Peter537 Agent Plugin",
-    "shortDescription": "Research, simplify, debug, audit, write, and design",
-    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, behavior-preserving code simplification, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, accessible product-specific UI design, and MAUI Blazor browser development.",
+    "shortDescription": "Research, prune, simplify, debug, audit, write, and design",
+    "longDescription": "Portable software workflows with optional MCP integrations for research, planning, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, accessible product-specific UI design, and MAUI Blazor browser development.",
     "developerName": "Peter537",
     "category": "Developer Tools",
     "capabilities": [

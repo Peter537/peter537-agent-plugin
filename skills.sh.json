@@ -12,10 +12,12 @@
     },
     {
       "title": "Engineering quality",
-      "description": "Investigate defects, audit implementations, and simplify code safely.",
+      "description": "Investigate defects, audit implementations and comments, simplify code, and retire obsolete surface safely.",
       "skills": [
         "deep-code-audit",
         "diagnose-bugs",
+        "comment-health",
+        "prune-codebase",
         "reduce-code-slop"
       ]
     },

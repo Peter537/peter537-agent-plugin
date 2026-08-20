@@ -1,6 +1,6 @@
 ---
 name: reduce-code-slop
-description: Simplify explicitly scoped C# or Python code without changing its established behavior. Use for clear requests to remove unnecessary indirection or generated boilerplate, harden weak type handling, de-slop an implementation, perform a focused simplification review, or apply already-configured simplification enforcement. Do not use for broad repository audits, bug diagnosis, architecture migrations, feature development, formatting-only cleanup, dependency installation, UI or prose work, or other languages.
+description: Simplify explicitly scoped C# or Python code without changing its established behavior. Use for clear requests to remove unnecessary indirection or generated boilerplate, harden weak type handling, de-slop an implementation, perform a focused simplification review, or apply already-configured simplification enforcement. Do not use for broad repository audits, repository-wide dead or obsolete surface pruning, bug diagnosis, architecture migrations, feature development, formatting-only cleanup, dependency installation, UI or prose work, or other languages.
 license: MIT
 ---
 
@@ -23,7 +23,7 @@ Reduce demonstrated implementation cost while preserving the behavior and constr
 - **Refactor:** make the smallest coherent behavior-preserving change requested by the user.
 - **Enforcement:** run, or adjust the configuration of, an already-configured repository tool only when the user explicitly requests enforcement work. Missing tooling is a gap, not permission to install it.
 
-If the request is a broad codebase assessment, route it to `$deep-code-audit`. Route concrete failure reproduction and causal repair to `$diagnose-bugs`, architecture or migration design to `$deep-planning`, dependency changes to `$audit-dependencies`, interface design to `$ui-design-and-polish`, and prose-only work to `$write-clearly` when those skills are available. Do not claim support for languages other than C# and Python.
+If the request is a broad codebase assessment, route it to `$deep-code-audit`. Route repository- or subsystem-wide proof and retirement of dead symbols, files, routes, assets, flags, shims, migration paths, or systemic policy drift to `$prune-codebase`. Route concrete failure reproduction and causal repair to `$diagnose-bugs`, architecture or migration design to `$deep-planning`, dependency changes to `$audit-dependencies`, interface design to `$ui-design-and-polish`, and prose-only work to `$write-clearly` when those skills are available. Keep local behavior-preserving C# or Python simplification here, and do not claim support for other languages.
 
 ## Load only the relevant guidance
 

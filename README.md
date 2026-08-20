@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, reader-first multilingual writing, evidence-driven bug diagnosis, behavior-preserving code simplification, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -9,11 +9,13 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 | `audit-data-exposure` | Review current repository content and reachable Git history for personal data, private artifacts, anonymization failures, and disposable migrations. |
 | `audit-dependencies` | Review every dependency and software supply-chain input before package changes or on request. |
 | `chatgpt-research` | Orchestrate and verify multi-source ChatGPT Deep Research. |
+| `comment-health` | Audit and safely improve source comments without losing contracts, rationale, documentation, or tool semantics. |
 | `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
 | `deep-planning` | Research and clarify complex software changes before implementation. |
 | `diagnose-bugs` | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. |
 | `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
 | `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
+| `prune-codebase` | Prove and retire dead or obsolete repository surface without guessing about consumers or compatibility. |
 | `reduce-code-slop` | Review and simplify scoped C# and Python code without changing behavior or hiding diagnostics. |
 | `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
 | `write-clearly` | Draft, edit, and audit repository prose for clarity, reader fit, fidelity, and voice in its source language. |
@@ -32,6 +34,8 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
 - `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
 - `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
+- `comment-health` keeps source comments and native-tool evidence local, protects comments with legal, documentation, or machine semantics, and previews broad cleanup candidates before editing.
+- `prune-codebase` treats analyzer results as candidates, preserves uncertain dynamic and external consumers, and previews broad removal candidates before editing.
 - `reduce-code-slop` inspects source, tests, and existing verification output locally, preserves justified complexity, and does not install analyzers or dependencies.
 - `write-clearly` keeps repository prose and author samples local by default, preserves protected meaning and format, and reports related findings outside the authorized edit scope without changing those files.
 - `playwright` requires Node.js 18 or newer.
@@ -109,6 +113,8 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $ui-design-and-polish to improve this product UI.`
 - `Use $write-clearly to improve this repository prose without changing its meaning or voice.`
 - `Use $chatgpt-research to compare the current official guidance.`
+- `Use $comment-health to review changed source comments for accuracy, value, and protected semantics.`
+- `Use $prune-codebase to find proven dead or obsolete repository surface and report removal candidates for approval.`
 
 ## Version
 

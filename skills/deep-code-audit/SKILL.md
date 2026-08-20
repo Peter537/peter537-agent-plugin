@@ -1,6 +1,6 @@
 ---
 name: deep-code-audit
-description: Perform evidence-backed, read-only audits of software repositories or scoped changes for correctness, security, maintainability, readability, state and data ownership, testability, performance, architecture, file organization, dependency risk, proportionate sensitive-data risk, accidental complexity, overengineering, and unnecessary implementation or change surface. Use for comprehensive codebase audits, security reviews, or deep review of a diff, branch, pull request, file, or subsystem. Do not use for dedicated bug reproduction or root-cause diagnosis, dependency-only reviews, personal-data or anonymization reviews, repository data-exposure audits, pre-addition supply-chain gates, dedicated C# or Python simplification and refactoring, routine implementation, simple style feedback, or a narrowly specified fix that does not request an audit.
+description: Perform evidence-backed, read-only audits of software repositories or scoped changes for correctness, security, maintainability, readability, state and data ownership, testability, performance, architecture, file organization, dependency risk, proportionate sensitive-data risk, accidental complexity, overengineering, and unnecessary implementation or change surface. Use for comprehensive codebase audits, security reviews, or deep review of a diff, branch, pull request, file, or subsystem. Do not use for dedicated bug diagnosis, dependency-only reviews, personal-data or repository-exposure audits, pre-addition supply-chain gates, dedicated source-comment health or codebase-pruning passes, dedicated C# or Python simplification, routine implementation, simple style feedback, or a narrowly specified fix that does not request an audit.
 license: MIT
 ---
 
@@ -58,6 +58,8 @@ Verify generated, vendored, binary, and build artifacts before excluding them. P
 - Keep proportionate dependency-risk coverage in broad audits. Route a dependency-only review or pre-addition supply-chain gate to `$audit-dependencies` when that skill is available.
 - Keep proportionate secret and sensitive-data coverage in broad audits. Route a dedicated personal-data, anonymization, repository-leak, or disposable-migration review to `$audit-data-exposure` when that skill is available.
 - Broad audits may identify likely defects, but route dedicated reproduction, debugging, regression, or root-cause investigation to `$diagnose-bugs` when that skill is available.
+- Broad audits may identify comment-code contradictions or harmful comment patterns proportionately. Route a dedicated source-comment, TODO, commented-out-code, or machine-directive review to `$comment-health` when that skill is available.
+- Broad audits may identify representative dead, obsolete, or drift-prone repository surface. Route a dedicated liveness, retirement, or codebase-pruning pass to `$prune-codebase` when that skill is available.
 - Broad audits retain proportionate accidental-complexity and change-quality coverage. Route a dedicated scoped C# or Python simplification review or authorized behavior-preserving refactor to `$reduce-code-slop` when that skill is available.
 
 ## Run bounded review lanes

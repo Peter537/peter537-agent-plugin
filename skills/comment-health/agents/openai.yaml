@@ -1,0 +1,7 @@
+interface:
+  display_name: "Source Comment Health"
+  short_description: "Audit and improve source comments safely"
+  default_prompt: "Use $comment-health to review these source comments for accuracy, value, placement, and protected semantics, then apply only the changes I authorize."
+
+policy:
+  allow_implicit_invocation: true

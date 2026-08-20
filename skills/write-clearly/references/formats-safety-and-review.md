@@ -18,7 +18,8 @@ Preserve the authoritative source and its machine-readable structure while editi
 ## Source comments and docstrings
 
 - Preserve comment delimiters, annotations, documentation tags, examples, and public API tooling syntax.
-- Explain contracts, invariants, side effects, non-obvious rationale, and public behavior; remove narration of self-evident syntax only when authorized.
+- For wording-only work, preserve established retention, technical meaning, and machine behavior while improving clarity and voice.
+- Route decisions about truth, necessity, locality, stale comments, TODOs, commented-out code, or machine directives to `$comment-health` when that skill is available.
 - Validate the containing source file with repository-native formatting, parsing, type, build, or test checks.
 
 ## UI, CLI, errors, and localization
