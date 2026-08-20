@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
+import stat
 import subprocess
 import sys
 import zipfile
@@ -31,8 +32,8 @@ DATABASE_EXTENSIONS = {".db", ".db3", ".mdb", ".sqlite", ".sqlite3"}
 ARCHIVE_EXTENSIONS = {".7z", ".bz2", ".gz", ".rar", ".tar", ".tgz", ".xz"}
 GENERATED_PARTS = {
     ".git", ".gradle", ".idea", ".mypy_cache", ".next", ".nuxt", ".pytest_cache",
-    ".tox", ".venv", ".vs", ".vscode", "__pycache__", "bin", "build", "coverage",
-    "dist", "node_modules", "obj", "out", "packages", "target", "vendor", "venv",
+    ".tox", ".venv", ".vs", "__pycache__", "bin", "build", "coverage",
+    "dist", "node_modules", "obj", "out", "target", "vendor", "venv",
 }
 
 PATTERNS = (
@@ -70,6 +71,45 @@ SENSITIVE_RECORD_FIELDS = {
 }
 
 
+def safe_git_environment() -> dict[str, str]:
+    """Return an environment that cannot redirect or instrument Git inspection."""
+    environment = {
+        name: value for name, value in os.environ.items() if not name.upper().startswith("GIT_")
+    }
+    environment.update(
+        {
+            "GIT_ATTR_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_SYSTEM": os.devnull,
+            "GIT_CREDENTIAL_INTERACTIVE": "never",
+            "GIT_LFS_SKIP_SMUDGE": "1",
+            "GIT_OPTIONAL_LOCKS": "0",
+            "GIT_PAGER": "cat",
+            "GIT_TERMINAL_PROMPT": "0",
+        }
+    )
+    return environment
+
+
+def safe_git_command(root: Path, *arguments: str) -> list[str]:
+    """Build a non-interactive Git command with execution-capable local config disabled."""
+    return [
+        "git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        f"core.hooksPath={os.devnull}",
+        "-c",
+        "credential.interactive=false",
+        "-c",
+        "protocol.allow=never",
+        "-C",
+        str(root),
+        *arguments,
+    ]
+
+
 class Scanner:
     def __init__(self, args: argparse.Namespace) -> None:
         self.args = args
@@ -79,6 +119,8 @@ class Scanner:
         self.exclusions: list[dict[str, str]] = []
         self.seen_units: set[tuple[str, str, str]] = set()
         self.seen_blobs: set[str] = set()
+        self.seen_location_units: set[tuple[str, str]] = set()
+        self.history_locators: dict[int, tuple[str, str]] = {}
         self.stats = {
             "files_considered": 0,
             "text_units_scanned": 0,
@@ -87,14 +129,20 @@ class Scanner:
             "bytes_scanned": 0,
         }
 
-    def git(self, *arguments: str, input_bytes: bytes | None = None, check: bool = True) -> bytes:
-        process = subprocess.run(
-            ["git", "-C", str(self.root), *arguments],
+    def git_process(
+        self, *arguments: str, input_bytes: bytes | None = None
+    ) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.run(
+            safe_git_command(self.root, *arguments),
             input=input_bytes,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=False,
+            env=safe_git_environment(),
         )
+
+    def git(self, *arguments: str, input_bytes: bytes | None = None, check: bool = True) -> bytes:
+        process = self.git_process(*arguments, input_bytes=input_bytes)
         if check and process.returncode != 0:
             raise RuntimeError(f"git command failed: {arguments[0] if arguments else 'unknown'}")
         return process.stdout
@@ -125,6 +173,8 @@ class Scanner:
         if member is not None:
             item["member"] = self.redacted_location(member)
         self.candidates.append(item)
+        if scope == "history" and commit is not None:
+            self.history_locators[id(item)] = (commit, path)
 
     def add_gap(self, category: str, scope: str, path: str = "") -> None:
         item = {"category": category, "scope": scope}
@@ -144,6 +194,32 @@ class Scanner:
         while normalized.startswith("./"):
             normalized = normalized[2:]
         return normalized
+
+    @classmethod
+    def safe_selected_path(cls, value: str) -> str:
+        normalized = cls.normalized(value)
+        path = PurePosixPath(normalized)
+        if (
+            not value.strip()
+            or "\x00" in value
+            or any(ord(character) < 32 for character in value)
+            or path.is_absolute()
+            or bool(path.anchor)
+            or re.match(r"^[A-Za-z]:", normalized) is not None
+            or not path.parts
+            or any(part in {"", ".", ".."} for part in path.parts)
+            or any(part.casefold() == ".git" for part in path.parts)
+        ):
+            raise ValueError("unsafe repository-relative path")
+        return path.as_posix()
+
+    @staticmethod
+    def is_link_or_reparse_point(path: Path) -> bool:
+        metadata = path.stat(follow_symlinks=False)
+        if stat.S_ISLNK(metadata.st_mode):
+            return True
+        attributes = getattr(metadata, "st_file_attributes", 0)
+        return bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0))
 
     @staticmethod
     def location_component_is_sensitive(component: str) -> bool:
@@ -185,6 +261,15 @@ class Scanner:
             if address.version == 4 and address.is_global:
                 self.add_candidate("path-public-ip-address", "medium", scope, path, commit=commit, member=member)
 
+    def scan_location_once(
+        self, location: str, scope: str, path: str, commit: str | None = None
+    ) -> None:
+        key = (scope, self.normalized(location))
+        if key in self.seen_location_units:
+            return
+        self.seen_location_units.add(key)
+        self.scan_location_name(location, scope, path, commit)
+
     @staticmethod
     def generated(path: str) -> bool:
         parts = {part.lower() for part in PurePosixPath(path.replace("\\", "/")).parts}
@@ -195,6 +280,32 @@ class Scanner:
             return True
         normalized = self.normalized(path)
         return any(normalized == item or normalized.startswith(item.rstrip("/") + "/") for item in selected)
+
+    @staticmethod
+    def validate_revision_text(value: str) -> None:
+        if (
+            not value
+            or value.startswith("-")
+            or any(character.isspace() or ord(character) < 32 for character in value)
+            or "\x00" in value
+            or ":" in value
+            or "\\" in value
+        ):
+            raise ValueError("unsafe Git revision")
+
+    def resolve_base_revision(self, value: str) -> str:
+        self.validate_revision_text(value)
+        resolved = self.git_text(
+            "rev-parse", "--verify", "--end-of-options", f"{value}^{{commit}}"
+        ).strip()
+        if re.fullmatch(r"[0-9a-fA-F]{40,64}", resolved) is None:
+            raise ValueError("invalid Git base revision")
+        return resolved
+
+    def validate_history_revision(self, value: str) -> str:
+        self.validate_revision_text(value)
+        self.git("rev-list", "--max-count=1", "--end-of-options", value)
+        return value
 
     def scan_text(
         self,
@@ -266,8 +377,8 @@ class Scanner:
             if info.file_size > self.args.max_archive_member_bytes:
                 self.add_gap("oversized-archive-member", scope, path)
                 continue
-            total += info.file_size
-            if total > self.args.max_archive_total_bytes:
+            remaining = self.args.max_archive_total_bytes - total
+            if remaining <= 0 or info.file_size > remaining:
                 self.add_gap("archive-expanded-size-limit", scope, path)
                 break
             if info.compress_size and info.file_size / max(info.compress_size, 1) > self.args.max_compression_ratio:
@@ -275,12 +386,22 @@ class Scanner:
                 continue
             suffix = Path(member).suffix.lower()
             if suffix not in TEXT_EXTENSIONS and suffix not in {".rels"}:
+                self.add_gap("unsupported-archive-member-format", scope, path)
                 continue
+            read_limit = min(self.args.max_archive_member_bytes, remaining)
             try:
-                member_data = archive.read(info)
-            except (RuntimeError, OSError, zipfile.BadZipFile):
+                with archive.open(info) as member_stream:
+                    member_data = member_stream.read(read_limit + 1)
+            except (EOFError, NotImplementedError, RuntimeError, OSError, zipfile.BadZipFile):
                 self.add_gap("unreadable-archive-member", scope, path)
                 continue
+            if len(member_data) > self.args.max_archive_member_bytes:
+                self.add_gap("oversized-archive-member", scope, path)
+                continue
+            if len(member_data) > remaining:
+                self.add_gap("archive-expanded-size-limit", scope, path)
+                break
+            total += len(member_data)
             if not self.looks_textual(member_data, member):
                 continue
             self.stats["archive_members_scanned"] += 1
@@ -293,7 +414,7 @@ class Scanner:
             return
         self.seen_units.add(unit)
         self.stats["files_considered"] += 1
-        self.scan_location_name(path, scope, path, commit)
+        self.scan_location_once(path, scope, path, commit)
         if len(data) > self.args.max_bytes:
             self.add_gap("oversized-file", scope, path)
             return
@@ -322,18 +443,36 @@ class Scanner:
         self.stats["bytes_scanned"] += len(data)
         self.scan_text(data.decode("utf-8", errors="replace"), scope, path, commit)
 
-    def read_worktree(self, path: str) -> bytes | None:
-        candidate = (self.root / path).resolve()
+    def read_worktree(self, path: str, scope: str) -> bytes | None:
         try:
-            candidate.relative_to(self.root)
+            relative = PurePosixPath(self.safe_selected_path(path))
         except ValueError:
+            self.add_gap("unsafe-repository-path-not-inspected", scope, path)
             return None
-        if not candidate.is_file() or candidate.is_symlink():
+        candidate = self.root.joinpath(*relative.parts)
+        current = self.root
+        for part in relative.parts:
+            current = current / part
+            if os.path.lexists(current):
+                try:
+                    if self.is_link_or_reparse_point(current):
+                        self.add_gap("symlink-or-reparse-target-not-inspected", scope, path)
+                        return None
+                except OSError:
+                    self.add_gap("unreadable-worktree-path", scope, path)
+                    return None
+        resolved = candidate.resolve(strict=False)
+        try:
+            resolved.relative_to(self.root)
+        except ValueError:
+            self.add_gap("path-outside-repository-not-inspected", scope, path)
+            return None
+        if not candidate.is_file():
             return None
         try:
             return candidate.read_bytes()
         except OSError:
-            self.add_gap("unreadable-worktree-file", "worktree", path)
+            self.add_gap("unreadable-worktree-file", scope, path)
             return None
 
     def scan_worktree_paths(self, paths: set[str], scope: str) -> None:
@@ -341,7 +480,7 @@ class Scanner:
             if self.generated(path):
                 self.add_exclusion("generated-or-dependency-cache", path)
                 continue
-            data = self.read_worktree(path)
+            data = self.read_worktree(path, scope)
             if data is not None:
                 self.scan_bytes(data, scope, path)
 
@@ -363,6 +502,9 @@ class Scanner:
                 continue
             if mode == "160000":
                 self.add_gap("submodule-content-not-inspected", "index", path)
+                continue
+            if mode == "120000":
+                self.add_gap("symlink-target-not-inspected", "index", path)
                 continue
             if self.generated(path):
                 self.add_exclusion("generated-or-dependency-cache", path)
@@ -396,18 +538,40 @@ class Scanner:
         self.scan_index(tracked)
 
     def scan_ref_file(self, ref: str, path: str, scope: str) -> None:
-        process = subprocess.run(
-            ["git", "-C", str(self.root), "show", f"{ref}:{path}"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-        )
+        process = self.git_process("show", f"{ref}:{path}")
         if process.returncode == 0:
             self.scan_bytes(process.stdout, scope, path, ref if re.fullmatch(r"[0-9a-fA-F]{7,64}", ref) else None)
 
-    def changed_paths(self, arguments: list[str]) -> set[str]:
-        output = self.git_text(*arguments, "--name-only", "-z", "--")
-        return {self.normalized(item) for item in output.split("\0") if item}
+    def changed_paths(self, arguments: list[str]) -> tuple[set[str], set[str]]:
+        output = self.git_text(*arguments, "--name-status", "-z", "--find-renames", "--")
+        tokens = [token for token in output.split("\0") if token]
+        current_paths: set[str] = set()
+        base_paths: set[str] = set()
+        index = 0
+        while index < len(tokens):
+            status = tokens[index].lstrip("\r\n")
+            index += 1
+            if not status:
+                continue
+            code = status[0]
+            if code in {"R", "C"}:
+                if index + 1 >= len(tokens):
+                    break
+                old_path = self.normalized(tokens[index])
+                new_path = self.normalized(tokens[index + 1])
+                index += 2
+                base_paths.add(old_path)
+                current_paths.add(new_path)
+                continue
+            if index >= len(tokens):
+                break
+            path = self.normalized(tokens[index])
+            index += 1
+            if code != "D":
+                current_paths.add(path)
+            if code != "A":
+                base_paths.add(path)
+        return current_paths, base_paths
 
     def scan_changes(self) -> None:
         untracked = {
@@ -416,17 +580,23 @@ class Scanner:
             if item
         }
         if self.args.base:
-            changed = self.changed_paths(["diff", self.args.base])
-            base_ref = self.args.base
+            current_paths, base_paths = self.changed_paths(["diff", self.args.base])
+            current = current_paths | untracked
+            self.scan_worktree_paths(current, "changes-worktree")
+            self.scan_index(set(self.index_entries()) & (current_paths | base_paths))
+            for path in sorted(base_paths):
+                self.scan_ref_file(self.args.base, path, "changes-base")
         else:
-            changed = self.changed_paths(["diff"]) | self.changed_paths(["diff", "--cached"])
-            base_ref = "HEAD"
-        current = changed | untracked
-        self.scan_worktree_paths(current, "changes-worktree")
-        index_paths = set(self.index_entries()) & changed
-        self.scan_index(index_paths)
-        for path in sorted(changed):
-            self.scan_ref_file(base_ref, path, "changes-base")
+            unstaged_current, unstaged_base = self.changed_paths(["diff"])
+            staged_current, staged_base = self.changed_paths(["diff", "--cached"])
+            current = unstaged_current | staged_current | untracked
+            self.scan_worktree_paths(current, "changes-worktree")
+            index_paths = set(self.index_entries()) & (
+                unstaged_current | unstaged_base | staged_current | staged_base
+            )
+            self.scan_index(index_paths)
+            for path in sorted(staged_base):
+                self.scan_ref_file("HEAD", path, "changes-base")
 
     def expand_paths_via_renames(self, selected: set[str]) -> set[str]:
         expanded = set(selected)
@@ -435,7 +605,7 @@ class Scanner:
         renames: list[tuple[str, str]] = []
         index = 0
         while index < len(tokens):
-            token = tokens[index]
+            token = tokens[index].lstrip("\r\n")
             if token.startswith("R") and index + 2 < len(tokens):
                 renames.append((self.normalized(tokens[index + 1]), self.normalized(tokens[index + 2])))
                 index += 3
@@ -452,20 +622,68 @@ class Scanner:
                             changed = True
         return expanded
 
-    def object_records(self, revision: str, selected: set[str]) -> list[tuple[str, str]]:
-        arguments = ["rev-list", "--objects"]
+    def object_records(
+        self, revision: str, selected: set[str]
+    ) -> list[tuple[str, str, str, str]]:
+        arguments = [
+            "log",
+            "--raw",
+            "--root",
+            "-m",
+            "--no-renames",
+            "--no-abbrev",
+            "-z",
+            "--format=",
+        ]
         if revision == "--all":
             arguments.append("--all")
         else:
-            arguments.append(revision)
-        output = self.git_text(*arguments, check=False)
-        records: list[tuple[str, str]] = []
-        for line in output.splitlines():
-            object_id, _, path = line.partition(" ")
-            if not path or not self.matches_paths(path, selected):
+            arguments.extend(["--end-of-options", revision])
+        if selected:
+            arguments.append("--")
+            arguments.extend(sorted(selected))
+        tokens = self.git_text(*arguments, check=False).split("\0")
+        records: set[tuple[str, str, str, str]] = set()
+        zero_id = re.compile(r"0+\Z")
+        index = 0
+        while index < len(tokens):
+            header = tokens[index].lstrip("\r\n")
+            index += 1
+            if not header.startswith(":"):
                 continue
-            records.append((object_id, self.normalized(path)))
-        return records
+            fields = header[1:].split()
+            if len(fields) < 5 or index >= len(tokens):
+                continue
+            old_mode, new_mode, old_id, new_id, status = fields[:5]
+            old_path = self.normalized(tokens[index])
+            index += 1
+            new_path = old_path
+            if status[:1] in {"R", "C"} and index < len(tokens):
+                new_path = self.normalized(tokens[index])
+                index += 1
+            for mode, object_id, path in (
+                (old_mode, old_id, old_path),
+                (new_mode, new_id, new_path),
+            ):
+                if (
+                    mode == "000000"
+                    or zero_id.fullmatch(object_id) is not None
+                    or re.fullmatch(r"[0-9a-fA-F]{40,64}", object_id) is None
+                    or not self.matches_paths(path, selected)
+                ):
+                    continue
+                object_type = "commit" if mode == "160000" else "blob"
+                records.add((object_id, path, mode, object_type))
+        return sorted(
+            records,
+            key=lambda record: (
+                record[1].casefold(),
+                record[1],
+                record[2],
+                record[0],
+                record[3],
+            ),
+        )
 
     def blob_metadata(self, object_ids: list[str]) -> dict[str, tuple[str, int]]:
         if not object_ids:
@@ -479,10 +697,15 @@ class Scanner:
                 metadata[parts[0]] = (parts[1], int(parts[2]))
         return metadata
 
-    def scan_commit_messages(self, revision: str) -> None:
-        args = ["log"]
-        args.append("--all" if revision == "--all" else revision)
-        args.append("--format=%H%x1f%an%x1f%ae%x1f%B%x1e")
+    def scan_commit_messages(self, revision: str, selected: set[str]) -> None:
+        args = ["log", "--format=%H%x1f%an%x1f%ae%x1f%B%x1e"]
+        if revision == "--all":
+            args.append("--all")
+        else:
+            args.extend(["--end-of-options", revision])
+        if selected:
+            args.append("--")
+            args.extend(sorted(selected))
         output = self.git_text(*args, check=False)
         for record in output.split("\x1e"):
             parts = record.split("\x1f", 3)
@@ -514,9 +737,21 @@ class Scanner:
 
     def scan_history(self, revision: str, selected: set[str]) -> None:
         records = self.object_records(revision, selected)
-        metadata = self.blob_metadata([object_id for object_id, _ in records])
-        for object_id, path in records:
+        regular_records: list[tuple[str, str]] = []
+        for object_id, path, mode, object_type in records:
+            self.scan_location_once(path, "history", path, object_id)
+            if mode == "120000":
+                self.add_gap("historical-symlink-target-not-inspected", "history", path)
+                continue
+            if mode == "160000":
+                self.add_gap("historical-submodule-content-not-inspected", "history", path)
+                continue
+            if object_type == "blob":
+                regular_records.append((object_id, path))
+        metadata = self.blob_metadata([object_id for object_id, _ in regular_records])
+        for object_id, path in regular_records:
             if object_id in self.seen_blobs:
+                self.scan_location_once(path, "history", path, object_id)
                 continue
             object_type, size = metadata.get(object_id, ("unknown", 0))
             if object_type != "blob":
@@ -528,8 +763,8 @@ class Scanner:
             data = self.git("cat-file", "blob", object_id)
             self.stats["history_blobs_scanned"] += 1
             self.scan_bytes(data, "history", path, object_id)
-        self.scan_commit_messages(revision)
-        if revision == "--all":
+        self.scan_commit_messages(revision, selected)
+        if revision == "--all" and not selected:
             self.scan_annotated_tags()
 
     def resolve_history_candidate_commits(self, revision: str) -> None:
@@ -537,15 +772,32 @@ class Scanner:
         for item in self.candidates:
             if item.get("scope") != "history" or "commit" not in item:
                 continue
-            blob = str(item["commit"])
-            path = str(item["path"])
+            locator = self.history_locators.get(id(item))
+            if locator is None:
+                item.pop("commit", None)
+                continue
+            blob, path = locator
             key = (blob, path)
             if key not in cache:
-                arguments = ["log"]
-                arguments.append("--all" if revision == "--all" else revision)
-                arguments.extend(["--format=%H", f"--find-object={blob}", "--", path])
+                arguments = ["log", "--format=%H", f"--find-object={blob}"]
+                if revision == "--all":
+                    arguments.append("--all")
+                else:
+                    arguments.extend(["--end-of-options", revision])
+                arguments.extend(["--", path])
                 commits = self.git_text(*arguments, check=False).splitlines()
-                cache[key] = commits[0].strip() if commits else None
+                containing_commit: str | None = None
+                for commit in commits:
+                    commit = commit.strip()
+                    if not commit:
+                        continue
+                    entry = self.git_text("ls-tree", commit, "--", path, check=False)
+                    metadata, _, listed_path = entry.partition("\t")
+                    fields = metadata.split()
+                    if listed_path and len(fields) >= 3 and fields[2] == blob:
+                        containing_commit = commit
+                        break
+                cache[key] = containing_commit
             resolved = cache[key]
             if resolved:
                 item["commit"] = resolved
@@ -564,8 +816,12 @@ class Scanner:
     def execute(self) -> dict[str, object]:
         if self.git_text("rev-parse", "--is-inside-work-tree", check=False).strip() != "true":
             raise RuntimeError("root is not a Git working tree")
+        if self.args.base:
+            self.args.base = self.resolve_base_revision(self.args.base)
+        if self.args.git_range:
+            self.args.git_range = self.validate_history_revision(self.args.git_range)
         self.repository_gaps()
-        selected = {self.normalized(path) for path in self.args.paths}
+        selected = {self.safe_selected_path(path) for path in self.args.paths}
         if selected:
             selected = self.expand_paths_via_renames(selected)
 

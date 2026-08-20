@@ -1,0 +1,2 @@
+record_id,full_name,email,status
+fixture-1,Fixture Person,fixture.person@example.invalid,pending

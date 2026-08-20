@@ -1,0 +1,4 @@
+Synthetic fixture only
+schema: fixture-v1
+status: synthetic
+owner: evaluation

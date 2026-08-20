@@ -1,0 +1,4 @@
+fixture.person@example.invalid
+schema: fixture-v1
+status: synthetic
+owner: evaluation
