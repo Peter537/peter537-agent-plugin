@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <ItemGroup><ProjectReference Include="../SharedUi/SharedUi.csproj" /></ItemGroup>
+</Project>

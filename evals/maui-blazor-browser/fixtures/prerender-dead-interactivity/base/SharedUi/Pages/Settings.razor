@@ -1,0 +1,8 @@
+@page "/settings"
+<button @onclick="Save">Save</button>
+<p>@status</p>
+
+@code {
+    private string status = "Not saved";
+    private void Save() => status = "Saved";
+}

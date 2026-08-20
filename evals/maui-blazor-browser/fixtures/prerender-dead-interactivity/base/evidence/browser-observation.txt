@@ -1,0 +1,3 @@
+GET /settings returned 200 and the Save button appeared.
+No /_blazor negotiation request occurred.
+Clicking Save did not change the status text.

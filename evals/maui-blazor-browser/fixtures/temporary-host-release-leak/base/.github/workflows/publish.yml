@@ -1,0 +1,8 @@
+name: Publish
+on: workflow_dispatch
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: dotnet publish .dev-browser-harness/Harness.csproj --configuration Release
