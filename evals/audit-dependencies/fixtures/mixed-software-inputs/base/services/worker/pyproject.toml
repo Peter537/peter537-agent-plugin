@@ -1,0 +1,4 @@
+[project]
+name = "fixture-worker"
+version = "0.0.0"
+dependencies = ["fixture-queue==2.0.0"]

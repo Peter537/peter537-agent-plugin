@@ -29,13 +29,13 @@ Perform a coverage-complete, evidence-backed review of the repository's software
 
 ## 2. Inventory every software input
 
-Run the bundled read-only inventory first:
+Resolve this skill's installed directory, then run its bundled read-only inventory from that absolute script path. Do not assume the repository under review contains a `scripts/` directory:
 
 ```text
-python scripts/inventory_dependency_files.py <repository-root> --format json
+python <audit-dependencies-skill-directory>/scripts/inventory_dependency_files.py <repository-root> --format json
 ```
 
-Use the script as a discovery aid, not as the coverage conclusion. Inspect the returned files and supplement it with repository-specific evidence. Inventory all of the following:
+The versioned output uses repository-relative paths, redacts referenced coordinates by default, records unreadable, malformed, oversized, linked, or unavailable Git evidence under `gaps`, and lists every directory skipped by its generated/cache name policy under `exclusions`. Confirm each exclusion from repository context before treating it as generated; an ambiguous source-shaped `bin`, `build`, `env`, or similarly named tree remains a coverage obligation. Inspect sensitive coordinates directly in their local source file only when necessary; do not paste them into a command or report. Use the script as a discovery aid, not as the coverage conclusion. Inspect the returned files and supplement it with repository-specific evidence. Inventory all of the following:
 
 - Direct and transitive language packages in every root, nested project, workspace, example, tool, test, and deployment project.
 - Manifests, lockfiles, dependency constraints, workspace definitions, central version catalogs, build plugins, code generators, and package-manager configuration.

@@ -1,0 +1,1 @@
+{"name":"fixture-native-candidate","version":"1.0.0","scripts":{"install":"node install.js"},"bin":{"fixture-native":"bin/fixture-native"},"dependencies":{}}

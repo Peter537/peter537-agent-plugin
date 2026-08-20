@@ -1,0 +1,1 @@
+{"source":"synthetic-local-evaluation","advisories":[{"id":"EVAL-DIRECT-001","package":"fixture-direct-parser","affected":"1.4.0","fixed":"1.4.1","severity":"high","reachability":"unknown"},{"id":"EVAL-TRANSITIVE-002","package":"fixture-transitive-codec","affected":"3.1.0","fixed":"3.1.2","severity":"critical","reachability":"unknown"}]}

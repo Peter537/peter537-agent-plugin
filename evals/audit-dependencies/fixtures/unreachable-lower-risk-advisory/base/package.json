@@ -1,0 +1,1 @@
+{"name":"fixture-linux-service","private":true,"os":["linux"],"optionalDependencies":{"fixture-win-helper":"1.0.0"}}

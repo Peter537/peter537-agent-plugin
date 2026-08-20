@@ -1,0 +1,1 @@
+{"deployment_targets":["linux-x64"],"advisory":{"id":"EVAL-OPTIONAL-003","package":"fixture-win-helper","affected":"1.0.0","severity":"low","condition":"Windows-only optional execution path"}}

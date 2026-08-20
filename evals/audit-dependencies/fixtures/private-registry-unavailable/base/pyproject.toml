@@ -1,0 +1,8 @@
+[project]
+name = "private-fixture-app"
+version = "0.0.0"
+dependencies = ["private-fixture-core>=7"]
+
+[[tool.uv.index]]
+name = "private"
+url = "https://private-registry.example.invalid/simple"

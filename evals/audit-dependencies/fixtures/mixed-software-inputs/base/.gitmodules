@@ -1,0 +1,3 @@
+[submodule "fixture-tool"]
+	path = external/fixture-tool
+	url = https://git.example.invalid/tools/fixture-tool.git

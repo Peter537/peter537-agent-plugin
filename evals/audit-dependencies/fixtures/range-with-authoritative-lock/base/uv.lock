@@ -1,0 +1,14 @@
+version = 1
+
+[[package]]
+name = "fixture-http"
+version = "2.4.1"
+source = { registry = "https://example.invalid/simple" }
+sdist = { url = "https://example.invalid/fixture-http-2.4.1.tar.gz", hash = "sha256:fixture-http" }
+dependencies = [{ name = "fixture-url" }]
+
+[[package]]
+name = "fixture-url"
+version = "1.0.2"
+source = { registry = "https://example.invalid/simple" }
+sdist = { url = "https://example.invalid/fixture-url-1.0.2.tar.gz", hash = "sha256:fixture-url" }

@@ -20,6 +20,7 @@ Use this reference to identify exact-resolution evidence and select commands tha
 - Record the package-manager and scanner versions because lock interpretation and advisory behavior can differ by version.
 - Check all workspaces, optional groups, development and test groups, build plugins, and platform-specific sections. A root lockfile may or may not cover every nested project.
 - Compare manifest and lockfile consistency. Exact entries in a stale or partial lockfile are not reliable evidence of the requested graph.
+- Treat the bundled inventory's `schemaVersion: 1` result as a privacy-safe discovery ledger: `root` is `.`; `items` use repository-relative paths; referenced coordinates are redacted unless they are immutable Gitlink commits; `gaps` records inputs that could not be inspected safely; and `exclusions` names every directory skipped by the generated/cache policy. Confirm each exclusion from repository evidence before closing coverage because source workspaces may use ambiguous names such as `bin`, `build`, or `env`. Read a redacted coordinate from its local source only when the review requires it, and never copy a private value into transmitted output.
 
 ## Language ecosystems
 

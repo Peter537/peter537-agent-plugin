@@ -1,0 +1,6 @@
+jobs:
+  build:
+    container:
+      image: registry.example.invalid/build-image:1
+    steps:
+      - uses: fixture-org/build-action@0123456789abcdef0123456789abcdef01234567
