@@ -1,0 +1,4 @@
+{
+  "checkCommand": "doclint README.md docs",
+  "toolDeclaredAsDependency": false
+}
