@@ -136,7 +136,7 @@ Return exactly one overall outcome:
 
 - `FIXED`: a causal repair was completed and the original signal plus relevant validation now pass.
 - `DIAGNOSED`: the causal mechanism is established, but repair was not requested or cannot be performed safely.
-- `INCONCLUSIVE`: evidence narrowed the issue without establishing a trustworthy causal mechanism.
-- `BLOCKED`: required access, environment, permission, or safe evidence is unavailable.
+- `INCONCLUSIVE`: safe evidence was gathered and narrowed or tested the issue, but it does not establish a trustworthy causal mechanism. The next discriminating observation may still be unavailable.
+- `BLOCKED`: meaningful investigation or repair cannot start or continue because required access, environment, permission, authority, or safe evidence is unavailable. Do not use `BLOCKED` merely because an otherwise useful investigation ended without a causal conclusion.
 
 Report the bug contract, evidence and causal explanation, repair and regression guard, verification, repository hygiene, unresolved alternatives, residual risk, and precise next step. A conclusion is bounded by demonstrated evidence; never call it definitive beyond that boundary.

@@ -1,0 +1,4 @@
+Runner: linux-arm64-special
+Observed stage: native transport initialization
+Result: process exited before the first application callback
+Missing capture: loader diagnostics from the same runner image and revision
