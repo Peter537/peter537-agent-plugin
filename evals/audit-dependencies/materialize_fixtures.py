@@ -310,7 +310,7 @@ def apply_overlay(source: Path, destination: Path, paths: list[str]) -> None:
         source_path = source / relative
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source_path, target)
+        shutil.copyfile(source_path, target)
 
 
 def inject_untrusted_canary(repository: Path, relative_path: str) -> None:
