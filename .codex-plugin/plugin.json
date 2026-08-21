@@ -1,6 +1,6 @@
 {
   "name": "peter537-agent-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Portable agent skills and MCP integrations for research, planning, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, UI design, MAUI Blazor browser development, and development workflows.",
   "author": {
     "name": "Peter537",
