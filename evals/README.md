@@ -2,6 +2,8 @@
 
 This directory contains repository-maintenance evaluations for the skills distributed by Peter537 Agent Plugin. The evaluation assets are not installed with an individual skill and are not runtime dependencies of the plugin.
 
+Use the [repository verification map](../docs/verification.md) to select the complete evidence required for a changed surface. This file remains the authority for eval-specific commands and safety constraints.
+
 ## Suite contract
 
 Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command.
@@ -48,7 +50,7 @@ Retain a skill change only when it corrects a reproduced failure and the revised
 
 ## Deterministic and live checks
 
-Deterministic offline checks are the required baseline. Run standard-library tests with `python -m unittest discover -s evals/<skill>/tests -v` when a suite provides them.
+Deterministic offline checks are the required baseline. Run standard-library tests with `python -B -m unittest discover -s evals/<skill>/tests -v` when a suite provides them.
 
 Cases under a manifest's `liveCases` field are optional and require separate authorization. They may use only the exact public data and destination named by the case. Never track account-specific browser state, ChatGPT conversation URLs, live reports, private package coordinates, or repository content transmitted to an external service.
 

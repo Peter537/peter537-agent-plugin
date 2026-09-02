@@ -48,5 +48,5 @@ This catalog organizes the plugin's skills for readers without changing their in
 - Add the matching maintenance suite at `evals/<slug>/cases.json`.
 - Assign the slug to exactly one group in [`skills.sh.json`](../../skills.sh.json).
 - Add its package, purpose, and evaluation links to this catalog.
-- Run the repository-layout checks, the skill validator, and the complete plugin validator.
+- Run the repository-layout checks, the skill validator, the complete plugin validator, and every applicable check in the [repository verification map](../verification.md).
 - During release preparation, update the applicable manifests, installation guidance, submission copy, evaluation bundle, and release notes.
