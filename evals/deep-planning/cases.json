@@ -161,16 +161,21 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-architecture", "prompt": "Plan the architecture for splitting this service while preserving its public contracts.", "expectActivation": true},
-    {"id": "trigger-migration", "prompt": "Research and plan this database migration, including sequencing and rollback gates.", "expectActivation": true},
-    {"id": "trigger-parity", "prompt": "Inventory which legacy behaviors to migrate, redesign, replace, or retire.", "expectActivation": true},
-    {"id": "trigger-adr", "prompt": "Prepare an evidence-backed ADR recommendation for these two storage designs.", "expectActivation": true},
-    {"id": "trigger-complex-refactor", "prompt": "Clarify the decisions and create a decision-complete plan for this cross-package refactor.", "expectActivation": true},
-    {"id": "trigger-retirement-sequencing", "prompt": "Plan the staged retirement of this compatibility layer, including consumers, rollback, and acceptance gates.", "expectActivation": true},
-    {"id": "near-miss-decision-complete", "prompt": "Change the button label from Save to Apply in settings.html and run the existing test.", "expectActivation": false},
-    {"id": "near-miss-debugging", "prompt": "Reproduce and root-cause this failing integration test.", "expectActivation": false},
-    {"id": "near-miss-audit", "prompt": "Perform a comprehensive read-only code audit of this repository.", "expectActivation": false},
-    {"id": "near-miss-dependencies", "prompt": "Review all transitive dependencies before upgrading the lockfile.", "expectActivation": false},
-    {"id": "near-miss-implementation", "prompt": "Implement the already specified parser change now.", "expectActivation": false}
+    {"id": "trigger-explicit-invocation", "prompt": "Use $deep-planning to research this software change, clarify material decisions, and prepare the requested planning deliverable.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-architecture", "prompt": "Plan the architecture for splitting this service while preserving its public contracts.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-migration", "prompt": "Research and plan this database migration, including sequencing and rollback gates.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-parity", "prompt": "Inventory which legacy behaviors to migrate, redesign, replace, or retire.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-adr", "prompt": "Prepare an evidence-backed ADR recommendation for these two storage designs.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-complex-refactor", "prompt": "Clarify the decisions and create a decision-complete plan for this cross-package refactor.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-retirement-sequencing", "prompt": "Plan the staged retirement of this compatibility layer, including consumers, rollback, and acceptance gates.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "trigger-full-catalog-plan", "prompt": "Research and prepare a decision-complete plan for migrating this monolith across data, UI, dependencies, documentation, compatibility, and rollout constraints.", "expectActivation": true, "expectedOwner": "deep-planning"},
+    {"id": "near-miss-decision-complete", "prompt": "Change the button label from Save to Apply in settings.html and run the existing test.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-debugging", "prompt": "Reproduce and root-cause this failing integration test.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-audit", "prompt": "Perform a comprehensive read-only code audit of this repository.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-dependencies", "prompt": "Review all transitive dependencies before upgrading the lockfile.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-implementation", "prompt": "Implement the already specified parser change now.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-deep-research", "prompt": "Research current external standards and vendor evidence to resolve this product decision with traceable citations.", "expectActivation": false, "expectedOwner": "chatgpt-research"},
+    {"id": "near-miss-pruning", "prompt": "Find proven dead code and obsolete repository surface, then report stable removal candidates.", "expectActivation": false, "expectedOwner": "prune-codebase"},
+    {"id": "near-miss-full-catalog-implementation", "prompt": "Implement the already specified parser change, add the existing-framework regression test, and update README.md with the verified command.", "expectActivation": false, "expectedOwner": "ordinary-implementation"}
   ]
 }

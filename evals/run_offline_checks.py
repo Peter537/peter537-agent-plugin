@@ -14,6 +14,7 @@ import argparse
 from dataclasses import dataclass, field
 import hashlib
 import html
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath, PureWindowsPath
@@ -26,6 +27,38 @@ import tokenize
 from typing import Callable, Iterable, Mapping, Sequence
 import unicodedata
 from urllib.parse import unquote_to_bytes
+
+_METADATA_BOOTSTRAP_FAILED = False
+try:
+    if __package__:
+        from evals.maintenance_metadata import (
+            BoundedYamlParseError,
+            parse_bounded_yaml as _parse_bounded_yaml,
+        )
+    else:
+        _metadata_path = Path(__file__).with_name("maintenance_metadata.py")
+        _metadata_spec = importlib.util.spec_from_file_location(
+            "_p537_offline_maintenance_metadata",
+            _metadata_path,
+        )
+        if _metadata_spec is None or _metadata_spec.loader is None:
+            raise ImportError
+        _metadata_module = importlib.util.module_from_spec(_metadata_spec)
+        _metadata_spec.loader.exec_module(_metadata_module)
+        BoundedYamlParseError = _metadata_module.BoundedYamlParseError
+        _parse_bounded_yaml = _metadata_module.parse_bounded_yaml
+except Exception:
+    _METADATA_BOOTSTRAP_FAILED = True
+
+    class BoundedYamlParseError(ValueError):
+        """The shared maintenance parser could not be loaded safely."""
+
+        def __init__(self, code: str) -> None:
+            super().__init__(code)
+            self.code = code
+
+    def _parse_bounded_yaml(_text: str) -> dict[str, object]:
+        raise BoundedYamlParseError("metadata-bootstrap")
 
 
 CHILD_TIMEOUT_SECONDS = 120
@@ -84,10 +117,6 @@ _EXTERNAL_SCHEMES = {
     "skill",
     "tel",
 }
-_YAML_KEY = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
-_PLAIN_YAML_NUMBER = re.compile(
-    r"[-+]?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?$"
-)
 _HEADING = re.compile(r"^[ ]{0,3}(#{1,6})[ \t]+(.+?)[ \t]*#*[ \t]*$")
 _REFERENCE_DEFINITION = re.compile(
     r"^[ ]{0,3}\[([^\]\n]+)\]:[ \t]*(?:<([^>\n]+)>|(\S+))",
@@ -681,79 +710,13 @@ def validate_json_file(path: Path) -> None:
         raise ContentValidationError("json") from error
 
 
-def _parse_yaml_scalar(raw: str) -> object:
-    value = raw.strip()
-    if not value:
-        raise ContentValidationError("empty-yaml-scalar")
-    if value.startswith('"'):
-        try:
-            parsed = json.loads(value)
-        except json.JSONDecodeError as error:
-            raise ContentValidationError("yaml-string") from error
-        if not isinstance(parsed, str):
-            raise ContentValidationError("yaml-scalar")
-        return parsed
-    if value.startswith("'"):
-        if len(value) < 2 or not value.endswith("'"):
-            raise ContentValidationError("yaml-string")
-        return value[1:-1].replace("''", "'")
-    value = re.split(r"[ \t]+#", value, maxsplit=1)[0].rstrip()
-    if _PLAIN_YAML_NUMBER.fullmatch(value):
-        return float(value) if any(character in value for character in ".eE") else int(value)
-    if not value or value[0] in "-?:,[]{}#&*!|>@`\"'":
-        raise ContentValidationError("unsupported-yaml")
-    if re.search(r":[ \t]", value):
-        raise ContentValidationError("unsupported-yaml")
-    lowered = value.casefold()
-    if lowered in {"true", "false"}:
-        return lowered == "true"
-    if lowered in {"null", "~"}:
-        return None
-    return value
-
-
 def parse_bounded_yaml(text: str) -> dict[str, object]:
-    """Parse the mapping/scalar YAML subset used by repository metadata."""
+    """Parse bounded YAML while preserving the runner's public error type."""
 
-    if len(text.encode("utf-8")) > 1024 * 1024:
-        raise ContentValidationError("yaml-size")
-    root: dict[str, object] = {}
-    stack: list[tuple[int, dict[str, object]]] = [(-2, root)]
-    created_maps: list[dict[str, object]] = []
-    for raw_line in text.splitlines():
-        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
-            continue
-        if "\t" in raw_line[: len(raw_line) - len(raw_line.lstrip())]:
-            raise ContentValidationError("yaml-tab")
-        indentation = len(raw_line) - len(raw_line.lstrip(" "))
-        if indentation % 2:
-            raise ContentValidationError("yaml-indentation")
-        line = raw_line[indentation:]
-        if line.startswith(("---", "...", "- ")) or ":" not in line:
-            raise ContentValidationError("unsupported-yaml")
-        key, raw_value = line.split(":", 1)
-        if not _YAML_KEY.fullmatch(key):
-            raise ContentValidationError("yaml-key")
-
-        while stack and indentation <= stack[-1][0]:
-            stack.pop()
-        if not stack or indentation != stack[-1][0] + 2:
-            raise ContentValidationError("yaml-indentation")
-        current = stack[-1][1]
-        if key in current:
-            raise ContentValidationError("yaml-duplicate-key")
-        if not raw_value.strip():
-            child: dict[str, object] = {}
-            current[key] = child
-            stack.append((indentation, child))
-            created_maps.append(child)
-        else:
-            current[key] = _parse_yaml_scalar(raw_value)
-    if not root:
-        raise ContentValidationError("empty-yaml")
-    if any(not mapping for mapping in created_maps):
-        raise ContentValidationError("empty-yaml-mapping")
-    return root
+    try:
+        return _parse_bounded_yaml(text)
+    except BoundedYamlParseError as error:
+        raise ContentValidationError(error.code) from error
 
 
 def _frontmatter(text: str) -> str:
@@ -1501,6 +1464,12 @@ def run_checks(
 ) -> RunResult:
     """Run checks with a final redacted boundary around all inspection races."""
 
+    if _METADATA_BOOTSTRAP_FAILED:
+        result = RunResult()
+        result.block_check("metadata", "shared parser is unavailable")
+        result.finish()
+        return result
+
     try:
         return _run_checks_impl(
             root,
@@ -1536,6 +1505,10 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = _parser().parse_args(argv)
+    if _METADATA_BOOTSTRAP_FAILED:
+        print("BLOCKED: metadata: shared parser is unavailable")
+        print("BLOCKED: offline checks could not complete")
+        return 2
     if os.environ.get(RECURSION_GUARD_ENV) == "1":
         print("BLOCKED: recursion: offline checks cannot invoke themselves")
         print("BLOCKED: offline checks could not complete")

@@ -361,17 +361,17 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-dead-code", "prompt": "Find proven dead code across this repository and report stable candidates before deleting anything.", "expectActivation": true, "expectedOwner": "$prune-codebase"},
-    {"id": "trigger-stale-flags", "prompt": "Review stale feature flags and obsolete compatibility paths for safe retirement.", "expectActivation": true, "expectedOwner": "$prune-codebase"},
-    {"id": "trigger-approved-prune", "prompt": "Use $prune-codebase to re-verify and remove approved candidate PC-004 only.", "expectActivation": true, "expectedOwner": "$prune-codebase"},
-    {"id": "trigger-unused-assets", "prompt": "Audit unused routes, handlers, and assets, including dynamic consumers and build variants.", "expectActivation": true, "expectedOwner": "$prune-codebase"},
-    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive security and maintainability audit of this repository.", "expectActivation": false, "expectedOwner": "$deep-code-audit"},
-    {"id": "near-miss-simplification", "prompt": "Simplify this local C# factory without changing behavior.", "expectActivation": false, "expectedOwner": "$reduce-code-slop"},
-    {"id": "near-miss-dependency", "prompt": "Remove this NuGet dependency and audit the post-resolution graph.", "expectActivation": false, "expectedOwner": "$audit-dependencies"},
-    {"id": "near-miss-bug", "prompt": "Reproduce and diagnose why this route returns 500.", "expectActivation": false, "expectedOwner": "$diagnose-bugs"},
-    {"id": "near-miss-privacy-migration", "prompt": "Review this disposable migration for embedded customer data and anonymization failures.", "expectActivation": false, "expectedOwner": "$audit-data-exposure"},
-    {"id": "near-miss-architecture", "prompt": "Plan the retirement of this compatibility architecture and decide the migration stages.", "expectActivation": false, "expectedOwner": "$deep-planning"},
-    {"id": "near-miss-comments", "prompt": "Audit source comments for stale TODOs and comment-code drift.", "expectActivation": false, "expectedOwner": "$comment-health"},
-    {"id": "near-miss-feature", "prompt": "Implement a new reports export route.", "expectActivation": false, "expectedOwner": "ordinary implementation"}
+    {"id": "trigger-dead-code", "prompt": "Find proven dead code across this repository and report stable candidates before deleting anything.", "expectActivation": true, "expectedOwner": "prune-codebase"},
+    {"id": "trigger-stale-flags", "prompt": "Review stale feature flags and obsolete compatibility paths for safe retirement.", "expectActivation": true, "expectedOwner": "prune-codebase"},
+    {"id": "trigger-approved-prune", "prompt": "Use $prune-codebase to re-verify and remove approved candidate PC-004 only.", "expectActivation": true, "expectedOwner": "prune-codebase"},
+    {"id": "trigger-unused-assets", "prompt": "Audit unused routes, handlers, and assets, including dynamic consumers and build variants.", "expectActivation": true, "expectedOwner": "prune-codebase"},
+    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive security and maintainability audit of this repository.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-simplification", "prompt": "Simplify this local C# factory without changing behavior.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
+    {"id": "near-miss-dependency", "prompt": "Remove this NuGet dependency and audit the post-resolution graph.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-bug", "prompt": "Reproduce and diagnose why this route returns 500.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-privacy-migration", "prompt": "Review this disposable migration for embedded customer data and anonymization failures.", "expectActivation": false, "expectedOwner": "audit-data-exposure"},
+    {"id": "near-miss-architecture", "prompt": "Plan the retirement of this compatibility architecture and decide the migration stages.", "expectActivation": false, "expectedOwner": "deep-planning"},
+    {"id": "near-miss-comments", "prompt": "Audit source comments for stale TODOs and comment-code drift.", "expectActivation": false, "expectedOwner": "comment-health"},
+    {"id": "near-miss-feature", "prompt": "Implement a new reports export route.", "expectActivation": false, "expectedOwner": "ordinary-implementation"}
   ]
 }

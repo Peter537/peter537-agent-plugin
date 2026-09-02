@@ -481,17 +481,20 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-python-simplify", "prompt": "Simplify this Python service without changing behavior or adding dependencies.", "expectActivation": true},
-    {"id": "trigger-csharp-type-hardening", "prompt": "Harden this C# type boundary and remove the null-forgiving and cast laundering.", "expectActivation": true},
-    {"id": "trigger-generated-boilerplate", "prompt": "Remove the unnecessary generated-looking boilerplate from this Python module while preserving its API.", "expectActivation": true},
-    {"id": "trigger-focused-review", "prompt": "Review this C# subsystem specifically for unnecessary indirection and hidden fallbacks. Remain read-only.", "expectActivation": true},
-    {"id": "near-miss-broad-audit", "prompt": "Perform a comprehensive audit of the entire repository for correctness and architecture risks.", "expectActivation": false},
-    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this flaky Python test, then fix it.", "expectActivation": false},
-    {"id": "near-miss-architecture", "prompt": "Plan a migration from the monolith to independent services.", "expectActivation": false},
-    {"id": "near-miss-dependency", "prompt": "Install a new C# analyzer and update every dependency.", "expectActivation": false},
-    {"id": "near-miss-ui", "prompt": "Polish this Blazor settings screen and verify it responsively.", "expectActivation": false},
-    {"id": "near-miss-prose", "prompt": "Rewrite the Python setup guide for clarity.", "expectActivation": false},
-    {"id": "near-miss-feature", "prompt": "Add CSV export to this C# application.", "expectActivation": false},
-    {"id": "near-miss-unsupported-language", "prompt": "Simplify this Rust parser without changing behavior.", "expectActivation": false}
+    {"id": "trigger-explicit-invocation", "prompt": "Use $reduce-code-slop to simplify this C# or Python code with evidence, preserve behavior, and verify the result.", "expectActivation": true, "expectedOwner": "reduce-code-slop"},
+    {"id": "trigger-python-simplify", "prompt": "Simplify this Python service without changing behavior or adding dependencies.", "expectActivation": true, "expectedOwner": "reduce-code-slop"},
+    {"id": "trigger-csharp-type-hardening", "prompt": "Harden this C# type boundary and remove the null-forgiving and cast laundering.", "expectActivation": true, "expectedOwner": "reduce-code-slop"},
+    {"id": "trigger-generated-boilerplate", "prompt": "Remove the unnecessary generated-looking boilerplate from this Python module while preserving its API.", "expectActivation": true, "expectedOwner": "reduce-code-slop"},
+    {"id": "trigger-focused-review", "prompt": "Review this C# subsystem specifically for unnecessary indirection and hidden fallbacks. Remain read-only.", "expectActivation": true, "expectedOwner": "reduce-code-slop"},
+    {"id": "near-miss-broad-audit", "prompt": "Perform a comprehensive audit of the entire repository for correctness and architecture risks.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this flaky Python test, then fix it.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-architecture", "prompt": "Plan a migration from the monolith to independent services.", "expectActivation": false, "expectedOwner": "deep-planning"},
+    {"id": "near-miss-dependency", "prompt": "Install a new C# analyzer and update every dependency.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-ui", "prompt": "Polish this Blazor settings screen and verify it responsively.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},
+    {"id": "near-miss-prose", "prompt": "Rewrite the Python setup guide for clarity.", "expectActivation": false, "expectedOwner": "write-clearly"},
+    {"id": "near-miss-feature", "prompt": "Add CSV export to this C# application.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-unsupported-language", "prompt": "Simplify this Rust parser without changing behavior.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-pruning", "prompt": "Find and retire dead routes, unused assets, and obsolete feature flags across this repository.", "expectActivation": false, "expectedOwner": "prune-codebase"},
+    {"id": "near-miss-comment-health", "prompt": "Audit the comments in this Python module for stale claims and protected directives.", "expectActivation": false, "expectedOwner": "comment-health"}
   ]
 }

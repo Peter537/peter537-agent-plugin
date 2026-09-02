@@ -246,20 +246,23 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-debug-concrete", "prompt": "Reproduce and root-cause this concrete parser defect, then fix it with a regression test.", "expectActivation": true},
-    {"id": "trigger-ci-regression", "prompt": "Investigate why this exact CI job started failing after commit abc123.", "expectActivation": true},
-    {"id": "trigger-flake", "prompt": "Diagnose this order-dependent flaky test and measure it before and after the repair.", "expectActivation": true},
-    {"id": "trigger-diagnosis-only", "prompt": "Root-cause this failing request, but remain read-only and only explain the causal mechanism.", "expectActivation": true},
-    {"id": "trigger-performance-regression", "prompt": "Investigate the measured 3x regression in this benchmark and identify the first causal boundary.", "expectActivation": true},
-    {"id": "trigger-environment-drift", "prompt": "Reproduce and root-cause this concrete environment-specific integration failure.", "expectActivation": true},
-    {"id": "near-miss-vague-broken", "prompt": "This seems broken.", "expectActivation": false},
-    {"id": "near-miss-error-explanation", "prompt": "What does this Python TypeError mean?", "expectActivation": false},
-    {"id": "near-miss-likely-causes", "prompt": "List common reasons an API might time out.", "expectActivation": false},
-    {"id": "near-miss-issue-summary", "prompt": "Summarize this bug report for the backlog.", "expectActivation": false},
-    {"id": "near-miss-broad-audit", "prompt": "Audit the whole repository for possible correctness and performance problems.", "expectActivation": false},
-    {"id": "near-miss-trivial-fix", "prompt": "Fix the known typo in this import name.", "expectActivation": false},
-    {"id": "near-miss-feature", "prompt": "Add CSV export to the report page.", "expectActivation": false},
-    {"id": "near-miss-dependencies", "prompt": "Audit every package before updating the lockfile.", "expectActivation": false},
-    {"id": "near-miss-production", "prompt": "Production is down; rotate credentials and restart the service now.", "expectActivation": false}
+    {"id": "trigger-explicit-invocation", "prompt": "Use $diagnose-bugs to reproduce, diagnose, and fix this bug with evidence and a regression guard.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-debug-concrete", "prompt": "Reproduce and root-cause this concrete parser defect, then fix it with a regression test.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-ci-regression", "prompt": "Investigate why this exact CI job started failing after commit abc123.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-flake", "prompt": "Diagnose this order-dependent flaky test and measure it before and after the repair.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-diagnosis-only", "prompt": "Root-cause this failing request, but remain read-only and only explain the causal mechanism.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-performance-regression", "prompt": "Investigate the measured 3x regression in this benchmark and identify the first causal boundary.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "trigger-environment-drift", "prompt": "Reproduce and root-cause this concrete environment-specific integration failure.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-vague-broken", "prompt": "This seems broken.", "expectActivation": false, "expectedOwner": "no-skill"},
+    {"id": "near-miss-error-explanation", "prompt": "What does this Python TypeError mean?", "expectActivation": false, "expectedOwner": "no-skill"},
+    {"id": "near-miss-likely-causes", "prompt": "List common reasons an API might time out.", "expectActivation": false, "expectedOwner": "no-skill"},
+    {"id": "near-miss-issue-summary", "prompt": "Summarize this bug report for the backlog.", "expectActivation": false, "expectedOwner": "no-skill"},
+    {"id": "near-miss-broad-audit", "prompt": "Audit the whole repository for possible correctness and performance problems.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-trivial-fix", "prompt": "Fix the known typo in this import name.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-feature", "prompt": "Add CSV export to the report page.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-dependencies", "prompt": "Audit every package before updating the lockfile.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-production", "prompt": "Production is down; rotate credentials and restart the service now.", "expectActivation": false, "expectedOwner": "incident-response"},
+    {"id": "near-miss-code-simplification", "prompt": "Simplify this scoped Python adapter without changing its established behavior.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
+    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to diagnose why this Hybrid companion prerenders but never becomes interactive.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"}
   ]
 }

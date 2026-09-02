@@ -15,10 +15,12 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
 import subprocess
 import sys
 import tempfile
 import textwrap
+import types
 import unittest
 from unittest import mock
 
@@ -293,6 +295,87 @@ policy:
         unsupported_result = self.run_runner()
 
         self.assert_failed(unsupported_result, "yaml")
+
+    def test_shared_yaml_parser_preserves_the_runner_error_contract(self) -> None:
+        parsed = RUNNER_MODULE.parse_bounded_yaml(
+            "policy:\n  allow_implicit_invocation: false\n"
+        )
+
+        self.assertEqual(
+            parsed,
+            {"policy": {"allow_implicit_invocation": False}},
+        )
+        with self.assertRaises(RUNNER_MODULE.ContentValidationError):
+            RUNNER_MODULE.parse_bounded_yaml("interface: &shared\n")
+        with self.assertRaises(RUNNER_MODULE.BoundedYamlParseError):
+            RUNNER_MODULE._parse_bounded_yaml("interface: &shared\n")
+
+    def test_shared_yaml_parser_ignores_a_top_level_shadow_module(self) -> None:
+        shadow = types.ModuleType("maintenance_metadata")
+        shadow.BoundedYamlParseError = RuntimeError
+        shadow.parse_bounded_yaml = lambda _text: {"shadowed": True}
+
+        with mock.patch.dict(sys.modules, {"maintenance_metadata": shadow}):
+            reloaded = _load_runner_module()
+
+        self.assertEqual(
+            reloaded._parse_bounded_yaml(
+                "policy:\n  allow_implicit_invocation: false\n"
+            ),
+            {"policy": {"allow_implicit_invocation": False}},
+        )
+
+    def test_shared_yaml_parser_bootstrap_failures_are_redacted(self) -> None:
+        for mode in ("missing", "invalid"):
+            with self.subTest(mode=mode):
+                isolated = self.temporary_root / f"metadata-{mode}"
+                isolated.mkdir()
+                runner_copy = isolated / RUNNER.name
+                shutil.copyfile(RUNNER, runner_copy)
+                if mode == "invalid":
+                    (isolated / "maintenance_metadata.py").write_text(
+                        "this is not valid Python !!!\n",
+                        encoding="utf-8",
+                    )
+
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "-B",
+                        str(runner_copy),
+                        "--root",
+                        str(self.root),
+                    ],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    timeout=30,
+                )
+
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn("BLOCKED: metadata", result.stdout)
+                self.assertNotIn("Traceback", result.stdout + result.stderr)
+                self.assertNotIn(str(isolated), result.stdout + result.stderr)
+                self.assertEqual(result.stderr, "")
+
+                module_name = f"p537_missing_metadata_runner_{mode}"
+                spec = importlib.util.spec_from_file_location(module_name, runner_copy)
+                self.assertIsNotNone(spec)
+                assert spec is not None and spec.loader is not None
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[module_name] = module
+                try:
+                    spec.loader.exec_module(module)
+                    with self.assertRaises(module.ContentValidationError):
+                        module.parse_bounded_yaml("policy:\n  enabled: true\n")
+                    programmatic = module.run_checks(self.root)
+                finally:
+                    sys.modules.pop(module_name, None)
+
+                self.assertEqual(programmatic.exit_code, 2)
+                self.assertIn("BLOCKED: metadata", "\n".join(programmatic.lines))
+                self.assertNotIn(str(isolated), "\n".join(programmatic.lines))
 
     def test_malformed_frontmatter_is_a_failure(self) -> None:
         skill = self.root / "skills" / "alpha" / "SKILL.md"

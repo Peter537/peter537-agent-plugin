@@ -328,6 +328,12 @@
   ],
   "triggerCases": [
     {
+      "id": "trigger-explicit-invocation",
+      "prompt": "Use $docs-audit to audit this repository against its implementation and rebuild its documentation.",
+      "expectActivation": true,
+      "expectedOwner": "docs-audit"
+    },
+    {
       "id": "trigger-comprehensive-audit",
       "prompt": "Comprehensively audit this repository's documentation against the implementation and repair what is stale.",
       "expectActivation": true,
@@ -365,7 +371,7 @@
     },
     {
       "id": "near-miss-proofreading",
-      "prompt": "Proofread this paragraph and make the tone friendlier.",
+      "prompt": "Proofread this paragraph in README.md and make the tone friendlier.",
       "expectActivation": false,
       "expectedOwner": "write-clearly"
     },

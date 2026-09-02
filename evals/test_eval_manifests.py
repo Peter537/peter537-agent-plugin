@@ -12,11 +12,12 @@ import json
 import os
 from pathlib import Path
 import secrets
+import shutil
 import stat
 import subprocess
 import sys
 import tempfile
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -127,8 +128,9 @@ class EvalManifestValidatorTests(unittest.TestCase):
         self.assertIn("PASS:", result.stdout)
         self.assertIn("4 suites", result.stdout)
         self.assertIn("4 cases", result.stdout)
-        self.assertIn("8 triggers", result.stdout)
+        self.assertIn("12 triggers", result.stdout)
         self.assertIn("1 live", result.stdout)
+        self.assertIn("0 boundaries", result.stdout)
 
     def test_suite_and_expected_outcome_are_optional(self) -> None:
         manifest = self._read_manifest(self.root, "alpha")
@@ -467,37 +469,52 @@ class EvalManifestValidatorTests(unittest.TestCase):
         self.assert_contract_error(result, "personal-home", "<field>")
         self.assertNotIn(canary, result.stdout + result.stderr)
 
-    def test_known_skill_owners_and_provisional_owners_are_accepted(self) -> None:
-        self._write_skill(self.root, "bravo")
+    def test_canonical_non_skill_owners_are_accepted(self) -> None:
         manifest = self._read_manifest(self.root, "alpha")
-        manifest["triggerCases"][0]["expectedOwner"] = "alpha"
-        provisional = (
-            "implementation-workflow",
+        owners = (
+            "browser-workflow",
+            "incident-response",
             "legal-guidance",
+            "no-skill",
             "ordinary-implementation",
-            "ordinary implementation",
             "release-workflow",
             "repository-analysis",
+            "translation-workflow",
         )
-        for index, owner in enumerate(provisional):
+        for index, owner in enumerate(owners):
             manifest["triggerCases"].append(
                 {
-                    "id": f"near-miss-provisional-{index}",
+                    "id": f"near-miss-canonical-{index}",
                     "prompt": "A synthetic near miss.",
                     "expectActivation": False,
                     "expectedOwner": owner,
                 }
             )
-        manifest["triggerCases"][1]["expectedOwner"] = "$bravo"
         self._write_manifest(self.root, "alpha", manifest)
 
         result = self.run_validator()
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_expected_owner_is_required_and_legacy_spellings_are_rejected(self) -> None:
+        invalid = (None, "$alpha", "implementation-workflow", "ordinary implementation")
+        for index, owner in enumerate(invalid):
+            with self.subTest(owner=owner):
+                root = self._new_repository(f"invalid-owner-{index}", ("alpha",))
+                manifest = self._read_manifest(root, "alpha")
+                if owner is None:
+                    manifest["triggerCases"][0].pop("expectedOwner")
+                else:
+                    manifest["triggerCases"][0]["expectedOwner"] = owner
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "expectedOwner")
+
     def test_unknown_owner_is_rejected(self) -> None:
         manifest = self._read_manifest(self.root, "alpha")
-        manifest["triggerCases"][1]["expectedOwner"] = "$unknown-skill"
+        manifest["triggerCases"][1]["expectedOwner"] = "unknown-skill"
         self._write_manifest(self.root, "alpha", manifest)
 
         result = self.run_validator()
@@ -505,9 +522,8 @@ class EvalManifestValidatorTests(unittest.TestCase):
         self.assert_contract_error(result, "expectedOwner")
 
     def test_positive_owner_must_match_suite(self) -> None:
-        self._write_skill(self.root, "bravo")
         manifest = self._read_manifest(self.root, "alpha")
-        manifest["triggerCases"][0]["expectedOwner"] = "$bravo"
+        manifest["triggerCases"][0]["expectedOwner"] = "ordinary-implementation"
         self._write_manifest(self.root, "alpha", manifest)
 
         result = self.run_validator()
@@ -516,12 +532,305 @@ class EvalManifestValidatorTests(unittest.TestCase):
 
     def test_negative_owner_must_not_name_suite(self) -> None:
         manifest = self._read_manifest(self.root, "alpha")
-        manifest["triggerCases"][1]["expectedOwner"] = "$alpha"
+        manifest["triggerCases"][1]["expectedOwner"] = "alpha"
         self._write_manifest(self.root, "alpha", manifest)
 
         result = self.run_validator()
 
         self.assert_contract_error(result, "expectedOwner")
+
+    def test_routing_matrix_is_required_and_malformed_json_returns_two(self) -> None:
+        matrix_path = self.root / "evals" / "routing-matrix.json"
+        matrix_path.unlink()
+
+        missing = self.run_validator()
+
+        self.assert_contract_error(missing, "routing matrix", "missing")
+
+        self._write_routing_matrix(self.root, ("alpha",))
+        matrix_path.write_text("{not-json\n", encoding="utf-8")
+
+        malformed = self.run_validator()
+
+        self.assertEqual(malformed.returncode, 2, malformed.stdout + malformed.stderr)
+        self.assertIn("routing-matrix.json", malformed.stdout)
+
+    def test_owner_registry_requires_canonical_sorted_ids_and_kinds(self) -> None:
+        invalid_changes = {
+            "missing-owner": lambda owners: owners.pop(),
+            "wrong-kind": lambda owners: owners[3].update({"kind": "workflow"}),
+            "unsorted": lambda owners: owners.reverse(),
+            "unknown": lambda owners: owners.append(
+                {
+                    "id": "unknown-workflow",
+                    "kind": "workflow",
+                    "description": "Unknown.",
+                }
+            ),
+        }
+        for label, mutate in invalid_changes.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"registry-{label}", ("alpha",))
+                matrix = self._read_matrix(root)
+                mutate(matrix["nonSkillOwners"])
+                self._write_matrix(root, matrix)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "nonSkillOwners")
+
+    def test_invocation_rows_cover_each_skill_and_resolve_both_triggers(self) -> None:
+        invalid_changes = {
+            "missing-row": lambda matrix: matrix["invocationCases"].clear(),
+            "duplicate-row": lambda matrix: matrix["invocationCases"].append(
+                dict(matrix["invocationCases"][0])
+            ),
+            "missing-explicit": lambda matrix: matrix["invocationCases"][0].update(
+                {"explicitTrigger": "not-present"}
+            ),
+            "missing-natural": lambda matrix: matrix["invocationCases"][0].update(
+                {"naturalLanguageTrigger": "not-present"}
+            ),
+        }
+        for label, mutate in invalid_changes.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"invocation-{label}", ("alpha",))
+                matrix = self._read_matrix(root)
+                mutate(matrix)
+                self._write_matrix(root, matrix)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "invocationCases")
+
+    def test_invocation_rows_require_exact_explicit_and_natural_prompts(self) -> None:
+        invalid_prompts = {
+            "explicit-missing": "Use the selected skill for this request.",
+            "explicit-attached": "Use $alpha_extra for this request.",
+            "explicit-other": "Use $alpha and $bravo for this request.",
+            "explicit-unknown": "Use $alpha and $not-installed for this request.",
+            "natural-explicit": "Use $alpha for this natural-language request.",
+            "natural-unknown": "Use $not-installed for this natural-language request.",
+        }
+        for label, prompt in invalid_prompts.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"prompt-{label}", ("alpha", "bravo"))
+                manifest = self._read_manifest(root, "alpha")
+                trigger_index = 2 if label.startswith("natural-") else 0
+                manifest["triggerCases"][trigger_index]["prompt"] = prompt
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "invocationCases")
+
+    def test_omitted_policy_defaults_true_and_explicit_only_policy_is_honored(self) -> None:
+        default_result = self.run_validator()
+        self.assertEqual(
+            default_result.returncode,
+            0,
+            default_result.stdout + default_result.stderr,
+        )
+
+        manifest = self._read_manifest(self.root, "alpha")
+        manifest["triggerCases"][2].update(
+            {
+                "expectActivation": False,
+                "expectedOwner": "ordinary-implementation",
+            }
+        )
+        self._write_manifest(self.root, "alpha", manifest)
+        self._write_openai_yaml(self.root, "alpha", implicit=False)
+
+        explicit_only_result = self.run_validator()
+
+        self.assertEqual(
+            explicit_only_result.returncode,
+            0,
+            explicit_only_result.stdout + explicit_only_result.stderr,
+        )
+
+    def test_invocation_policy_must_be_boolean_when_present(self) -> None:
+        path = self.root / "skills" / "alpha" / "agents" / "openai.yaml"
+        path.write_text(
+            "interface:\n"
+            '  default_prompt: "Use $alpha."\n'
+            "policy:\n"
+            '  allow_implicit_invocation: "yes"\n',
+            encoding="utf-8",
+        )
+
+        result = self.run_validator()
+
+        self.assert_contract_error(result, "allow_implicit_invocation")
+
+    def test_invocation_metadata_uses_bounded_yaml_and_is_required(self) -> None:
+        path = self.root / "skills" / "alpha" / "agents" / "openai.yaml"
+        path.write_text(
+            "interface:\n"
+            '  default_prompt: "Use $alpha."\n'
+            "policy:\n"
+            "  allow_implicit_invocation: [true]\n",
+            encoding="utf-8",
+        )
+
+        malformed = self.run_validator()
+
+        self.assert_contract_error(malformed, "supported metadata subset")
+
+        path.unlink()
+
+        missing = self.run_validator()
+
+        self.assert_contract_error(missing, "openai.yaml", "required")
+
+    def test_shared_yaml_parser_ignores_a_top_level_shadow_module(self) -> None:
+        shadow = ModuleType("maintenance_metadata")
+        shadow.BoundedYamlParseError = RuntimeError
+        shadow.parse_bounded_yaml = lambda _text: {"shadowed": True}
+
+        with mock.patch.dict(sys.modules, {"maintenance_metadata": shadow}):
+            reloaded = _load_validator_module()
+
+        self.assertEqual(
+            reloaded.parse_bounded_yaml(
+                "policy:\n  allow_implicit_invocation: false\n"
+            ),
+            {"policy": {"allow_implicit_invocation": False}},
+        )
+
+    def test_shared_yaml_parser_bootstrap_failures_are_redacted(self) -> None:
+        for mode in ("missing", "invalid"):
+            with self.subTest(mode=mode):
+                isolated = self.temporary_root / f"metadata-{mode}"
+                isolated.mkdir()
+                validator_copy = isolated / VALIDATOR.name
+                shutil.copyfile(VALIDATOR, validator_copy)
+                if mode == "invalid":
+                    (isolated / "maintenance_metadata.py").write_text(
+                        "this is not valid Python !!!\n",
+                        encoding="utf-8",
+                    )
+
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "-B",
+                        str(validator_copy),
+                        "--root",
+                        str(self.root),
+                    ],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    timeout=30,
+                )
+
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn("ERROR: shared maintenance metadata parser", result.stdout)
+                self.assertNotIn("Traceback", result.stdout + result.stderr)
+                self.assertNotIn(str(isolated), result.stdout + result.stderr)
+                self.assertEqual(result.stderr, "")
+
+                module_name = f"p537_missing_metadata_validator_{mode}"
+                spec = importlib.util.spec_from_file_location(module_name, validator_copy)
+                self.assertIsNotNone(spec)
+                assert spec is not None and spec.loader is not None
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[module_name] = module
+                try:
+                    spec.loader.exec_module(module)
+                    programmatic = module.validate_repository(self.root)
+                finally:
+                    sys.modules.pop(module_name, None)
+
+                self.assertEqual(programmatic.exit_code, 2)
+                diagnostics = "\n".join(programmatic.fatal_errors + programmatic.errors)
+                self.assertIn("shared maintenance metadata parser", diagnostics)
+                self.assertNotIn(str(isolated), diagnostics)
+
+    def test_valid_reciprocal_boundary_passes_and_is_counted(self) -> None:
+        root = self._new_repository("valid-boundary", ("alpha", "bravo"))
+        self._add_boundary(root, "alpha", "bravo")
+
+        result = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("1 boundaries", result.stdout)
+
+    def test_boundary_requires_sorted_unique_pair_and_both_owned_directions(self) -> None:
+        changes = {
+            "unsorted-pair": lambda boundary: boundary.update(
+                {"skills": ["bravo", "alpha"]}
+            ),
+            "one-direction": lambda boundary: boundary["directions"].pop(),
+            "wrong-owner": lambda boundary: boundary["directions"][0]["triggers"].append(
+                "near-miss-other-work"
+            ),
+            "unknown-trigger": lambda boundary: boundary["directions"][0].update(
+                {"triggers": ["not-present"]}
+            ),
+        }
+        for label, mutate in changes.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"boundary-{label}", ("alpha", "bravo"))
+                self._add_boundary(root, "alpha", "bravo")
+                matrix = self._read_matrix(root)
+                mutate(matrix["boundaries"][0])
+                self._write_matrix(root, matrix)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "boundaries")
+
+    def test_duplicate_boundary_pair_is_rejected(self) -> None:
+        root = self._new_repository("duplicate-boundary", ("alpha", "bravo"))
+        self._add_boundary(root, "alpha", "bravo")
+        matrix = self._read_matrix(root)
+        duplicate = json.loads(json.dumps(matrix["boundaries"][0]))
+        duplicate["id"] = "alpha-bravo-copy"
+        matrix["boundaries"].append(duplicate)
+        self._write_matrix(root, matrix)
+
+        result = self.run_validator(root)
+
+        self.assert_contract_error(result, "boundary pair", "duplicated")
+
+    def test_coverage_cases_require_all_kinds_and_valid_references(self) -> None:
+        invalid_changes = {
+            "missing-kind": lambda coverage: coverage.pop(),
+            "unknown-kind": lambda coverage: coverage[0].update({"kind": "score"}),
+            "missing-ref": lambda coverage: coverage[0]["caseRefs"][0].update(
+                {"id": "not-present"}
+            ),
+            "unknown-section": lambda coverage: coverage[0]["caseRefs"][0].update(
+                {"section": "unknownCases"}
+            ),
+        }
+        for label, mutate in invalid_changes.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"coverage-{label}", ("alpha",))
+                matrix = self._read_matrix(root)
+                mutate(matrix["coverageCases"])
+                self._write_matrix(root, matrix)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "coverageCases")
+
+    def test_matrix_diagnostics_redact_private_runtime_canary(self) -> None:
+        canary = "MATRIX_" + secrets.token_hex(12)
+        matrix = self._read_matrix(self.root)
+        matrix["coverageCases"][0]["requiredSignals"][0] = (
+            f"Inspect C:\\Users\\{canary}\\private"
+        )
+        self._write_matrix(self.root, matrix)
+
+        result = self.run_validator()
+
+        self.assert_contract_error(result, "personal-home")
+        self.assertNotIn(canary, result.stdout + result.stderr)
 
     def test_both_live_authorization_shapes_pass(self) -> None:
         manifest = self._read_manifest(self.root, "alpha")
@@ -770,6 +1079,7 @@ class EvalManifestValidatorTests(unittest.TestCase):
         for slug in slugs:
             self._write_skill(root, slug)
             self._write_suite(root, slug, self._valid_manifest(slug))
+        self._write_routing_matrix(root, slugs)
         return root
 
     @staticmethod
@@ -799,11 +1109,19 @@ class EvalManifestValidatorTests(unittest.TestCase):
                     "id": "trigger-owned-request",
                     "prompt": f"Use ${slug} for this explicit request.",
                     "expectActivation": True,
+                    "expectedOwner": slug,
                 },
                 {
                     "id": "near-miss-other-work",
                     "prompt": "Perform an unrelated task.",
                     "expectActivation": False,
+                    "expectedOwner": "no-skill",
+                },
+                {
+                    "id": "trigger-natural-request",
+                    "prompt": "Perform the concrete workflow described by this fixture.",
+                    "expectActivation": True,
+                    "expectedOwner": slug,
                 },
             ],
         }
@@ -860,6 +1178,158 @@ class EvalManifestValidatorTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
+        agents = directory / "agents"
+        agents.mkdir(parents=True, exist_ok=True)
+        (agents / "openai.yaml").write_text(
+            "\n".join(
+                (
+                    "interface:",
+                    f'  display_name: "{slug}"',
+                    '  short_description: "Synthetic routing fixture"',
+                    f'  default_prompt: "Use ${slug} for this fixture."',
+                    "",
+                )
+            ),
+            encoding="utf-8",
+        )
+
+    @classmethod
+    def _write_routing_matrix(cls, root: Path, slugs: tuple[str, ...]) -> None:
+        first = sorted(slugs)[0]
+        owners = (
+            ("browser-workflow", "workflow"),
+            ("incident-response", "workflow"),
+            ("legal-guidance", "workflow"),
+            ("no-skill", "none"),
+            ("ordinary-implementation", "workflow"),
+            ("release-workflow", "workflow"),
+            ("repository-analysis", "workflow"),
+            ("translation-workflow", "workflow"),
+        )
+        matrix = {
+            "schemaVersion": 1,
+            "nonSkillOwners": [
+                {
+                    "id": owner_id,
+                    "kind": kind,
+                    "description": "Synthetic non-skill routing owner.",
+                }
+                for owner_id, kind in owners
+            ],
+            "invocationCases": [
+                {
+                    "skill": slug,
+                    "explicitTrigger": "trigger-owned-request",
+                    "naturalLanguageTrigger": "trigger-natural-request",
+                }
+                for slug in sorted(slugs)
+            ],
+            "boundaries": [],
+            "coverageCases": [
+                {
+                    "id": "full-catalog-control",
+                    "kind": "full-catalog-collision",
+                    "caseRefs": [
+                        {
+                            "suite": first,
+                            "section": "triggerCases",
+                            "id": "trigger-natural-request",
+                        }
+                    ],
+                    "requiredSignals": ["select one owner"],
+                    "prohibitedSignals": ["activate every skill"],
+                },
+                {
+                    "id": "progressive-disclosure-control",
+                    "kind": "progressive-disclosure",
+                    "caseRefs": [
+                        {
+                            "suite": first,
+                            "section": "triggerCases",
+                            "id": "trigger-owned-request",
+                        }
+                    ],
+                    "requiredSignals": ["load the selected skill"],
+                    "prohibitedSignals": ["load unrelated references"],
+                },
+                {
+                    "id": "specialist-handoff-control",
+                    "kind": "specialist-handoff",
+                    "caseRefs": [
+                        {
+                            "suite": first,
+                            "section": "triggerCases",
+                            "id": "near-miss-other-work",
+                        }
+                    ],
+                    "requiredSignals": ["respect the declared owner"],
+                    "prohibitedSignals": ["activate the source suite"],
+                },
+            ],
+        }
+        cls._write_json(root / "evals" / "routing-matrix.json", matrix)
+
+    @classmethod
+    def _add_boundary(cls, root: Path, first: str, second: str) -> None:
+        first_manifest = cls._read_manifest(root, first)
+        first_manifest["triggerCases"].append(
+            {
+                "id": f"near-miss-{second}",
+                "prompt": "Perform the neighboring specialist workflow.",
+                "expectActivation": False,
+                "expectedOwner": second,
+            }
+        )
+        cls._write_manifest(root, first, first_manifest)
+        second_manifest = cls._read_manifest(root, second)
+        second_manifest["triggerCases"].append(
+            {
+                "id": f"near-miss-{first}",
+                "prompt": "Perform the reciprocal specialist workflow.",
+                "expectActivation": False,
+                "expectedOwner": first,
+            }
+        )
+        cls._write_manifest(root, second, second_manifest)
+        matrix = cls._read_matrix(root)
+        matrix["boundaries"].append(
+            {
+                "id": f"{first}-{second}",
+                "skills": [first, second],
+                "directions": [
+                    {
+                        "from": first,
+                        "to": second,
+                        "triggers": [f"near-miss-{second}"],
+                    },
+                    {
+                        "from": second,
+                        "to": first,
+                        "triggers": [f"near-miss-{first}"],
+                    },
+                ],
+            }
+        )
+        cls._write_matrix(root, matrix)
+
+    @staticmethod
+    def _write_openai_yaml(root: Path, slug: str, *, implicit: bool) -> None:
+        value = "true" if implicit else "false"
+        (root / "skills" / slug / "agents" / "openai.yaml").write_text(
+            "\n".join(
+                (
+                    "interface:",
+                    f'  display_name: "{slug}"',
+                    '  short_description: "Synthetic routing fixture"',
+                    f'  default_prompt: "Use ${slug} for this fixture."',
+                    "",
+                    "policy:",
+                    f"  allow_implicit_invocation: {value}",
+                    "",
+                )
+            ),
+            encoding="utf-8",
+        )
 
     @classmethod
     def _write_suite(
@@ -875,6 +1345,16 @@ class EvalManifestValidatorTests(unittest.TestCase):
         return json.loads(
             (root / "evals" / slug / "cases.json").read_text(encoding="utf-8")
         )
+
+    @staticmethod
+    def _read_matrix(root: Path) -> dict[str, object]:
+        return json.loads(
+            (root / "evals" / "routing-matrix.json").read_text(encoding="utf-8")
+        )
+
+    @classmethod
+    def _write_matrix(cls, root: Path, matrix: dict[str, object]) -> None:
+        cls._write_json(root / "evals" / "routing-matrix.json", matrix)
 
     @classmethod
     def _write_manifest(

@@ -256,18 +256,19 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-explicit-review", "prompt": "Use $audit-dependencies to review every dependency and supply-chain input in this repository.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "trigger-before-add", "prompt": "Before adding this npm package, verify its exact graph, vulnerabilities, provenance, scripts, and identity.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "trigger-lock-change", "prompt": "Review this lockfile change for unexpected transitive drift and supply-chain risk.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "trigger-container-ci", "prompt": "Audit our GitHub Actions, container images, vendored code, and submodules as software dependencies.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "trigger-package-removal", "prompt": "Before removing this package, verify the complete post-removal graph and every affected workspace.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "trigger-provenance-license", "prompt": "Review these exact locked packages for provenance, integrity, license obligations, and malicious-package risk.", "expectActivation": true, "expectedOwner": "$audit-dependencies"},
-    {"id": "near-miss-broad-audit", "prompt": "Perform a comprehensive correctness and architecture audit of this repository.", "expectActivation": false, "expectedOwner": "$deep-code-audit"},
-    {"id": "near-miss-bug", "prompt": "Reproduce and root-cause this failing package-loading test.", "expectActivation": false, "expectedOwner": "$diagnose-bugs"},
-    {"id": "near-miss-pruning", "prompt": "Find dead source files and obsolete feature flags, but do not remove packages.", "expectActivation": false, "expectedOwner": "$prune-codebase"},
-    {"id": "near-miss-code-simplification", "prompt": "Simplify this Python parser without changing behavior or dependencies.", "expectActivation": false, "expectedOwner": "$reduce-code-slop"},
-    {"id": "near-miss-privacy", "prompt": "Review Git history for personal data and disposable migrations.", "expectActivation": false, "expectedOwner": "$audit-data-exposure"},
-    {"id": "near-miss-docs", "prompt": "Update the dependency installation prose in README.md for clarity.", "expectActivation": false, "expectedOwner": "$write-clearly"}
+    {"id": "trigger-explicit-review", "prompt": "Use $audit-dependencies to review every dependency and supply-chain input in this repository.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "trigger-before-add", "prompt": "Before adding this npm package, verify its exact graph, vulnerabilities, provenance, scripts, and identity.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "trigger-lock-change", "prompt": "Review this lockfile change for unexpected transitive drift and supply-chain risk.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "trigger-container-ci", "prompt": "Audit our GitHub Actions, container images, vendored code, and submodules as software dependencies.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "trigger-package-removal", "prompt": "Before removing this package, verify the complete post-removal graph and every affected workspace.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "trigger-provenance-license", "prompt": "Review these exact locked packages for provenance, integrity, license obligations, and malicious-package risk.", "expectActivation": true, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-broad-audit", "prompt": "Perform a comprehensive correctness and architecture audit of this repository.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-bug", "prompt": "Reproduce and root-cause this failing package-loading test.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-pruning", "prompt": "Find dead source files and obsolete feature flags, but do not remove packages.", "expectActivation": false, "expectedOwner": "prune-codebase"},
+    {"id": "near-miss-code-simplification", "prompt": "Simplify this Python parser without changing behavior or dependencies.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
+    {"id": "near-miss-privacy", "prompt": "Review Git history for personal data and disposable migrations.", "expectActivation": false, "expectedOwner": "audit-data-exposure"},
+    {"id": "near-miss-docs", "prompt": "Update the dependency installation prose in README.md for clarity.", "expectActivation": false, "expectedOwner": "write-clearly"},
+    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to make this MAUI Blazor Hybrid route safely browser-testable without adding packages.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"}
   ],
   "liveCases": [
     {

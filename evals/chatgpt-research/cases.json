@@ -118,17 +118,18 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-standards-comparison", "prompt": "Compare the current official standards and resolve their conflicting migration guidance with traceable citations.", "expectActivation": true},
-    {"id": "trigger-vendor-evaluation", "prompt": "Research several vendors and synthesize security, portability, and lifecycle evidence for this product decision.", "expectActivation": true},
-    {"id": "trigger-source-conflict", "prompt": "Investigate why authoritative sources disagree about this API and determine which versions each claim covers.", "expectActivation": true},
-    {"id": "trigger-ui-reference-research", "prompt": "Research several official product interfaces and accessibility sources to inform this workflow redesign.", "expectActivation": true},
-    {"id": "trigger-explicit-deep-research", "prompt": "Use $chatgpt-research to run ChatGPT Deep Research on current provenance approaches.", "expectActivation": true},
-    {"id": "trigger-multi-source-product-decision", "prompt": "Research official documentation, standards, and independent evidence to decide between these two product architectures.", "expectActivation": true},
-    {"id": "near-miss-single-fact", "prompt": "What year was this standard released?", "expectActivation": false},
-    {"id": "near-miss-one-url", "prompt": "Summarize the documentation page at this URL.", "expectActivation": false},
-    {"id": "near-miss-repository-only", "prompt": "Find where this repository registers its services.", "expectActivation": false},
-    {"id": "near-miss-direct-capture", "prompt": "Open this one page and copy the visible table exactly.", "expectActivation": false},
-    {"id": "near-miss-ordinary-search", "prompt": "Look up the latest stable version of this library.", "expectActivation": false}
+    {"id": "trigger-standards-comparison", "prompt": "Compare the current official standards and resolve their conflicting migration guidance with traceable citations.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "trigger-vendor-evaluation", "prompt": "Research several vendors and synthesize security, portability, and lifecycle evidence for this product decision.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "trigger-source-conflict", "prompt": "Investigate why authoritative sources disagree about this API and determine which versions each claim covers.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "trigger-ui-reference-research", "prompt": "Research several official product interfaces and accessibility sources to inform this workflow redesign.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "trigger-explicit-deep-research", "prompt": "Use $chatgpt-research to run ChatGPT Deep Research on current provenance approaches.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "trigger-multi-source-product-decision", "prompt": "Research official documentation, standards, and independent evidence to decide between these two product architectures.", "expectActivation": true, "expectedOwner": "chatgpt-research"},
+    {"id": "near-miss-single-fact", "prompt": "What year was this standard released?", "expectActivation": false, "expectedOwner": "browser-workflow"},
+    {"id": "near-miss-one-url", "prompt": "Summarize the documentation page at this URL.", "expectActivation": false, "expectedOwner": "browser-workflow"},
+    {"id": "near-miss-repository-only", "prompt": "Find where this repository registers its services.", "expectActivation": false, "expectedOwner": "repository-analysis"},
+    {"id": "near-miss-direct-capture", "prompt": "Open this one page and copy the visible table exactly.", "expectActivation": false, "expectedOwner": "browser-workflow"},
+    {"id": "near-miss-ordinary-search", "prompt": "Look up the latest stable version of this library.", "expectActivation": false, "expectedOwner": "browser-workflow"},
+    {"id": "near-miss-implementation-plan", "prompt": "Inspect this repository and prepare a decision-complete plan for splitting the service while preserving its contracts.", "expectActivation": false, "expectedOwner": "deep-planning"}
   ],
   "liveCases": [
     {

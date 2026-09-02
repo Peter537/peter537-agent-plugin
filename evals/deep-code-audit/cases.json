@@ -284,39 +284,88 @@
   ],
   "triggerCases": [
     {
+      "id": "trigger-explicit-invocation",
+      "prompt": "Use $deep-code-audit to perform a deep, evidence-backed audit of this repository and report prioritized findings.",
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
       "id": "trigger-whole-audit",
       "prompt": "Perform a comprehensive evidence-backed audit of this repository.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
     },
     {
       "id": "trigger-change-quality",
       "prompt": "Deeply review this pull request for correctness, overengineering, and unnecessary change surface.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
+      "id": "trigger-full-catalog-audit",
+      "prompt": "Perform one broad read-only audit of this repository across correctness, security, maintainability, dependencies, documentation, privacy, comments, and unnecessary implementation surface.",
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
     },
     {
       "id": "near-miss-implementation",
       "prompt": "Implement the requested export button.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
     },
     {
       "id": "near-miss-debugging",
       "prompt": "Reproduce and root-cause this flaky test.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "diagnose-bugs"
     },
     {
       "id": "near-miss-dependencies",
       "prompt": "Review every package before I upgrade the lockfile.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "audit-dependencies"
     },
     {
       "id": "near-miss-privacy",
       "prompt": "Check this repository history for personal data exposure.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "audit-data-exposure"
     },
     {
       "id": "near-miss-style",
       "prompt": "Give me quick style feedback on these variable names.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
+    },
+    {
+      "id": "near-miss-comment-health",
+      "prompt": "Review source comments for stale TODOs, misleading explanations, and protected directives.",
+      "expectActivation": false,
+      "expectedOwner": "comment-health"
+    },
+    {
+      "id": "near-miss-pruning",
+      "prompt": "Find proven dead routes, obsolete flags, and unused files, then report stable removal candidates.",
+      "expectActivation": false,
+      "expectedOwner": "prune-codebase"
+    },
+    {
+      "id": "near-miss-code-simplification",
+      "prompt": "Simplify this scoped Python service without changing behavior.",
+      "expectActivation": false,
+      "expectedOwner": "reduce-code-slop"
+    },
+    {
+      "id": "near-miss-planning",
+      "prompt": "Research and prepare a decision-complete plan for splitting this service.",
+      "expectActivation": false,
+      "expectedOwner": "deep-planning"
+    },
+    {
+      "id": "near-miss-docs-audit",
+      "prompt": "Audit the complete documentation set against the implementation and repair it.",
+      "expectActivation": false,
+      "expectedOwner": "docs-audit"
     }
   ]
 }

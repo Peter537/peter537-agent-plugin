@@ -310,64 +310,82 @@
   ],
   "triggerCases": [
     {
+      "id": "trigger-explicit-invocation",
+      "prompt": "Use $ui-design-and-polish to audit or improve this product UI within the requested scope and verify the rendered result.",
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
+    },
+    {
       "id": "trigger-product-ui-audit",
       "prompt": "Audit this product dashboard for hierarchy, responsive behavior, states, and accessibility.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
     },
     {
       "id": "trigger-polish-settings",
       "prompt": "Polish this settings workflow while preserving its controls and behavior.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
     },
     {
       "id": "trigger-generic-interface",
       "prompt": "Make this templated-looking operations interface more specific to its actual workflow.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
     },
     {
       "id": "trigger-redesign-shell",
       "prompt": "Redesign this application shell using the existing product and user evidence.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
     },
     {
       "id": "near-miss-backend",
       "prompt": "Optimize the queue-processing backend without changing its interface.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
     },
     {
       "id": "near-miss-dependency",
       "prompt": "Review and upgrade the frontend dependency lockfile.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "audit-dependencies"
     },
     {
       "id": "near-miss-documentation",
       "prompt": "Rebuild the repository documentation and navigation.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "docs-audit"
     },
     {
       "id": "near-miss-marketing",
       "prompt": "Design a campaign landing page for our product launch.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-logo",
       "prompt": "Create a new bitmap logo for this application.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-wording-only",
       "prompt": "Rewrite this validation message without changing the UI.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "near-miss-maui-host",
-      "prompt": "Create a temporary MAUI Blazor browser host for this component.",
-      "expectActivation": false
+      "prompt": "Use $maui-blazor-browser to create a temporary browser host for this MAUI Blazor Hybrid component.",
+      "expectActivation": false,
+      "expectedOwner": "maui-blazor-browser"
     },
     {
       "id": "near-miss-code-simplification",
       "prompt": "Simplify this C# view model without changing behavior.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "reduce-code-slop"
     }
   ]
 }

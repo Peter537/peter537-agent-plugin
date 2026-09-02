@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass, field
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath, PureWindowsPath
@@ -19,9 +20,39 @@ import stat
 import sys
 from typing import Iterable
 
+_METADATA_BOOTSTRAP_FAILED = False
+try:
+    if __package__:
+        from evals.maintenance_metadata import BoundedYamlParseError, parse_bounded_yaml
+    else:
+        _metadata_path = Path(__file__).with_name("maintenance_metadata.py")
+        _metadata_spec = importlib.util.spec_from_file_location(
+            "_p537_eval_maintenance_metadata",
+            _metadata_path,
+        )
+        if _metadata_spec is None or _metadata_spec.loader is None:
+            raise ImportError
+        _metadata_module = importlib.util.module_from_spec(_metadata_spec)
+        _metadata_spec.loader.exec_module(_metadata_module)
+        BoundedYamlParseError = _metadata_module.BoundedYamlParseError
+        parse_bounded_yaml = _metadata_module.parse_bounded_yaml
+except Exception:
+    _METADATA_BOOTSTRAP_FAILED = True
+
+    class BoundedYamlParseError(ValueError):
+        """The shared maintenance parser could not be loaded safely."""
+
+        def __init__(self, code: str) -> None:
+            super().__init__(code)
+            self.code = code
+
+    def parse_bounded_yaml(_text: str) -> dict[str, object]:
+        raise BoundedYamlParseError("metadata-bootstrap")
+
 
 SCHEMA_VERSION = 1
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+ROUTING_ID = re.compile(r"^[a-z0-9]+(?:-+[a-z0-9]+)*$")
 ALLOWED_TOP_LEVEL_FIELDS = {
     "schemaVersion",
     "suite",
@@ -45,14 +76,29 @@ PATH_FIELDS = {
     "scannerPaths",
     "stagePaths",
 }
-PROVISIONAL_OWNERS = {
-    "implementation-workflow",
-    "legal-guidance",
-    "ordinary-implementation",
-    "ordinary implementation",
-    "release-workflow",
-    "repository-analysis",
+NON_SKILL_OWNER_KINDS = {
+    "browser-workflow": "workflow",
+    "incident-response": "workflow",
+    "legal-guidance": "workflow",
+    "no-skill": "none",
+    "ordinary-implementation": "workflow",
+    "release-workflow": "workflow",
+    "repository-analysis": "workflow",
+    "translation-workflow": "workflow",
 }
+ROUTING_MATRIX_FIELDS = {
+    "schemaVersion",
+    "nonSkillOwners",
+    "invocationCases",
+    "boundaries",
+    "coverageCases",
+}
+REQUIRED_COVERAGE_KINDS = {
+    "specialist-handoff",
+    "progressive-disclosure",
+    "full-catalog-collision",
+}
+CASE_SECTIONS = {"cases", "triggerCases", "liveCases"}
 PYTHON_COMMANDS = {"python", "python.exe", "python3", "python3.exe", "py", "py.exe"}
 DOTNET_COMMANDS = {"dotnet", "dotnet.exe"}
 FORBIDDEN_PYTHON_MODULES = {
@@ -105,6 +151,23 @@ DIAGNOSTIC_FIELD_NAMES = ALLOWED_TOP_LEVEL_FIELDS | PATH_FIELDS | {
     "requiredSignals",
     "trackOutput",
     "verificationCommands",
+    "allow_implicit_invocation",
+    "boundaries",
+    "caseRefs",
+    "coverageCases",
+    "directions",
+    "explicitTrigger",
+    "from",
+    "invocationCases",
+    "kind",
+    "naturalLanguageTrigger",
+    "nonSkillOwners",
+    "policy",
+    "section",
+    "skill",
+    "skills",
+    "to",
+    "triggers",
 }
 WINDOWS_RESERVED_PATH_NAMES = {
     "aux",
@@ -130,6 +193,7 @@ class ValidationResult:
     case_count: int = 0
     trigger_count: int = 0
     live_count: int = 0
+    boundary_count: int = 0
 
     @property
     def ok(self) -> bool:
@@ -627,10 +691,6 @@ def _validate_behavioral_case(
     return valid_id
 
 
-def _normalize_owner(owner: str) -> str:
-    return owner[1:] if owner.startswith("$") else owner
-
-
 def _validate_trigger_case(
     case: object,
     *,
@@ -658,19 +718,21 @@ def _validate_trigger_case(
     else:
         activation_value = activation
 
-    if "expectedOwner" in case:
-        owner = case["expectedOwner"]
-        if not _nonempty_string(owner):
-            result.errors.append(f"{label}:{location}.expectedOwner: must be a non-empty string")
-        else:
-            assert isinstance(owner, str)
-            normalized = _normalize_owner(owner)
-            if normalized not in skill_slugs and owner not in PROVISIONAL_OWNERS:
-                result.errors.append(f"{label}:{location}.expectedOwner: owner is not recognized")
-            elif activation_value is True and normalized != suite_slug:
-                result.errors.append(f"{label}:{location}.expectedOwner: positive trigger must name its suite")
-            elif activation_value is False and normalized == suite_slug:
-                result.errors.append(f"{label}:{location}.expectedOwner: negative trigger must not name its suite")
+    owner = case.get("expectedOwner")
+    if not _nonempty_string(owner):
+        result.errors.append(f"{label}:{location}.expectedOwner: must be a non-empty string")
+    else:
+        assert isinstance(owner, str)
+        if not SLUG.fullmatch(owner):
+            result.errors.append(
+                f"{label}:{location}.expectedOwner: must be a canonical bare owner ID"
+            )
+        elif owner not in skill_slugs and owner not in NON_SKILL_OWNER_KINDS:
+            result.errors.append(f"{label}:{location}.expectedOwner: owner is not recognized")
+        elif activation_value is True and owner != suite_slug:
+            result.errors.append(f"{label}:{location}.expectedOwner: positive trigger must name its suite")
+        elif activation_value is False and owner == suite_slug:
+            result.errors.append(f"{label}:{location}.expectedOwner: negative trigger must not name its suite")
     return valid_id, activation_value
 
 
@@ -889,10 +951,538 @@ def _load_skill_slugs(root: Path, result: ValidationResult) -> set[str]:
     return skill_slugs
 
 
+def _validate_exact_fields(
+    value: dict[object, object],
+    *,
+    required: set[str],
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> bool:
+    """Validate a closed object shape without disclosing unknown key values."""
+
+    keys = {key for key in value if isinstance(key, str)}
+    for field_name in sorted(required - keys):
+        result.errors.append(f"{label}:{location}.{field_name}: required field is missing")
+    unknown_count = sum(
+        not isinstance(key, str) or key not in required for key in value
+    )
+    if unknown_count:
+        result.errors.append(
+            f"{label}:{location}.<field>: contains {unknown_count} unsupported field(s)"
+        )
+    return not (required - keys) and not unknown_count
+
+
+def _manifest_case_index(
+    manifests: dict[str, dict[str, object]],
+) -> dict[str, dict[str, dict[str, dict[str, object]]]]:
+    """Build a best-effort index for already structurally validated manifests."""
+
+    index: dict[str, dict[str, dict[str, dict[str, object]]]] = {}
+    for suite, manifest in manifests.items():
+        sections: dict[str, dict[str, dict[str, object]]] = {}
+        for section in CASE_SECTIONS:
+            cases: dict[str, dict[str, object]] = {}
+            raw_cases = manifest.get(section, [])
+            if isinstance(raw_cases, list):
+                for case in raw_cases:
+                    if (
+                        isinstance(case, dict)
+                        and isinstance(case.get("id"), str)
+                        and case["id"] not in cases
+                    ):
+                        cases[case["id"]] = case
+            sections[section] = cases
+        index[suite] = sections
+    return index
+
+
+def _load_invocation_policy(
+    root: Path,
+    skill_slug: str,
+    *,
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> bool | None:
+    """Return effective implicit invocation, whose documented default is true."""
+
+    metadata_path = root / "skills" / skill_slug / "agents" / "openai.yaml"
+    current = root / "skills" / skill_slug
+    for path in (current / "agents", metadata_path):
+        if _reject_link_or_inspection_gap(
+            path,
+            label=label,
+            location=location,
+            result=result,
+        ):
+            return None
+    if not metadata_path.is_file():
+        result.errors.append(
+            f"{label}:{location}: agents/openai.yaml is required for invocation validation"
+        )
+        return None
+    try:
+        text = metadata_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        result.fatal_errors.append(
+            f"{label}:{location}: agents/openai.yaml could not be read "
+            f"({error.__class__.__name__})"
+        )
+        return None
+    try:
+        metadata = parse_bounded_yaml(text)
+    except BoundedYamlParseError:
+        result.errors.append(
+            f"{label}:{location}: agents/openai.yaml is outside the supported metadata subset"
+        )
+        return None
+    policy = metadata.get("policy")
+    if policy is None:
+        return True
+    if not isinstance(policy, dict):
+        result.errors.append(
+            f"{label}:{location}: policy must be a mapping when present"
+        )
+        return None
+    implicit = policy.get("allow_implicit_invocation", True)
+    if type(implicit) is not bool:
+        result.errors.append(
+            f"{label}:{location}: allow_implicit_invocation must be a boolean"
+        )
+        return None
+    return implicit
+
+
+def _skill_mentions(prompt: object) -> list[str]:
+    if not isinstance(prompt, str):
+        return []
+    return re.findall(
+        r"(?<![A-Za-z0-9_-])\$([a-z0-9]+(?:-[a-z0-9]+)*)(?![A-Za-z0-9_-])",
+        prompt,
+    )
+
+
+def _validate_owner_registry(
+    value: object,
+    *,
+    label: str,
+    result: ValidationResult,
+) -> None:
+    location = "$.nonSkillOwners"
+    if not isinstance(value, list):
+        result.errors.append(f"{label}:{location}: must be an array")
+        return
+    seen: set[str] = set()
+    ordered_ids: list[str] = []
+    for index, item in enumerate(value):
+        item_location = f"{location}[{index}]"
+        if not isinstance(item, dict):
+            result.errors.append(f"{label}:{item_location}: owner must be an object")
+            continue
+        _validate_exact_fields(
+            item,
+            required={"id", "kind", "description"},
+            label=label,
+            location=item_location,
+            result=result,
+        )
+        owner_id = item.get("id")
+        kind = item.get("kind")
+        if not isinstance(owner_id, str) or owner_id not in NON_SKILL_OWNER_KINDS:
+            result.errors.append(f"{label}:{item_location}.id: owner is not registered")
+            continue
+        ordered_ids.append(owner_id)
+        if owner_id in seen:
+            result.errors.append(f"{label}:{item_location}.id: owner ID is duplicated")
+        seen.add(owner_id)
+        if kind != NON_SKILL_OWNER_KINDS[owner_id]:
+            result.errors.append(f"{label}:{item_location}.kind: owner kind is incorrect")
+        if not _nonempty_string(item.get("description")):
+            result.errors.append(
+                f"{label}:{item_location}.description: must be a non-empty string"
+            )
+    if seen != set(NON_SKILL_OWNER_KINDS):
+        result.errors.append(
+            f"{label}:{location}: must register every canonical non-skill owner exactly once"
+        )
+    if ordered_ids != sorted(ordered_ids):
+        result.errors.append(f"{label}:{location}: owners must be sorted by ID")
+
+
+def _validate_invocation_cases(
+    value: object,
+    *,
+    root: Path,
+    skill_slugs: set[str],
+    case_index: dict[str, dict[str, dict[str, dict[str, object]]]],
+    label: str,
+    result: ValidationResult,
+) -> None:
+    location = "$.invocationCases"
+    if not isinstance(value, list):
+        result.errors.append(f"{label}:{location}: must be an array")
+        return
+    seen: set[str] = set()
+    ordered_skills: list[str] = []
+    for index, item in enumerate(value):
+        item_location = f"{location}[{index}]"
+        if not isinstance(item, dict):
+            result.errors.append(f"{label}:{item_location}: invocation row must be an object")
+            continue
+        _validate_exact_fields(
+            item,
+            required={"skill", "explicitTrigger", "naturalLanguageTrigger"},
+            label=label,
+            location=item_location,
+            result=result,
+        )
+        skill = item.get("skill")
+        if not isinstance(skill, str) or skill not in skill_slugs:
+            result.errors.append(f"{label}:{item_location}.skill: skill is not discovered")
+            continue
+        ordered_skills.append(skill)
+        if skill in seen:
+            result.errors.append(f"{label}:{item_location}.skill: skill is duplicated")
+        seen.add(skill)
+        triggers = case_index.get(skill, {}).get("triggerCases", {})
+        referenced: dict[str, dict[str, object] | None] = {}
+        for field_name in ("explicitTrigger", "naturalLanguageTrigger"):
+            trigger_id = item.get(field_name)
+            if not isinstance(trigger_id, str) or not SLUG.fullmatch(trigger_id):
+                result.errors.append(
+                    f"{label}:{item_location}.{field_name}: must be a trigger-case ID"
+                )
+                referenced[field_name] = None
+            else:
+                trigger = triggers.get(trigger_id)
+                referenced[field_name] = trigger
+                if trigger is None:
+                    result.errors.append(
+                        f"{label}:{item_location}.{field_name}: referenced trigger does not exist"
+                    )
+
+        explicit = referenced.get("explicitTrigger")
+        if explicit is not None:
+            if explicit.get("expectActivation") is not True or explicit.get("expectedOwner") != skill:
+                result.errors.append(
+                    f"{label}:{item_location}.explicitTrigger: must be a positive trigger owned by its skill"
+                )
+            mentions = _skill_mentions(explicit.get("prompt"))
+            if skill not in mentions or any(mention != skill for mention in mentions):
+                result.errors.append(
+                    f"{label}:{item_location}.explicitTrigger: prompt must explicitly name only its exact skill"
+                )
+
+        natural = referenced.get("naturalLanguageTrigger")
+        policy = _load_invocation_policy(
+            root,
+            skill,
+            label=label,
+            location=f"{item_location}.naturalLanguageTrigger",
+            result=result,
+        )
+        if natural is not None:
+            if _skill_mentions(natural.get("prompt")):
+                result.errors.append(
+                    f"{label}:{item_location}.naturalLanguageTrigger: prompt must not explicitly name a skill"
+                )
+            if policy is True and (
+                natural.get("expectActivation") is not True
+                or natural.get("expectedOwner") != skill
+            ):
+                result.errors.append(
+                    f"{label}:{item_location}.naturalLanguageTrigger: implicit policy requires a positive trigger owned by its skill"
+                )
+            elif policy is False and (
+                natural.get("expectActivation") is not False
+                or natural.get("expectedOwner") == skill
+            ):
+                result.errors.append(
+                    f"{label}:{item_location}.naturalLanguageTrigger: explicit-only policy requires a negative trigger owned elsewhere"
+                )
+    if seen != skill_slugs:
+        result.errors.append(
+            f"{label}:{location}: must contain exactly one row for every discovered skill"
+        )
+    if ordered_skills != sorted(ordered_skills):
+        result.errors.append(f"{label}:{location}: rows must be sorted by skill")
+
+
+def _validate_boundaries(
+    value: object,
+    *,
+    skill_slugs: set[str],
+    case_index: dict[str, dict[str, dict[str, dict[str, object]]]],
+    label: str,
+    result: ValidationResult,
+) -> None:
+    location = "$.boundaries"
+    if not isinstance(value, list):
+        result.errors.append(f"{label}:{location}: must be an array")
+        return
+    result.boundary_count = len(value)
+    seen_ids: set[str] = set()
+    seen_pairs: set[tuple[str, str]] = set()
+    ordered_pairs: list[tuple[str, str]] = []
+    for index, item in enumerate(value):
+        item_location = f"{location}[{index}]"
+        if not isinstance(item, dict):
+            result.errors.append(f"{label}:{item_location}: boundary must be an object")
+            continue
+        _validate_exact_fields(
+            item,
+            required={"id", "skills", "directions"},
+            label=label,
+            location=item_location,
+            result=result,
+        )
+        boundary_id = item.get("id")
+        if not isinstance(boundary_id, str) or not ROUTING_ID.fullmatch(boundary_id):
+            result.errors.append(f"{label}:{item_location}.id: must be a lowercase routing ID")
+        elif boundary_id in seen_ids:
+            result.errors.append(f"{label}:{item_location}.id: boundary ID is duplicated")
+        else:
+            seen_ids.add(boundary_id)
+        skills = item.get("skills")
+        if (
+            not isinstance(skills, list)
+            or len(skills) != 2
+            or not all(isinstance(skill, str) and skill in skill_slugs for skill in skills)
+            or skills[0] == skills[1]
+        ):
+            result.errors.append(
+                f"{label}:{item_location}.skills: must contain two distinct discovered skills"
+            )
+            continue
+        pair = (skills[0], skills[1])
+        if list(pair) != sorted(pair):
+            result.errors.append(f"{label}:{item_location}.skills: pair must be sorted")
+        if pair in seen_pairs:
+            result.errors.append(f"{label}:{item_location}.skills: boundary pair is duplicated")
+        seen_pairs.add(pair)
+        ordered_pairs.append(pair)
+        directions = item.get("directions")
+        if not isinstance(directions, list) or len(directions) != 2:
+            result.errors.append(
+                f"{label}:{item_location}.directions: must contain both directional handoffs"
+            )
+            continue
+        expected_directions = ((pair[0], pair[1]), (pair[1], pair[0]))
+        seen_directions: set[tuple[str, str]] = set()
+        for direction_index, direction in enumerate(directions):
+            direction_location = f"{item_location}.directions[{direction_index}]"
+            if not isinstance(direction, dict):
+                result.errors.append(
+                    f"{label}:{direction_location}: direction must be an object"
+                )
+                continue
+            _validate_exact_fields(
+                direction,
+                required={"from", "to", "triggers"},
+                label=label,
+                location=direction_location,
+                result=result,
+            )
+            from_skill = direction.get("from")
+            to_skill = direction.get("to")
+            direction_pair = (from_skill, to_skill)
+            if direction_pair != expected_directions[direction_index]:
+                result.errors.append(
+                    f"{label}:{direction_location}: directions must be ordered from first-to-second and second-to-first"
+                )
+            if (
+                not isinstance(from_skill, str)
+                or not isinstance(to_skill, str)
+                or from_skill not in pair
+                or to_skill not in pair
+                or from_skill == to_skill
+            ):
+                continue
+            if direction_pair in seen_directions:
+                result.errors.append(
+                    f"{label}:{direction_location}: direction is duplicated"
+                )
+            seen_directions.add(direction_pair)
+            trigger_ids = direction.get("triggers")
+            if not _string_list(trigger_ids):
+                result.errors.append(
+                    f"{label}:{direction_location}.triggers: must be a non-empty trigger ID array"
+                )
+                continue
+            assert isinstance(trigger_ids, list)
+            if len(set(trigger_ids)) != len(trigger_ids):
+                result.errors.append(
+                    f"{label}:{direction_location}.triggers: trigger IDs must be unique"
+                )
+            source_triggers = case_index.get(from_skill, {}).get("triggerCases", {})
+            for trigger_index, trigger_id in enumerate(trigger_ids):
+                trigger_location = f"{direction_location}.triggers[{trigger_index}]"
+                trigger = source_triggers.get(trigger_id)
+                if trigger is None:
+                    result.errors.append(
+                        f"{label}:{trigger_location}: referenced negative trigger does not exist"
+                    )
+                elif (
+                    trigger.get("expectActivation") is not False
+                    or trigger.get("expectedOwner") != to_skill
+                ):
+                    result.errors.append(
+                        f"{label}:{trigger_location}: trigger must be negative and owned by the opposite skill"
+                    )
+    if ordered_pairs != sorted(ordered_pairs):
+        result.errors.append(f"{label}:{location}: boundaries must be sorted by skill pair")
+
+
+def _validate_coverage_cases(
+    value: object,
+    *,
+    skill_slugs: set[str],
+    case_index: dict[str, dict[str, dict[str, dict[str, object]]]],
+    label: str,
+    result: ValidationResult,
+) -> None:
+    location = "$.coverageCases"
+    if not isinstance(value, list):
+        result.errors.append(f"{label}:{location}: must be an array")
+        return
+    seen_ids: set[str] = set()
+    kinds: set[str] = set()
+    for index, item in enumerate(value):
+        item_location = f"{location}[{index}]"
+        if not isinstance(item, dict):
+            result.errors.append(f"{label}:{item_location}: coverage case must be an object")
+            continue
+        _validate_exact_fields(
+            item,
+            required={
+                "id",
+                "kind",
+                "caseRefs",
+                "requiredSignals",
+                "prohibitedSignals",
+            },
+            label=label,
+            location=item_location,
+            result=result,
+        )
+        coverage_id = item.get("id")
+        if not isinstance(coverage_id, str) or not SLUG.fullmatch(coverage_id):
+            result.errors.append(f"{label}:{item_location}.id: must be a lowercase slug")
+        elif coverage_id in seen_ids:
+            result.errors.append(f"{label}:{item_location}.id: coverage ID is duplicated")
+        else:
+            seen_ids.add(coverage_id)
+        kind = item.get("kind")
+        if not isinstance(kind, str) or kind not in REQUIRED_COVERAGE_KINDS:
+            result.errors.append(f"{label}:{item_location}.kind: coverage kind is not recognized")
+        else:
+            kinds.add(kind)
+        for field_name in ("requiredSignals", "prohibitedSignals"):
+            if not _string_list(item.get(field_name)):
+                result.errors.append(
+                    f"{label}:{item_location}.{field_name}: must be a non-empty string array"
+                )
+        refs = item.get("caseRefs")
+        if not isinstance(refs, list) or not refs:
+            result.errors.append(f"{label}:{item_location}.caseRefs: must be a non-empty array")
+            continue
+        seen_refs: set[tuple[str, str, str]] = set()
+        for ref_index, ref in enumerate(refs):
+            ref_location = f"{item_location}.caseRefs[{ref_index}]"
+            if not isinstance(ref, dict):
+                result.errors.append(f"{label}:{ref_location}: case reference must be an object")
+                continue
+            _validate_exact_fields(
+                ref,
+                required={"suite", "section", "id"},
+                label=label,
+                location=ref_location,
+                result=result,
+            )
+            suite = ref.get("suite")
+            section = ref.get("section")
+            case_id = ref.get("id")
+            if not isinstance(suite, str) or suite not in skill_slugs:
+                result.errors.append(f"{label}:{ref_location}.suite: suite is not discovered")
+                continue
+            if not isinstance(section, str) or section not in CASE_SECTIONS:
+                result.errors.append(f"{label}:{ref_location}.section: section is not recognized")
+                continue
+            if not isinstance(case_id, str) or not SLUG.fullmatch(case_id):
+                result.errors.append(f"{label}:{ref_location}.id: must be a case ID")
+                continue
+            reference = (suite, section, case_id)
+            if reference in seen_refs:
+                result.errors.append(f"{label}:{ref_location}: case reference is duplicated")
+            seen_refs.add(reference)
+            if case_id not in case_index.get(suite, {}).get(section, {}):
+                result.errors.append(f"{label}:{ref_location}: referenced case does not exist")
+    missing_kinds = REQUIRED_COVERAGE_KINDS - kinds
+    if missing_kinds:
+        result.errors.append(
+            f"{label}:{location}: must cover every required coverage kind"
+        )
+
+
+def _validate_routing_matrix(
+    matrix: object,
+    *,
+    root: Path,
+    skill_slugs: set[str],
+    manifests: dict[str, dict[str, object]],
+    label: str,
+    result: ValidationResult,
+) -> None:
+    if not isinstance(matrix, dict):
+        result.errors.append(f"{label}:$: routing matrix must contain a JSON object")
+        return
+    _validate_exact_fields(
+        matrix,
+        required=ROUTING_MATRIX_FIELDS,
+        label=label,
+        location="$",
+        result=result,
+    )
+    if type(matrix.get("schemaVersion")) is not int or matrix.get("schemaVersion") != SCHEMA_VERSION:
+        result.errors.append(f"{label}:$.schemaVersion: must be integer 1")
+    case_index = _manifest_case_index(manifests)
+    _validate_owner_registry(matrix.get("nonSkillOwners"), label=label, result=result)
+    _validate_invocation_cases(
+        matrix.get("invocationCases"),
+        root=root,
+        skill_slugs=skill_slugs,
+        case_index=case_index,
+        label=label,
+        result=result,
+    )
+    _validate_boundaries(
+        matrix.get("boundaries"),
+        skill_slugs=skill_slugs,
+        case_index=case_index,
+        label=label,
+        result=result,
+    )
+    _validate_coverage_cases(
+        matrix.get("coverageCases"),
+        skill_slugs=skill_slugs,
+        case_index=case_index,
+        label=label,
+        result=result,
+    )
+    for location, text in _walk_strings(matrix):
+        if _contains_personal_home(text):
+            result.errors.append(f"{label}:{location}: contains a personal-home absolute path")
+
+
 def validate_repository(root: Path) -> ValidationResult:
     """Validate every immediate evaluation manifest beneath *root*."""
 
     result = ValidationResult()
+    if _METADATA_BOOTSTRAP_FAILED:
+        result.fatal_errors.append("shared maintenance metadata parser is unavailable")
+        return result
     skill_slugs = _load_skill_slugs(root, result)
     evals_root = root / "evals"
     if not evals_root.is_dir():
@@ -916,6 +1506,7 @@ def validate_repository(root: Path) -> ValidationResult:
         result.fatal_errors.append(f"evals/ could not be inspected ({error.__class__.__name__})")
         return result
 
+    manifests: dict[str, dict[str, object]] = {}
     for suite_directory in suite_directories:
         safe_slug = suite_directory.name if SLUG.fullmatch(suite_directory.name) else "<invalid-suite>"
         label = f"evals/{safe_slug}/cases.json"
@@ -958,6 +1549,8 @@ def validate_repository(root: Path) -> ValidationResult:
             )
             continue
         result.suite_count += 1
+        if isinstance(manifest, dict):
+            manifests[suite_directory.name] = manifest
         _validate_manifest(
             manifest,
             suite_slug=suite_directory.name,
@@ -969,6 +1562,46 @@ def validate_repository(root: Path) -> ValidationResult:
 
     if not suite_directories:
         result.fatal_errors.append("evals/ contains no evaluation suites")
+
+    matrix_path = evals_root / "routing-matrix.json"
+    matrix_label = "evals/routing-matrix.json"
+    try:
+        linked_matrix = _is_link_or_reparse(matrix_path)
+    except PathInspectionError as error:
+        result.fatal_errors.append(
+            f"{matrix_label}:$: routing matrix could not be inspected ({error})"
+        )
+        return result
+    if linked_matrix:
+        result.errors.append(
+            f"{matrix_label}:$: routing matrix must not be a link or reparse point"
+        )
+        return result
+    if not matrix_path.is_file():
+        result.errors.append(f"{matrix_label}:$: routing matrix is missing")
+        return result
+    try:
+        matrix_text = matrix_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        result.fatal_errors.append(
+            f"{matrix_label}:$: could not read UTF-8 JSON ({error.__class__.__name__})"
+        )
+        return result
+    try:
+        matrix = json.loads(matrix_text)
+    except json.JSONDecodeError as error:
+        result.fatal_errors.append(
+            f"{matrix_label}:$: invalid JSON at line {error.lineno}, column {error.colno}"
+        )
+        return result
+    _validate_routing_matrix(
+        matrix,
+        root=root,
+        skill_slugs=skill_slugs,
+        manifests=manifests,
+        label=matrix_label,
+        result=result,
+    )
     return result
 
 
@@ -977,7 +1610,8 @@ def _print_result(result: ValidationResult) -> None:
         print(f"ERROR: {diagnostic}")
     counts = (
         f"{result.suite_count} suites, {result.case_count} cases, "
-        f"{result.trigger_count} triggers, {result.live_count} live cases"
+        f"{result.trigger_count} triggers, {result.live_count} live cases, "
+        f"{result.boundary_count} boundaries"
     )
     if result.ok:
         print(f"PASS: eval manifests are valid ({counts})")
@@ -1002,6 +1636,9 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = _parser().parse_args(argv)
+    if _METADATA_BOOTSTRAP_FAILED:
+        print("ERROR: shared maintenance metadata parser is unavailable")
+        return 2
     try:
         root = arguments.root.resolve(strict=True)
     except OSError as error:

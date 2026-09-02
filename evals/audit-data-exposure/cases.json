@@ -261,17 +261,18 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-personal-data", "prompt": "Review this repository for personal data before I make it public.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
-    {"id": "trigger-anonymization", "prompt": "Audit whether these committed samples are actually anonymous or still re-identifiable.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
-    {"id": "trigger-history-leak", "prompt": "Check the full reachable Git history for leaked customer records and private developer paths.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
-    {"id": "trigger-disposable-migration", "prompt": "Review this one-time conversion script and its history for private data exposure.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
-    {"id": "trigger-changed-private-data", "prompt": "Audit the current Git changes for real user records, credentials, and developer-machine metadata.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
-    {"id": "trigger-path-privacy", "prompt": "Review the fixtures/ subsystem and its history for repository data exposure, keeping findings redacted.", "expectActivation": true, "expectedOwner": "$audit-data-exposure"},
+    {"id": "trigger-explicit-invocation", "prompt": "Use $audit-data-exposure to review this repository for personal data, private artifacts, and one-off migrations.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-personal-data", "prompt": "Review this repository for personal data before I make it public.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-anonymization", "prompt": "Audit whether these committed samples are actually anonymous or still re-identifiable.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-history-leak", "prompt": "Check the full reachable Git history for leaked customer records and private developer paths.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-disposable-migration", "prompt": "Review this one-time conversion script and its history for private data exposure.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-changed-private-data", "prompt": "Audit the current Git changes for real user records, credentials, and developer-machine metadata.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
+    {"id": "trigger-path-privacy", "prompt": "Review the fixtures/ subsystem and its history for repository data exposure, keeping findings redacted.", "expectActivation": true, "expectedOwner": "audit-data-exposure"},
     {"id": "near-miss-publication", "prompt": "Publish the current release after running the normal release checks.", "expectActivation": false, "expectedOwner": "release-workflow"},
-    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive correctness and security audit of this repository.", "expectActivation": false, "expectedOwner": "$deep-code-audit"},
-    {"id": "near-miss-dependency", "prompt": "Review every direct and transitive dependency for supply-chain risk.", "expectActivation": false, "expectedOwner": "$audit-dependencies"},
-    {"id": "near-miss-anonymize", "prompt": "Transform this dataset into an anonymized export for me.", "expectActivation": false, "expectedOwner": "implementation-workflow"},
+    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive correctness and security audit of this repository.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-dependency", "prompt": "Review every direct and transitive dependency for supply-chain risk.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-anonymize", "prompt": "Transform this dataset into an anonymized export for me.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
     {"id": "near-miss-legal", "prompt": "Give me a GDPR legal opinion about whether this processing is lawful.", "expectActivation": false, "expectedOwner": "legal-guidance"},
-    {"id": "near-miss-pruning", "prompt": "Remove obsolete migrations and dead conversion code from this repository.", "expectActivation": false, "expectedOwner": "$prune-codebase"}
+    {"id": "near-miss-pruning", "prompt": "Remove obsolete migrations and dead conversion code from this repository.", "expectActivation": false, "expectedOwner": "prune-codebase"}
   ]
 }

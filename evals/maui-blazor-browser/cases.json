@@ -214,19 +214,20 @@
     }
   ],
   "triggerCases": [
-    {"id": "explicit-host-request", "prompt": "Use $maui-blazor-browser to make this MAUI Blazor Hybrid route safely browser-testable.", "expectActivation": true},
-    {"id": "explicit-interactivity-diagnosis", "prompt": "Use $maui-blazor-browser to diagnose why this Hybrid companion prerenders but never becomes interactive.", "expectActivation": true},
-    {"id": "explicit-existing-companion", "prompt": "Use $maui-blazor-browser to reuse this maintained Blazor Web companion for Hybrid UI development.", "expectActivation": true},
-    {"id": "explicit-temporary-harness", "prompt": "Use $maui-blazor-browser to prepare a safe one-off browser harness around this host-neutral Razor UI.", "expectActivation": true},
-    {"id": "explicit-native-boundary", "prompt": "Use $maui-blazor-browser to separate what this browser result proves from what still needs native MAUI verification.", "expectActivation": true},
-    {"id": "explicit-state-isolation-review", "prompt": "Use $maui-blazor-browser to review this Hybrid companion's Web service lifetimes for per-user isolation.", "expectActivation": true},
-    {"id": "implicit-same-request", "prompt": "Make this MAUI Blazor Hybrid route safely browser-testable.", "expectActivation": false},
-    {"id": "near-miss-blazor-web", "prompt": "Add a page to this ordinary Blazor Web App.", "expectActivation": false},
-    {"id": "near-miss-native-xaml", "prompt": "Fix the layout of this native MAUI XAML page.", "expectActivation": false},
-    {"id": "near-miss-ui-polish", "prompt": "Polish the visual hierarchy of this existing browser page.", "expectActivation": false},
-    {"id": "near-miss-browser-test", "prompt": "Run the existing Playwright tests for this React application.", "expectActivation": false},
-    {"id": "near-miss-dependency", "prompt": "Install the MAUI workload and add a Blazor package.", "expectActivation": false},
-    {"id": "near-miss-backend", "prompt": "Add a server-side export endpoint to this API.", "expectActivation": false}
+    {"id": "explicit-host-request", "prompt": "Use $maui-blazor-browser to make this MAUI Blazor Hybrid route safely browser-testable.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "explicit-interactivity-diagnosis", "prompt": "Use $maui-blazor-browser to diagnose why this Hybrid companion prerenders but never becomes interactive.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "explicit-existing-companion", "prompt": "Use $maui-blazor-browser to reuse this maintained Blazor Web companion for Hybrid UI development.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "explicit-temporary-harness", "prompt": "Use $maui-blazor-browser to prepare a safe one-off browser harness around this host-neutral Razor UI.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "explicit-native-boundary", "prompt": "Use $maui-blazor-browser to separate what this browser result proves from what still needs native MAUI verification.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "explicit-state-isolation-review", "prompt": "Use $maui-blazor-browser to review this Hybrid companion's Web service lifetimes for per-user isolation.", "expectActivation": true, "expectedOwner": "maui-blazor-browser"},
+    {"id": "implicit-same-request", "prompt": "Make this MAUI Blazor Hybrid route safely browser-testable.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-blazor-web", "prompt": "Add a page to this ordinary Blazor Web App.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-native-xaml", "prompt": "Fix the layout of this native MAUI XAML page.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},
+    {"id": "near-miss-ui-polish", "prompt": "Polish the visual hierarchy of this existing browser page.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},
+    {"id": "near-miss-browser-test", "prompt": "Run the existing Playwright tests for this React application.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-dependency", "prompt": "Install the MAUI workload and add a Blazor package.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-backend", "prompt": "Add a server-side export endpoint to this API.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this concrete failing integration test in the existing Blazor Web companion.", "expectActivation": false, "expectedOwner": "diagnose-bugs"}
   ],
   "liveCases": [
     {

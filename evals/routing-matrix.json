@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "nonSkillOwners": [
+    {
+      "id": "browser-workflow",
+      "kind": "workflow",
+      "description": "A direct browser lookup or capture that does not need multi-source Deep Research."
+    },
+    {
+      "id": "incident-response",
+      "kind": "workflow",
+      "description": "Active production or security incident response outside local repository diagnosis."
+    },
+    {
+      "id": "legal-guidance",
+      "kind": "workflow",
+      "description": "A request for legal interpretation or advice rather than a repository data review."
+    },
+    {
+      "id": "no-skill",
+      "kind": "none",
+      "description": "No skill in this plugin owns the request; this does not mean Codex lacks the capability."
+    },
+    {
+      "id": "ordinary-implementation",
+      "kind": "workflow",
+      "description": "Decision-complete implementation or routine repository work that needs no specialist skill."
+    },
+    {
+      "id": "release-workflow",
+      "kind": "workflow",
+      "description": "Repository release, tagging, submission, or publication work."
+    },
+    {
+      "id": "repository-analysis",
+      "kind": "workflow",
+      "description": "Read-only repository explanation or inspection that is not a comprehensive audit."
+    },
+    {
+      "id": "translation-workflow",
+      "kind": "workflow",
+      "description": "Translation without a separate request to edit the source-language prose."
+    }
+  ],
+  "invocationCases": [
+    {
+      "skill": "audit-data-exposure",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-personal-data"
+    },
+    {
+      "skill": "audit-dependencies",
+      "explicitTrigger": "trigger-explicit-review",
+      "naturalLanguageTrigger": "trigger-before-add"
+    },
+    {
+      "skill": "chatgpt-research",
+      "explicitTrigger": "trigger-explicit-deep-research",
+      "naturalLanguageTrigger": "trigger-standards-comparison"
+    },
+    {
+      "skill": "comment-health",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-comment-accuracy"
+    },
+    {
+      "skill": "deep-code-audit",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-whole-audit"
+    },
+    {
+      "skill": "deep-planning",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-architecture"
+    },
+    {
+      "skill": "diagnose-bugs",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-debug-concrete"
+    },
+    {
+      "skill": "docs-audit",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-comprehensive-audit"
+    },
+    {
+      "skill": "maui-blazor-browser",
+      "explicitTrigger": "explicit-host-request",
+      "naturalLanguageTrigger": "implicit-same-request"
+    },
+    {
+      "skill": "prune-codebase",
+      "explicitTrigger": "trigger-approved-prune",
+      "naturalLanguageTrigger": "trigger-dead-code"
+    },
+    {
+      "skill": "reduce-code-slop",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-python-simplify"
+    },
+    {
+      "skill": "ui-design-and-polish",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-product-ui-audit"
+    },
+    {
+      "skill": "write-clearly",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-proofreading"
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "audit-data-exposure--audit-dependencies",
+      "skills": ["audit-data-exposure", "audit-dependencies"],
+      "directions": [
+        {"from": "audit-data-exposure", "to": "audit-dependencies", "triggers": ["near-miss-dependency"]},
+        {"from": "audit-dependencies", "to": "audit-data-exposure", "triggers": ["near-miss-privacy"]}
+      ]
+    },
+    {
+      "id": "audit-data-exposure--deep-code-audit",
+      "skills": ["audit-data-exposure", "deep-code-audit"],
+      "directions": [
+        {"from": "audit-data-exposure", "to": "deep-code-audit", "triggers": ["near-miss-code-audit"]},
+        {"from": "deep-code-audit", "to": "audit-data-exposure", "triggers": ["near-miss-privacy"]}
+      ]
+    },
+    {
+      "id": "audit-data-exposure--prune-codebase",
+      "skills": ["audit-data-exposure", "prune-codebase"],
+      "directions": [
+        {"from": "audit-data-exposure", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
+        {"from": "prune-codebase", "to": "audit-data-exposure", "triggers": ["near-miss-privacy-migration"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--deep-code-audit",
+      "skills": ["audit-dependencies", "deep-code-audit"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]},
+        {"from": "deep-code-audit", "to": "audit-dependencies", "triggers": ["near-miss-dependencies"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--diagnose-bugs",
+      "skills": ["audit-dependencies", "diagnose-bugs"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "diagnose-bugs", "triggers": ["near-miss-bug"]},
+        {"from": "diagnose-bugs", "to": "audit-dependencies", "triggers": ["near-miss-dependencies"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--maui-blazor-browser",
+      "skills": ["audit-dependencies", "maui-blazor-browser"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "maui-blazor-browser", "triggers": ["near-miss-maui-host"]},
+        {"from": "maui-blazor-browser", "to": "audit-dependencies", "triggers": ["near-miss-dependency"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--prune-codebase",
+      "skills": ["audit-dependencies", "prune-codebase"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
+        {"from": "prune-codebase", "to": "audit-dependencies", "triggers": ["near-miss-dependency"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--reduce-code-slop",
+      "skills": ["audit-dependencies", "reduce-code-slop"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]},
+        {"from": "reduce-code-slop", "to": "audit-dependencies", "triggers": ["near-miss-dependency"]}
+      ]
+    },
+    {
+      "id": "chatgpt-research--deep-planning",
+      "skills": ["chatgpt-research", "deep-planning"],
+      "directions": [
+        {"from": "chatgpt-research", "to": "deep-planning", "triggers": ["near-miss-implementation-plan"]},
+        {"from": "deep-planning", "to": "chatgpt-research", "triggers": ["near-miss-deep-research"]}
+      ]
+    },
+    {
+      "id": "comment-health--deep-code-audit",
+      "skills": ["comment-health", "deep-code-audit"],
+      "directions": [
+        {"from": "comment-health", "to": "deep-code-audit", "triggers": ["near-miss-code-audit"]},
+        {"from": "deep-code-audit", "to": "comment-health", "triggers": ["near-miss-comment-health"]}
+      ]
+    },
+    {
+      "id": "comment-health--docs-audit",
+      "skills": ["comment-health", "docs-audit"],
+      "directions": [
+        {"from": "comment-health", "to": "docs-audit", "triggers": ["near-miss-docs"]},
+        {"from": "docs-audit", "to": "comment-health", "triggers": ["near-miss-source-comments"]}
+      ]
+    },
+    {
+      "id": "comment-health--prune-codebase",
+      "skills": ["comment-health", "prune-codebase"],
+      "directions": [
+        {"from": "comment-health", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
+        {"from": "prune-codebase", "to": "comment-health", "triggers": ["near-miss-comments"]}
+      ]
+    },
+    {
+      "id": "comment-health--reduce-code-slop",
+      "skills": ["comment-health", "reduce-code-slop"],
+      "directions": [
+        {"from": "comment-health", "to": "reduce-code-slop", "triggers": ["near-miss-simplification"]},
+        {"from": "reduce-code-slop", "to": "comment-health", "triggers": ["near-miss-comment-health"]}
+      ]
+    },
+    {
+      "id": "comment-health--write-clearly",
+      "skills": ["comment-health", "write-clearly"],
+      "directions": [
+        {"from": "comment-health", "to": "write-clearly", "triggers": ["near-miss-wording"]},
+        {"from": "write-clearly", "to": "comment-health", "triggers": ["near-miss-comment-health"]}
+      ]
+    },
+    {
+      "id": "deep-code-audit--deep-planning",
+      "skills": ["deep-code-audit", "deep-planning"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "deep-planning", "triggers": ["near-miss-planning"]},
+        {"from": "deep-planning", "to": "deep-code-audit", "triggers": ["near-miss-audit"]}
+      ]
+    },
+    {
+      "id": "deep-code-audit--diagnose-bugs",
+      "skills": ["deep-code-audit", "diagnose-bugs"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "diagnose-bugs", "triggers": ["near-miss-debugging"]},
+        {"from": "diagnose-bugs", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}
+      ]
+    },
+    {
+      "id": "deep-code-audit--docs-audit",
+      "skills": ["deep-code-audit", "docs-audit"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "docs-audit", "triggers": ["near-miss-docs-audit"]},
+        {"from": "docs-audit", "to": "deep-code-audit", "triggers": ["near-miss-code-audit"]}
+      ]
+    },
+    {
+      "id": "deep-code-audit--prune-codebase",
+      "skills": ["deep-code-audit", "prune-codebase"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
+        {"from": "prune-codebase", "to": "deep-code-audit", "triggers": ["near-miss-code-audit"]}
+      ]
+    },
+    {
+      "id": "deep-code-audit--reduce-code-slop",
+      "skills": ["deep-code-audit", "reduce-code-slop"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]},
+        {"from": "reduce-code-slop", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}
+      ]
+    },
+    {
+      "id": "deep-planning--prune-codebase",
+      "skills": ["deep-planning", "prune-codebase"],
+      "directions": [
+        {"from": "deep-planning", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
+        {"from": "prune-codebase", "to": "deep-planning", "triggers": ["near-miss-architecture"]}
+      ]
+    },
+    {
+      "id": "diagnose-bugs--maui-blazor-browser",
+      "skills": ["diagnose-bugs", "maui-blazor-browser"],
+      "directions": [
+        {"from": "diagnose-bugs", "to": "maui-blazor-browser", "triggers": ["near-miss-maui-host"]},
+        {"from": "maui-blazor-browser", "to": "diagnose-bugs", "triggers": ["near-miss-bug-diagnosis"]}
+      ]
+    },
+    {
+      "id": "diagnose-bugs--reduce-code-slop",
+      "skills": ["diagnose-bugs", "reduce-code-slop"],
+      "directions": [
+        {"from": "diagnose-bugs", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]},
+        {"from": "reduce-code-slop", "to": "diagnose-bugs", "triggers": ["near-miss-bug-diagnosis"]}
+      ]
+    },
+    {
+      "id": "docs-audit--write-clearly",
+      "skills": ["docs-audit", "write-clearly"],
+      "directions": [
+        {"from": "docs-audit", "to": "write-clearly", "triggers": ["near-miss-proofreading"]},
+        {"from": "write-clearly", "to": "docs-audit", "triggers": ["near-miss-docs-audit"]}
+      ]
+    },
+    {
+      "id": "maui-blazor-browser--ui-design-and-polish",
+      "skills": ["maui-blazor-browser", "ui-design-and-polish"],
+      "directions": [
+        {"from": "maui-blazor-browser", "to": "ui-design-and-polish", "triggers": ["near-miss-ui-polish"]},
+        {"from": "ui-design-and-polish", "to": "maui-blazor-browser", "triggers": ["near-miss-maui-host"]}
+      ]
+    },
+    {
+      "id": "prune-codebase--reduce-code-slop",
+      "skills": ["prune-codebase", "reduce-code-slop"],
+      "directions": [
+        {"from": "prune-codebase", "to": "reduce-code-slop", "triggers": ["near-miss-simplification"]},
+        {"from": "reduce-code-slop", "to": "prune-codebase", "triggers": ["near-miss-pruning"]}
+      ]
+    },
+    {
+      "id": "reduce-code-slop--ui-design-and-polish",
+      "skills": ["reduce-code-slop", "ui-design-and-polish"],
+      "directions": [
+        {"from": "reduce-code-slop", "to": "ui-design-and-polish", "triggers": ["near-miss-ui"]},
+        {"from": "ui-design-and-polish", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]}
+      ]
+    },
+    {
+      "id": "ui-design-and-polish--write-clearly",
+      "skills": ["ui-design-and-polish", "write-clearly"],
+      "directions": [
+        {"from": "ui-design-and-polish", "to": "write-clearly", "triggers": ["near-miss-wording-only"]},
+        {"from": "write-clearly", "to": "ui-design-and-polish", "triggers": ["near-miss-ui-design"]}
+      ]
+    }
+  ],
+  "coverageCases": [
+    {
+      "id": "specialist-handoff-boundaries",
+      "kind": "specialist-handoff",
+      "caseRefs": [
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "near-miss-comment-health"},
+        {"suite": "comment-health", "section": "triggerCases", "id": "near-miss-code-audit"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-maui-host"},
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "near-miss-ui-polish"}
+      ],
+      "requiredSignals": [
+        "select the declared specialist owner without activating the containing suite",
+        "preserve explicit-only invocation when the destination skill requires it"
+      ],
+      "prohibitedSignals": [
+        "activate both specialists for one bounded request",
+        "use a router skill or invent an unregistered owner"
+      ]
+    },
+    {
+      "id": "explicit-and-natural-language-discovery",
+      "kind": "progressive-disclosure",
+      "caseRefs": [
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-explicit-invocation"},
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-whole-audit"},
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "explicit-host-request"},
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "implicit-same-request"}
+      ],
+      "requiredSignals": [
+        "honor direct $skill invocation",
+        "use natural-language discovery only when the skill policy permits implicit invocation"
+      ],
+      "prohibitedSignals": [
+        "require an explicit mention for an implicit-enabled skill",
+        "activate an explicit-only skill from natural language alone"
+      ]
+    },
+    {
+      "id": "full-catalog-owner-collisions",
+      "kind": "full-catalog-collision",
+      "caseRefs": [
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-full-catalog-audit"},
+        {"suite": "deep-planning", "section": "triggerCases", "id": "trigger-full-catalog-plan"},
+        {"suite": "deep-planning", "section": "triggerCases", "id": "near-miss-full-catalog-implementation"}
+      ],
+      "requiredSignals": [
+        "select deep-code-audit for one comprehensive read-only audit",
+        "select deep-planning for unresolved cross-domain design decisions",
+        "select ordinary-implementation for a decision-complete bounded change"
+      ],
+      "prohibitedSignals": [
+        "activate every named specialist for one comprehensive request",
+        "force planning or audit onto decision-complete implementation"
+      ]
+    }
+  ]
+}

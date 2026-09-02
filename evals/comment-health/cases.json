@@ -273,17 +273,18 @@
     }
   ],
   "triggerCases": [
-    {"id": "trigger-comment-accuracy", "prompt": "Audit these source comments for accuracy and value.", "expectActivation": true, "expectedOwner": "$comment-health"},
-    {"id": "trigger-comment-cleanup", "prompt": "Clean up stale TODOs and commented-out code, but show me candidates before editing.", "expectActivation": true, "expectedOwner": "$comment-health"},
-    {"id": "trigger-directives", "prompt": "Review whether these suppression comments and doctests are still valid.", "expectActivation": true, "expectedOwner": "$comment-health"},
-    {"id": "near-miss-wording", "prompt": "Proofread this docstring for grammar without changing its meaning.", "expectActivation": false, "expectedOwner": "$write-clearly"},
-    {"id": "near-miss-docs", "prompt": "Audit and rebuild all repository documentation.", "expectActivation": false, "expectedOwner": "$docs-audit"},
-    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive correctness and security audit of this repository.", "expectActivation": false, "expectedOwner": "$deep-code-audit"},
-    {"id": "near-miss-simplification", "prompt": "Simplify this Python function without changing behavior.", "expectActivation": false, "expectedOwner": "$reduce-code-slop"},
-    {"id": "near-miss-pruning", "prompt": "Find all dead exports and stale feature flags in this repository.", "expectActivation": false, "expectedOwner": "$prune-codebase"},
-    {"id": "near-miss-dependency", "prompt": "Remove this package and review the resolved dependency graph.", "expectActivation": false, "expectedOwner": "$audit-dependencies"},
-    {"id": "near-miss-bug", "prompt": "Reproduce and root-cause this failing test.", "expectActivation": false, "expectedOwner": "$diagnose-bugs"},
-    {"id": "near-miss-privacy", "prompt": "Review this disposable data migration for personal-data exposure.", "expectActivation": false, "expectedOwner": "$audit-data-exposure"},
-    {"id": "near-miss-architecture", "prompt": "Plan the retirement of our legacy compatibility architecture.", "expectActivation": false, "expectedOwner": "$deep-planning"}
+    {"id": "trigger-explicit-invocation", "prompt": "Use $comment-health to review these source comments for accuracy, value, placement, and protected semantics, then apply only the changes I authorize.", "expectActivation": true, "expectedOwner": "comment-health"},
+    {"id": "trigger-comment-accuracy", "prompt": "Audit these source comments for accuracy and value.", "expectActivation": true, "expectedOwner": "comment-health"},
+    {"id": "trigger-comment-cleanup", "prompt": "Clean up stale TODOs and commented-out code, but show me candidates before editing.", "expectActivation": true, "expectedOwner": "comment-health"},
+    {"id": "trigger-directives", "prompt": "Review whether these suppression comments and doctests are still valid.", "expectActivation": true, "expectedOwner": "comment-health"},
+    {"id": "near-miss-wording", "prompt": "Proofread this docstring for grammar without changing its meaning.", "expectActivation": false, "expectedOwner": "write-clearly"},
+    {"id": "near-miss-docs", "prompt": "Audit and rebuild all repository documentation.", "expectActivation": false, "expectedOwner": "docs-audit"},
+    {"id": "near-miss-code-audit", "prompt": "Perform a comprehensive correctness and security audit of this repository.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-simplification", "prompt": "Simplify this Python function without changing behavior.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
+    {"id": "near-miss-pruning", "prompt": "Find all dead exports and stale feature flags in this repository.", "expectActivation": false, "expectedOwner": "prune-codebase"},
+    {"id": "near-miss-dependency", "prompt": "Remove this package and review the resolved dependency graph.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
+    {"id": "near-miss-bug", "prompt": "Reproduce and root-cause this failing test.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-privacy", "prompt": "Review this disposable data migration for personal-data exposure.", "expectActivation": false, "expectedOwner": "audit-data-exposure"},
+    {"id": "near-miss-architecture", "prompt": "Plan the retirement of our legacy compatibility architecture.", "expectActivation": false, "expectedOwner": "deep-planning"}
   ]
 }

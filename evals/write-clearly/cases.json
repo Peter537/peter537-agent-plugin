@@ -305,64 +305,94 @@
   ],
   "triggerCases": [
     {
+      "id": "trigger-explicit-invocation",
+      "prompt": "Use $write-clearly to draft or improve this repository prose for its readers while preserving meaning and voice.",
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
+    },
+    {
       "id": "trigger-proofreading",
       "prompt": "Proofread this repository Markdown file and fix only spelling and punctuation.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "trigger-documentation-draft",
       "prompt": "Draft a concise setup guide from the verified repository commands.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "trigger-release-notes",
       "prompt": "Rewrite these release notes for developers without changing any claims.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "trigger-ui-error-copy",
       "prompt": "Make this validation error clear and actionable while preserving its placeholder.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "trigger-multilingual-editing",
       "prompt": "Gør denne danske README mere klar uden at oversætte den.",
-      "expectActivation": true
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
     },
     {
       "id": "near-miss-code-only",
       "prompt": "Refactor this parser without changing comments or user-visible strings.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
     },
     {
       "id": "near-miss-translation",
       "prompt": "Translate this Danish paragraph into English without otherwise editing it.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "translation-workflow"
     },
     {
       "id": "near-miss-summary",
       "prompt": "Summarize this design document in five bullets.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-extraction",
       "prompt": "Extract every version number and URL from this README.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-fact-check",
       "prompt": "Verify whether every statement in this release note is factually correct.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-creative-writing",
       "prompt": "Write a poem about debugging.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
     },
     {
       "id": "near-miss-docs-audit",
       "prompt": "Audit the whole documentation set against the implementation and redesign its navigation.",
-      "expectActivation": false
+      "expectActivation": false,
+      "expectedOwner": "docs-audit"
+    },
+    {
+      "id": "near-miss-comment-health",
+      "prompt": "Audit these source comments for stale claims, redundant narration, and protected directives.",
+      "expectActivation": false,
+      "expectedOwner": "comment-health"
+    },
+    {
+      "id": "near-miss-ui-design",
+      "prompt": "Redesign this settings workflow's hierarchy and interactions while preserving behavior.",
+      "expectActivation": false,
+      "expectedOwner": "ui-design-and-polish"
     }
   ]
 }
