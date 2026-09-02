@@ -4,6 +4,31 @@ This directory contains repository-maintenance evaluations for the skills distri
 
 Use the [repository verification map](../docs/verification.md) to select the complete evidence required for a changed surface. This file remains the authority for eval-specific commands and safety constraints.
 
+## Canonical offline check
+
+Run the dependency-free repository baseline from the repository root:
+
+```text
+python -B evals/run_offline_checks.py
+python -B evals/run_offline_checks.py --root <repository>
+```
+
+The command discovers tracked and nonignored untracked repository files, performs bounded JSON, YAML/frontmatter, Python, and local Markdown-link checks, runs development-mode layout and common eval-manifest validation, invokes each suite's single materializer `--list` interface, and runs root maintenance tests plus distributed-script test suites. Discovery and execution order are deterministic. Generic static inspection excludes `.git`, intentionally malformed `evals/<slug>/fixtures/**` payloads, and nontracked cache or build outputs; tracked repository-owned files remain checked even when their directory has a build-like name.
+
+Exit `0` means every required offline check passed and the Git-visible repository state and path inventory remained unchanged. Exit `1` means at least one completed validation or test failed, or repository mutation was detected. Exit `2` means an infrastructure failure prevented reliable completion, including unsafe root discovery, filesystem inspection failure, unavailable writable temporary storage, child-process launch failure, or timeout. Independent failures are aggregated where their discovery remains trustworthy.
+
+The runner uses fixed direct Python argument arrays, closed standard input, captured child output, deterministic environment settings, and a fixed timeout. It executes only the Git-visible validators, materializer `--list` entry points, and test modules defined by this maintenance contract; it never executes manifest `verificationCommands`, live cases, fixture materialization, dependency installers, or services intentionally. Diagnostics identify checks and repository-relative locations without reproducing child output, matched values, canaries, private paths, or source snippets.
+
+The runner is an orchestrator, not an operating-system sandbox. Its reviewed child entry points are required to remain offline and nonpersistent, but the runner cannot technically prevent a changed child script from using the network or spawning descendants, and a timeout bounds only the direct child process. Captured child output is suppressed from diagnostics but is not itself proof that the child was safe.
+
+Run its standard-library tests with:
+
+```text
+python -B -m unittest evals/test_offline_checks.py -v
+```
+
+Python 3, local Git, and writable operating-system temporary storage are prerequisites. The command deliberately does not run strict release grouping, bundled skill or plugin validators, external schemas, model comparisons, live or runtime checks, MCP connections, installation, tagging, submission, or publication. Its final informational `NOT_RUN` boundary points to the [repository verification map](../docs/verification.md) for that evidence. A successful run proves only the bounded offline contracts it reports.
+
 ## Suite contract
 
 Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command.
@@ -77,7 +102,7 @@ Retain a skill change only when it corrects a reproduced failure and the revised
 
 ## Deterministic and live checks
 
-Deterministic offline checks are the required baseline. Run standard-library tests with `python -B -m unittest discover -s evals/<skill>/tests -v` when a suite provides them.
+The canonical offline command is the required baseline. Run an individual standard-library suite with `python -B -m unittest discover -s evals/<skill>/tests -v` when focused evidence or debugging is needed.
 
 Cases under a manifest's `liveCases` field are optional and require separate authorization. They may use only the exact public data and destination named by the case. Never track account-specific browser state, ChatGPT conversation URLs, live reports, private package coordinates, or repository content transmitted to an external service.
 
