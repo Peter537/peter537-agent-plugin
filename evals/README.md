@@ -6,6 +6,8 @@ This directory contains repository-maintenance evaluations for the skills distri
 
 Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command.
 
+The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
+
 Non-repository suites may provide a standard-library packet materializer, such as `materialize_packets.py`, with the same selection and external-output safety contract.
 
 Materializers support:
@@ -17,6 +19,26 @@ python evals/<skill>/materialize_fixtures.py --all --output <empty-temporary-dir
 ```
 
 The output directory must be empty and outside this repository. Materializers use local Git only, isolate Git configuration and hooks, and do not install packages or access the network.
+
+## Layout checks
+
+Run the repository-layout validator during development to detect nested packages, missing skill/eval pairs, name mismatches, invalid group assignments, catalog omissions, and manifest discovery drift. Newly added ungrouped skills produce a warning so development can continue:
+
+```text
+python -B evals/validate_repository_layout.py
+```
+
+Use strict grouping as a release gate. In this mode, every discovered skill must already belong to one `skills.sh.json` group:
+
+```text
+python -B evals/validate_repository_layout.py --strict-groups
+```
+
+Run the validator's standard-library fixture tests with:
+
+```text
+python -B -m unittest evals/test_repository_layout.py -v
+```
 
 ## Comparison method
 

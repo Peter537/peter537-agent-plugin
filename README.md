@@ -4,21 +4,17 @@ Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org
 
 ## Included skills
 
-| Skill | Purpose |
+| Group | Skills |
 | --- | --- |
-| `audit-data-exposure` | Review current repository content and reachable Git history for personal data, private artifacts, anonymization failures, and disposable migrations. |
-| `audit-dependencies` | Review every dependency and software supply-chain input before package changes or on request. |
-| `chatgpt-research` | Orchestrate and verify multi-source ChatGPT Deep Research. |
-| `comment-health` | Audit and safely improve source comments without losing contracts, rationale, documentation, or tool semantics. |
-| `deep-code-audit` | Audit correctness, security, architecture, and maintainability across a codebase or scoped change. |
-| `deep-planning` | Research and clarify complex software changes before implementation. |
-| `diagnose-bugs` | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. |
-| `docs-audit` | Audit and rebuild repository documentation against implementation evidence. |
-| `maui-blazor-browser` | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. |
-| `prune-codebase` | Prove and retire dead or obsolete repository surface without guessing about consumers or compatibility. |
-| `reduce-code-slop` | Review and simplify scoped C# and Python code without changing behavior or hiding diagnostics. |
-| `ui-design-and-polish` | Design, audit, refine, and verify accessible product interfaces. |
-| `write-clearly` | Draft, edit, and audit repository prose for clarity, reader fit, fidelity, and voice in its source language. |
+| [Planning & research](docs/skills/README.md#planning--research) | `deep-planning`, `chatgpt-research` |
+| [Engineering quality](docs/skills/README.md#engineering-quality) | `deep-code-audit`, `diagnose-bugs`, `comment-health`, `prune-codebase`, `reduce-code-slop` |
+| [Security & supply chain](docs/skills/README.md#security--supply-chain) | `audit-dependencies`, `audit-data-exposure` |
+| [Documentation & writing](docs/skills/README.md#documentation--writing) | `docs-audit`, `write-clearly` |
+| [UI & .NET](docs/skills/README.md#ui--net) | `ui-design-and-polish`, `maui-blazor-browser` |
+
+See the [skill catalog](docs/skills/README.md) for each skill's purpose, package, and evaluation suite.
+
+The `skills/` and `evals/` directories intentionally remain flat: every installable skill is an immediate `skills/<slug>/` child, and every tracked evaluation suite mirrors it at `evals/<slug>/`. Logical categories come from [`skills.sh.json`](skills.sh.json) rather than filesystem nesting so Agent Plugin discovery remains compatible.
 
 ## Included MCP servers
 
