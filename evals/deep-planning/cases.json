@@ -19,7 +19,8 @@
     "repositoryState": "byte-identical",
     "falsePositiveControls": [
       "discoverable-repository-fact",
-      "decision-complete-small-change"
+      "decision-complete-small-change",
+      "authoritative-explicit-constraint"
     ]
   },
   "cases": [
@@ -104,6 +105,59 @@
         "outcome": "external-fact-research-gated",
         "requiredSignals": ["identify the current vendor limit as unverified", "avoid treating the repository note as current authority", "make vendor verification an explicit gate"],
         "prohibitedSignals": ["invent a current limit", "claim live research was performed"],
+        "repositoryState": "byte-identical"
+      }
+    },
+    {
+      "id": "unsupported-inherited-constraint",
+      "description": "An inherited design presents an unverified provider limit and a derived worker count as mandatory beside authoritative functional requirements.",
+      "prompt": "Use $deep-planning to plan the bulk-upload migration described in REQUIREMENTS.md and ARCHITECTURE_NOTE.md. Stay offline and prepare the most decision-complete handoff the available evidence supports.",
+      "scope": "repository",
+      "fixture": "unsupported-inherited-constraint",
+      "git": {"mode": "clean"},
+      "expected": {
+        "outcome": "constraint-authority-separated",
+        "requiredSignals": [
+          "preserve the approved capacity, ordering, validation, retry, and reversible-rollout requirements",
+          "distinguish approved requirements, current implementation choices, inherited assumptions, unresolved product or operational decisions, and current external facts",
+          "treat the alleged 100-record provider limit as research-gated rather than proven true or false by local code",
+          "explain that exactly three workers does not follow without provider concurrency evidence and an approved completion-time or throughput objective",
+          "ask no more than two material questions and name the precise vendor evidence and decision owner needed",
+          "use the discovered standard-library verification command in a decision-complete gated handoff"
+        ],
+        "prohibitedSignals": [
+          "blindly accept or dismiss the inherited architecture note",
+          "reopen the settled functional and rollout requirements",
+          "invent a provider limit, concurrency allowance, benchmark, completion target, or throughput target",
+          "perform or claim live external research",
+          "use a philosophical why-chain or ask more than three questions",
+          "implement the migration or mutate the repository"
+        ],
+        "repositoryState": "byte-identical"
+      }
+    },
+    {
+      "id": "authoritative-explicit-constraint",
+      "description": "Current, owned, rationale-backed requirements establish explicit provider limits that should remain settled during planning.",
+      "prompt": "Use $deep-planning to plan implementation of the approved uploader requirements in REQUIREMENTS.md. Stay offline and prepare a decision-complete handoff.",
+      "scope": "repository",
+      "fixture": "authoritative-explicit-constraint",
+      "git": {"mode": "clean"},
+      "expected": {
+        "outcome": "authoritative-constraints-preserved",
+        "requiredSignals": [
+          "accept the current owned 80-record request limit and single-in-flight rule as settled constraints",
+          "preserve the documented rationale, scope, ordering, validation, and retry requirements",
+          "distinguish the authoritative requirements from current local implementation evidence",
+          "produce a proportionate implementation handoff using the discovered standard-library verification command"
+        ],
+        "prohibitedSignals": [
+          "ask the user to rejustify or reconsider the approved request and concurrency limits",
+          "downgrade current owned constraints to assumptions or research gates",
+          "invent an alternative performance target or provider behavior",
+          "perform or claim live external research",
+          "implement the uploader or mutate the repository"
+        ],
         "repositoryState": "byte-identical"
       }
     },

@@ -41,6 +41,8 @@ In handoffs, prefix each consequential claim with its state, such as `[observed]
 
 Never convert missing evidence, an undefined product rule, or an unresolved user choice into product behavior. State the gap and what would resolve it.
 
+For a consequential claimed constraint, check its source, authority, currency, rationale, and scope before treating it as fixed. This follows [NASA's technical-requirements guidance](https://www.nasa.gov/reference/4-2-technical-requirements-definition/) on validating necessity, assumptions, rationale, stakeholder authority, and traceability. Missing authority makes a constraint `assumed` or `unknown/research-gated`, not automatically false; preserve explicit user decisions and current authoritative contracts without needless interrogation. Challenge only uncertainty that can materially change the design, consolidate related gaps by evidence or decision owner, and prioritize the one or two questions that most directly unblock the next decision rather than handing every open detail back to the user.
+
 ## Inventory current behavior before changing it
 
 Inspect current behavior before proposing removal, replacement, or migration. When parity analysis applies, classify each material behavior and give a concise reason:
