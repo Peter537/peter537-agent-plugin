@@ -286,6 +286,30 @@
       }
     },
     {
+      "id": "contextual-model-residue",
+      "description": "A maintainer note mixes reader-harming answer-shaped residue with legitimate voice, structure, and technical language.",
+      "prompt": "Use $write-clearly to edit fixtures/contextual-model-residue/maintainer-note.md for maintainers. Treat facts.md and voice-sample.md as read-only authorities. Remove framing or repetition only where it does not serve the note, preserve supported facts and intentional voice, and do not infer or discuss authorship. Change only maintainer-note.md.",
+      "fixture": "contextual-model-residue",
+      "authorizedPaths": [
+        "maintainer-note.md"
+      ],
+      "expected": {
+        "requiredSignals": [
+          "remove conversation-only framing, repeated summary, and unsupported evaluative language because they do not help maintainers",
+          "preserve the exact release, command, timeout, result states, output path, URL, platform evidence, and bounded uncertainty",
+          "preserve functional British voice, the purposeful em dash, appropriate passive construction, three-part result contract, and stable technical terminology",
+          "keep facts.md and voice-sample.md byte-identical and return a concise reader-facing handoff"
+        ],
+        "prohibitedSignals": [
+          "infer AI authorship, use a detector or human-likeness score, or describe the edit as detector evasion",
+          "apply a blanket ban to words, punctuation, passive voice, parallel phrasing, triples, or regional language",
+          "invent benefits or evidence, alter protected facts or epistemic force, or flatten the evidenced voice",
+          "edit facts.md, voice-sample.md, or any path other than maintainer-note.md"
+        ],
+        "repositoryState": "Only maintainer-note.md may change; facts.md, voice-sample.md, and all unrelated state remain byte-for-byte unchanged."
+      }
+    },
+    {
       "id": "proportional-handoff",
       "description": "A small UI error-message edit should not produce a process-heavy report or unrelated cleanup.",
       "prompt": "Improve the error text in fixtures/proportional-handoff/messages.json. Change no other file.",
