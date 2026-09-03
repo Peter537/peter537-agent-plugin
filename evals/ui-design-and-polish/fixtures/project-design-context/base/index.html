@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kølekæde · Undtagelsesvurdering</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Gå til indhold</a>
+  <header class="hero-card">
+    <p class="eyebrow">Kølekæde</p>
+    <h1>Undtagelsesvurdering</h1>
+    <p>Vurder temperaturafvigelser og beslut, om en forsendelse kan fortsætte eller skal i karantæne.</p>
+  </header>
+
+  <nav class="state-picker" aria-label="Eksempeltilstande" data-testid="state-controls">
+    <a href="?state=populated" data-state-link="populated">Aktive</a>
+    <a href="?state=empty" data-state-link="empty">Ingen</a>
+    <a href="?state=error" data-state-link="error">Datafejl</a>
+    <a href="?state=permission" data-state-link="permission">Adgang</a>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <section data-state-panel="populated" data-testid="state-populated">
+      <div class="summary-cards" aria-label="Oversigt">
+        <article class="summary-card"><strong>2</strong><span>kræver beslutning</span></article>
+        <article class="summary-card"><strong>18 min.</strong><span>ældste afvigelse</span></article>
+        <article class="summary-card"><strong>1</strong><span>kritisk temperatur</span></article>
+      </div>
+
+      <section id="source-CC-1842" class="sensor-provenance evidence-card" aria-labelledby="evidence-heading" data-testid="sensor-provenance">
+        <h2 id="evidence-heading">Sensorbevis</h2>
+        <p>Kilde: Kalibreret sensor DK-CPH-04 · senest synkroniseret kl. 14.32 CET</p>
+      </section>
+
+      <section class="shipment-grid" aria-labelledby="shipments-heading">
+        <h2 id="shipments-heading">Forsendelser til vurdering</h2>
+        <article class="shipment-card" data-testid="shipment-CC-1842">
+          <header><span class="status-chip" data-severity="critical">Kritisk</span><h3>CC-1842</h3></header>
+          <dl><div><dt>Facilitet</dt><dd>København Nord</dd></div><div><dt>Alder</dt><dd>18 min.</dd></div><div><dt>Målt</dt><dd>9,2 °C</dd></div><div><dt>Grænse</dt><dd>8,0 °C</dd></div></dl>
+          <p data-testid="long-reason">Gentagne temperaturudsving efter omlæsning ved den midlertidige kølezone; chaufføren oplyser, at plomberingen blev kontrolleret, men dokumentationen er endnu ikke synkroniseret.</p>
+          <div class="actions"><a href="#source-CC-1842" data-testid="open-source">Åbn kildedata</a><button class="action-button action-button--destructive" type="button" data-testid="quarantine">Sæt CC-1842 i karantæne</button></div>
+        </article>
+        <article class="shipment-card" data-testid="shipment-CC-1977">
+          <header><span class="status-chip" data-severity="warning">Advarsel</span><h3>CC-1977</h3></header>
+          <dl><div><dt>Facilitet</dt><dd>Høje Taastrup omlastning</dd></div><div><dt>Alder</dt><dd>7 min.</dd></div><div><dt>Målt</dt><dd>7,7 °C</dd></div><div><dt>Grænse</dt><dd>8,0 °C</dd></div></dl>
+          <p>Temperaturen nærmer sig grænsen efter en forsinket omlæsning. Kontroller næste sensormåling før beslutning.</p>
+        </article>
+      </section>
+    </section>
+
+    <section class="state-card" data-state-panel="empty" data-testid="state-empty" hidden>
+      <h2>Ingen undtagelser kræver vurdering</h2>
+      <p>Nye sensorafvigelser vises her, når de modtages.</p>
+    </section>
+
+    <section class="state-card" data-state-panel="error" data-testid="state-error" role="alert" hidden>
+      <h2>Sensorbevis kunne ikke indlæses</h2>
+      <p>Ingen beslutning er blevet ændret. Prøv igen, når forbindelsen er genetableret.</p>
+    </section>
+
+    <section class="state-card" data-state-panel="permission" data-testid="state-permission" hidden>
+      <h2>Du mangler tilladelse til at træffe beslutninger</h2>
+      <p>Du kan fortsat gennemgå sensorbevis. Kontakt en vagtleder for rollen Kølekædeansvarlig.</p>
+      <p class="sensor-provenance">Kilde: Kalibreret sensor DK-CPH-04 · senest synkroniseret kl. 14.32 CET</p>
+    </section>
+  </main>
+
+  <dialog id="quarantine-dialog" aria-labelledby="dialog-title" data-testid="quarantine-dialog">
+    <h2 id="dialog-title">Sæt CC-1842 i karantæne?</h2>
+    <p>Forsendelsen kan ikke frigives, før en kølekædeansvarlig har gennemgået den.</p>
+    <form method="dialog">
+      <button class="action-button action-button--secondary" value="cancel" data-testid="cancel-quarantine">Annuller</button>
+      <button class="action-button action-button--destructive" value="confirm" data-testid="confirm-quarantine">Bekræft karantæne</button>
+    </form>
+  </dialog>
+
+  <p class="shortcut-hint">Genvej: Alt+Q flytter fokus til karantænehandlingen.</p>
+  <script src="app.js"></script>
+</body>
+</html>

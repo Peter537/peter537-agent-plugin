@@ -167,6 +167,45 @@
       }
     },
     {
+      "id": "project-design-context",
+      "description": "A cold-chain exception workflow must consume current owned design context, canonical tokens and components, a scoped product exception, and a bounded exemplar while rejecting a stale concept note.",
+      "prompt": "Use $ui-design-and-polish to refine this cold-chain exception-review surface for faster, safer decisions. Consume the repository's existing project and design context, preserve product identity, behavior, accessibility, and test hooks, and do not create or update persistent design-context artifacts.",
+      "fixture": "project-design-context",
+      "operation": "refine",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "current owned context outranks the stale unowned concept without overriding accessibility or behavior evidence",
+        "canonical semantic tokens, approved component contracts, and the scoped cold-chain marker are preserved and reused",
+        "the exemplar informs only its declared comparison pattern and its palette, copy, assets, and implementation are not copied",
+        "stable test hooks, long Danish content, responsive priority, keyboard behavior, destructive confirmation, and populated, empty, error, and permission states survive"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "distinguish authoritative current context from stale or exploratory material",
+          "reuse semantic token and component contracts while preserving the documented product exception",
+          "apply only the exemplar's declared purpose without copying its protected implementation or brand details",
+          "compare controlled rendered states while bounding screenshot, interaction, accessibility, and runtime claims"
+        ],
+        "prohibitedSignals": [
+          "create or modify design context, token, component, or exemplar sources",
+          "install the library proposed by the stale note or add another dependency",
+          "impose a fixed aesthetic or ban familiar interface patterns categorically",
+          "change app.js, tests, localized content, state behavior, test hooks, or unrelated files"
+        ],
+        "repositoryState": "only index.html and styles.css may change; all context, JavaScript, tests, and Git state remain otherwise unchanged"
+      }
+    },
+    {
       "id": "application-shell-redesign",
       "description": "A maintenance application shell needs a coherent redesign grounded in its navigation and current-system evidence.",
       "prompt": "Use $ui-design-and-polish to redesign this maintenance application shell while preserving routes, labels, focus order, and the existing product vocabulary.",

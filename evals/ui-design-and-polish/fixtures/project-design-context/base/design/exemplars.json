@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "source-comparison-row",
+      "purpose": "Keep list-level provenance adjacent to the comparison and align each record's age, measured value, and threshold for rapid review.",
+      "applicability": "Applicable only to the evidence-comparison region of repeated operational review workflows.",
+      "nonCopyGuidance": [
+        "Do not copy the exemplar's page layout, palette, wording, component names, or source code.",
+        "Do not reproduce its mouse-only overflow action or low-contrast secondary text."
+      ],
+      "source": {
+        "type": "repository-owned synthetic reference",
+        "path": "design/reference-review-board.html",
+        "owner": "Interaction design"
+      },
+      "license": "MIT",
+      "knownLimitations": [
+        "The row action is not keyboard accessible.",
+        "The secondary text contrast has not been approved."
+      ]
+    }
+  ]
+}
