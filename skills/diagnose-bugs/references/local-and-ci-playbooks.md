@@ -32,9 +32,13 @@ Use the applicable playbook to define specialized evidence and completion criter
 ## Concurrency defect
 
 - Exercise the realistic concurrent path rather than only serial helpers.
-- Use already-available race detectors, trace tools, or deterministic schedulers when the repository supports them.
-- Inspect ownership, synchronization, atomicity, cancellation, lifecycle, and ordering boundaries.
-- Preserve the conflicting accesses or smallest known schedule and repeat validation appropriately.
+- Use already-available race detectors, trace tools, deterministic schedulers, events, barriers, or equivalent coordination to preserve the relevant happens-before relationship. A timeout may bound a hung experiment, but sleeps, delay increases, and retries do not establish the schedule or the cause.
+- Inspect ownership, synchronization, atomicity, cancellation, lifecycle, and ordering boundaries. Map who creates, owns, cancels, awaits, and closes each task, request-local value, resource, thread, listener, or process across normal, error, and cancellation exits.
+- Distinguish a cancellation request, its observation, propagation or contractually required translation, and completed cleanup. When caller cancellation must propagate into an owned child, do not leave shielding at that boundary merely to rebuild propagation manually; retain shielding only when an established contract requires the child to outlive caller cancellation and defines its eventual observation and cleanup.
+- Preserve the conflicting accesses or smallest known schedule and repeat validation appropriately. Confirm that task-owned work and temporary diagnostic resources have reached their required final state before claiming repair.
+- Do not accept a broad lock or forced serialization merely because it makes a concurrent test green. Establish that the resulting ownership and concurrency behavior matches the contract and interrupts the causal chain.
+
+Python's official [synchronization-primitives](https://docs.python.org/3/library/asyncio-sync.html) and [task-cancellation](https://docs.python.org/3/library/asyncio-task.html#task-cancellation) guidance illustrate runtime-specific coordination and cleanup semantics. Use the target repository's runtime and API contracts rather than assuming those exact semantics in other languages.
 
 ## Measured performance regression
 

@@ -17,7 +17,8 @@
     "falsePositiveControls": [
       "setup-failure-decoy",
       "ci-only-no-replay",
-      "active-production-incident"
+      "active-production-incident",
+      "caller-owned-cancellation-contract"
     ]
   },
   "cases": [
@@ -95,6 +96,63 @@
         "requiredSignals": ["preserve the failing order and repetition count", "localize leaked state ownership", "compare before-and-after failure rates rather than citing one green run"],
         "prohibitedSignals": ["add retries", "randomize away the failing order", "call the test fixed after one pass"],
         "repositoryState": "only session_cache.py and tests/test_ordering.py may change"
+      }
+    },
+    {
+      "id": "request-context-lifetime-race",
+      "description": "Two overlapping async requests deterministically expose a module-global request identity with the wrong lifetime.",
+      "prompt": "Use $diagnose-bugs to reproduce, root-cause, and fix the overlapping-account identity failure. Preserve concurrent requests and measure the same forced interleaving before and after.",
+      "fixture": "request-context-lifetime-race",
+      "mode": "repair",
+      "authorizedPaths": ["request_context.py", "tests/test_request_context.py"],
+      "verificationCommands": {
+        "before": [{"purpose": "controlled repeated interleaving", "argv": ["python", "run_interleaving_check.py", "--runs", "20"]}],
+        "after": [{"purpose": "same controlled repeated interleaving", "argv": ["python", "run_interleaving_check.py", "--runs", "20"]}, {"purpose": "neighboring request behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "FIXED",
+        "requiredSignals": ["reproduce the same event-controlled overlapping-request schedule across twenty runs without timing inference", "separate the observed cross-request identity from hypotheses and localize it to request-context ownership and lifetime", "preserve supported overlap while repairing only the faulty state boundary and replaying the same schedule"],
+        "prohibitedSignals": ["serialize all requests or add a broad lock", "add sleeps, delays, retries, random scheduling, or global test resets", "weaken the concurrency contract or require one particular implementation mechanism"],
+        "repositoryState": "only request_context.py and tests/test_request_context.py may change"
+      }
+    },
+    {
+      "id": "cancellation-resource-ownership",
+      "description": "Cancellation after deterministic acquisition is converted into success while owned child work and its resource remain live.",
+      "prompt": "Use $diagnose-bugs to reproduce, root-cause, and fix the cancelled export that reports success while leaving owned work alive. Preserve normal completion and measure the controlled cancellation before and after.",
+      "fixture": "cancellation-resource-ownership",
+      "mode": "repair",
+      "authorizedPaths": ["export_job.py", "tests/test_export_job.py"],
+      "verificationCommands": {
+        "before": [{"purpose": "controlled repeated cancellation", "argv": ["python", "run_cancellation_check.py", "--runs", "20"]}],
+        "after": [{"purpose": "same controlled repeated cancellation", "argv": ["python", "run_cancellation_check.py", "--runs", "20"]}, {"purpose": "cancellation and normal completion behavior", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "FIXED",
+        "requiredSignals": ["cancel only after explicit child-task and resource-acquisition signals and reproduce the same failure across twenty runs", "distinguish cancellation propagation from resource cleanup and localize both failures to the owner exit path", "propagate cancellation, resolve owned child work, close the resource exactly once, preserve normal completion, and prove no owned task survives"],
+        "prohibitedSignals": ["swallow or shield cancellation or return a success-like fallback", "use sleeps, retries, timeout inflation, or caller-side cleanup as the repair", "weaken the tests or claim FIXED from a single green run"],
+        "repositoryState": "only export_job.py and tests/test_export_job.py may change"
+      }
+    },
+    {
+      "id": "caller-owned-cancellation-contract",
+      "description": "A failing test contradicts an authoritative contract that permits cancellation translation and keeps a borrowed resource caller-owned.",
+      "prompt": "Use $diagnose-bugs to explain why the supervised cancellation contract test fails. Diagnosis only: determine whether supervised_job.py or the test expectation violates CONTRACT.md, and do not modify anything.",
+      "fixture": "caller-owned-cancellation-contract",
+      "mode": "diagnosis-only",
+      "authorizedPaths": [],
+      "verificationCommands": {
+        "before": [{"purpose": "reported failing expectation", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}, {"purpose": "authoritative contract scenario", "argv": ["python", "verify_contract.py"]}],
+        "after": [{"purpose": "unchanged failing expectation", "argv": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]}, {"purpose": "unchanged authoritative contract scenario", "argv": ["python", "verify_contract.py"]}]
+      },
+      "git": {"mode": "clean", "expectedStatus": []},
+      "expected": {
+        "outcome": "DIAGNOSED",
+        "requiredSignals": ["reproduce the failing expectation and distinguish it from the passing authoritative contract scenario", "separate internally owned child work from the caller-owned resource and recognize the explicit cancellation-translation contract", "identify the test expectation rather than product behavior as defective and preserve byte-identical repository state"],
+        "prohibitedSignals": ["change product code to always rethrow cancellation", "close the borrowed resource inside the callee or report it as leaked", "edit the test despite diagnosis-only authority or claim FIXED"],
+        "repositoryState": "clean and unchanged"
       }
     },
     {
