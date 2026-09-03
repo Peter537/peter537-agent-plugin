@@ -90,8 +90,8 @@ def load_manifest() -> dict[str, Any]:
     if manifest.get("suite") != "chatgpt-research":
         raise PacketError("Packet manifest has the wrong suite name.")
     cases = manifest.get("cases")
-    if not isinstance(cases, list) or len(cases) < 5:
-        raise PacketError("Packet manifest must contain at least five cases.")
+    if not isinstance(cases, list) or not cases:
+        raise PacketError("Packet manifest must contain at least one behavioral case.")
     seen: set[str] = set()
     for case in cases:
         if not isinstance(case, dict):
@@ -119,12 +119,12 @@ def load_manifest() -> dict[str, Any]:
             if text.count(placeholder) != 1:
                 raise PacketError(f"Packet case {case_id} must contain its runtime-canary placeholder exactly once.")
     triggers = manifest.get("triggerCases")
-    if not isinstance(triggers, list):
-        raise PacketError("Packet manifest must contain triggerCases.")
+    if not isinstance(triggers, list) or not triggers:
+        raise PacketError("Packet manifest must contain at least one trigger case.")
     activations = sum(trigger.get("expectActivation") is True for trigger in triggers if isinstance(trigger, dict))
     near_misses = sum(trigger.get("expectActivation") is False for trigger in triggers if isinstance(trigger, dict))
-    if activations < 6 or near_misses < 4:
-        raise PacketError("Trigger coverage requires at least six activations and four near misses.")
+    if not activations or not near_misses:
+        raise PacketError("Trigger coverage requires at least one activation and one near miss.")
     return manifest
 
 

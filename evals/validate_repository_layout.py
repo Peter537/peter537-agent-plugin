@@ -23,6 +23,7 @@ from typing import Iterable
 SKILL_SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MARKDOWN_LINK = re.compile(r"\[[^\]\n]*\]\((?:<([^>\n]+)>|([^\s)]+))")
 FRONTMATTER_NAME = re.compile(r"^name\s*:\s*(.*?)\s*$")
+CATALOG_SUPPORT_LINKS = {"../../evals/behavior-first-contract.md"}
 
 
 @dataclass
@@ -355,7 +356,7 @@ def _validate_catalog(
             result.errors.append(f"catalog is missing link: {target}")
         elif count > 1:
             result.errors.append(f"catalog contains duplicate link: {target}")
-    for target in sorted(catalog_package_links - expected_links):
+    for target in sorted(catalog_package_links - expected_links - CATALOG_SUPPORT_LINKS):
         result.errors.append(f"catalog contains unknown skill or eval link: {target}")
 
     heading_matches = list(

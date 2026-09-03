@@ -16,7 +16,12 @@
       "claim that report synthesis is itself a primary source",
       "create or modify repository files during a research run"
     ],
-    "repositoryState": "unchanged"
+    "repositoryState": "unchanged",
+    "falsePositiveControls": [
+      "ordinary-one-document-lookup",
+      "interactive-capture-contract",
+      "unavailable-signed-in-browser"
+    ]
   },
   "cases": [
     {

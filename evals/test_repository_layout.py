@@ -156,6 +156,18 @@ class RepositoryLayoutValidatorTests(unittest.TestCase):
 
         self.assert_failed_with(result, "catalog")
 
+    def test_behavior_contract_catalog_link_is_allowed(self) -> None:
+        catalog = self.root / "docs" / "skills" / "README.md"
+        catalog.write_text(
+            catalog.read_text(encoding="utf-8")
+            + "\n[Behavior-first evaluation contract](../../evals/behavior-first-contract.md)\n",
+            encoding="utf-8",
+        )
+
+        result = self.run_validator("--strict-groups")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_catalog_pairs_must_remain_under_their_configured_groups(self) -> None:
         catalog = self.root / "docs" / "skills" / "README.md"
         catalog.write_text(

@@ -28,10 +28,9 @@ class ChatGPTResearchSuiteTests(unittest.TestCase):
     def test_manifest_has_signal_based_coverage(self) -> None:
         self.assertEqual(self.manifest["schemaVersion"], 1)
         self.assertEqual(self.manifest["suite"], "chatgpt-research")
-        self.assertGreaterEqual(len(self.manifest["cases"]), 5)
+        self.assertTrue(self.manifest["cases"])
         triggers = self.manifest["triggerCases"]
-        self.assertGreaterEqual(sum(case["expectActivation"] is True for case in triggers), 6)
-        self.assertGreaterEqual(sum(case["expectActivation"] is False for case in triggers), 4)
+        self.assertEqual({case["expectActivation"] for case in triggers}, {True, False})
         ids = [case["id"] for case in self.manifest["cases"] + triggers + self.manifest["liveCases"]]
         self.assertEqual(len(ids), len(set(ids)))
 

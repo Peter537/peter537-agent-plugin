@@ -15,6 +15,10 @@
     ],
     "conditionalOutcomePolicy": "For cases marked required-when-safe, PASS assumes a safe renderer and browser are available; otherwise BLOCKED is correct when the missing rendered evidence is explicit and no visual-completion claim is made.",
     "repositoryState": "Only paths authorized by the case may change; pre-existing tracked, staged, unstaged, and untracked work must otherwise remain byte-for-byte unchanged.",
+    "falsePositiveControls": [
+      "justified-patterns",
+      "blazor-rendering-blocked"
+    ],
     "blindReviewRubric": [
       "Does the result make the product's primary job and hierarchy clearer?",
       "Do product-derived choices make the result more specific without harming familiar interaction patterns?",

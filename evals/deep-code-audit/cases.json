@@ -13,7 +13,12 @@
       "apply arbitrary file, line, function, class, test, abstraction, or dependency-count thresholds",
       "promote unverified scanner output or authorship guesses as findings"
     ],
-    "repositoryState": "Every fixture repository must retain its original tracked, staged, unstaged, and untracked state."
+    "repositoryState": "Every fixture repository must retain its original tracked, staged, unstaged, and untracked state.",
+    "falsePositiveControls": [
+      "clean-proportionate",
+      "cohesive-state-machine",
+      "necessary-security-compatibility"
+    ]
   },
   "cases": [
     {

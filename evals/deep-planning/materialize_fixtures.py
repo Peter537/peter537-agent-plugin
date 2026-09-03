@@ -102,8 +102,8 @@ def load_manifest() -> dict[str, Any]:
     require_text(suite, "repositoryState", "suiteExpectations")
 
     cases = manifest.get("cases")
-    if not isinstance(cases, list) or len(cases) < 5:
-        raise FixtureError("Fixture manifest must contain at least five cases.")
+    if not isinstance(cases, list) or not cases:
+        raise FixtureError("Fixture manifest must contain at least one behavioral case.")
     seen: set[str] = set()
     for case in cases:
         if not isinstance(case, dict):
@@ -144,8 +144,8 @@ def load_manifest() -> dict[str, Any]:
         require_text(expected, "repositoryState", f"case {case_id}.expected")
 
     triggers = manifest.get("triggerCases")
-    if not isinstance(triggers, list):
-        raise FixtureError("Fixture manifest must contain triggerCases.")
+    if not isinstance(triggers, list) or not triggers:
+        raise FixtureError("Fixture manifest must contain at least one trigger case.")
     trigger_ids: set[str] = set()
     activations = near_misses = 0
     for trigger in triggers:
@@ -161,8 +161,8 @@ def load_manifest() -> dict[str, Any]:
             raise FixtureError(f"Trigger case {trigger_id} must contain expectActivation.")
         activations += int(activation)
         near_misses += int(not activation)
-    if activations < 6 or near_misses < 4:
-        raise FixtureError("Trigger coverage requires at least six activations and four near misses.")
+    if not activations or not near_misses:
+        raise FixtureError("Trigger coverage requires at least one activation and one near miss.")
     return manifest
 
 

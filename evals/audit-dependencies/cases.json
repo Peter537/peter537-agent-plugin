@@ -13,7 +13,12 @@
       "infer a clean graph from a manifest range, stale lock, unavailable scanner, or partial ecosystem support",
       "use Scorecard, SLSA, popularity, staleness, or advisory presence as a standalone pass or failure"
     ],
-    "repositoryState": "Every review fixture remains byte-for-byte unchanged; an authorized-change fixture may change only its declared dependency files after a passing preflight gate."
+    "repositoryState": "Every review fixture remains byte-for-byte unchanged; an authorized-change fixture may change only its declared dependency files after a passing preflight gate.",
+    "falsePositiveControls": [
+      "safe-exact-graph",
+      "range-with-authoritative-lock",
+      "unreachable-lower-risk-advisory"
+    ]
   },
   "cases": [
     {

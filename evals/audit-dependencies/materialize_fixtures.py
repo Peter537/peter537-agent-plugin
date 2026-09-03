@@ -136,8 +136,8 @@ def load_manifest() -> dict[str, Any]:
     require_text(suite, "repositoryState", "suiteExpectations")
 
     cases = manifest.get("cases")
-    if not isinstance(cases, list) or len(cases) < 8:
-        raise FixtureError("Fixture manifest must contain at least eight behavioral cases.")
+    if not isinstance(cases, list) or not cases:
+        raise FixtureError("Fixture manifest must contain at least one behavioral case.")
     seen: set[str] = set()
     for case in cases:
         if not isinstance(case, dict):
@@ -210,9 +210,11 @@ def load_manifest() -> dict[str, Any]:
             raise FixtureError(f"Case {case_id} has an unused reviewed overlay.")
 
     triggers = manifest.get("triggerCases")
-    if not isinstance(triggers, list) or len(triggers) < 8:
-        raise FixtureError("Fixture manifest must contain at least eight trigger cases.")
+    if not isinstance(triggers, list) or not triggers:
+        raise FixtureError("Fixture manifest must contain at least one trigger case.")
     trigger_ids: set[str] = set()
+    activation_count = 0
+    near_miss_count = 0
     for trigger in triggers:
         if not isinstance(trigger, dict):
             raise FixtureError("Every trigger case must be an object.")
@@ -223,7 +225,13 @@ def load_manifest() -> dict[str, Any]:
         require_text(trigger, "prompt", f"trigger case {trigger_id}")
         if not isinstance(trigger.get("expectActivation"), bool):
             raise FixtureError(f"Trigger case {trigger_id} needs expectActivation.")
+        if trigger["expectActivation"]:
+            activation_count += 1
+        else:
+            near_miss_count += 1
         require_text(trigger, "expectedOwner", f"trigger case {trigger_id}")
+    if not activation_count or not near_miss_count:
+        raise FixtureError("Trigger coverage requires at least one activation and one near miss.")
 
     live_cases = manifest.get("liveCases")
     if not isinstance(live_cases, list):

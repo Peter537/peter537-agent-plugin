@@ -2,7 +2,7 @@
 
 This directory contains repository-maintenance evaluations for the skills distributed by Peter537 Agent Plugin. The evaluation assets are not installed with an individual skill and are not runtime dependencies of the plugin.
 
-Use the [repository verification map](../docs/verification.md) to select the complete evidence required for a changed surface. This file remains the authority for eval-specific commands and safety constraints.
+Use the [behavior-first evaluation contract](behavior-first-contract.md) to design and grade cases, and use the [repository verification map](../docs/verification.md) to select the complete evidence required for a changed surface. This file remains the authority for eval-specific commands and safety constraints.
 
 ## Canonical offline check
 
@@ -31,7 +31,7 @@ Python 3, local Git, and writable operating-system temporary storage are prerequ
 
 ## Suite contract
 
-Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command.
+Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
 
 The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
 
@@ -46,9 +46,13 @@ python -B evals/validate_eval_manifests.py --root <repository>
 
 Exit `0` means every discovered manifest and the cross-skill routing matrix satisfy the shared structural contract. Exit `1` means parsed metadata contains validation errors. Exit `2` means root discovery, file reading, or JSON parsing failed. Diagnostics are deterministic and repository-relative; privacy findings identify only the field location, never the offending value.
 
-The shared contract requires `schemaVersion: 1`, `suiteExpectations`, nonempty `cases`, and nonempty `triggerCases`. The only optional top-level fields are `suite` and `liveCases`; when present, `suite` must match its directory. Behavioral cases require lowercase slug IDs, descriptions, prompts, fixtures, and an `expected` object with nonempty `requiredSignals`, `prohibitedSignals`, and `repositoryState`; `expected.outcome` remains optional. Trigger cases require IDs, prompts, boolean `expectActivation` values, and one canonical `expectedOwner`. IDs must be unique across behavioral, trigger, and live cases within one suite, while different suites may reuse an ID. Nested metadata remains open so suites can retain task-specific evidence.
+The shared contract requires `schemaVersion: 1`, `suiteExpectations`, nonempty `cases`, and nonempty `triggerCases`. The only optional top-level fields are `suite` and `liveCases`; when present, `suite` must match its directory. `suiteExpectations.falsePositiveControls` is a nonempty, unique list of IDs that resolve only to behavioral cases in the same suite.
 
-Every suite must include at least one positive and one negative trigger. The validator deliberately does not apply the portal's five-positive/three-negative minimum to each suite because that threshold applies to the complete public submission. This contract follows [OpenAI's evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) by requiring task-specific structured evidence without reducing quality to a numerical score; see the separate [submission guidance](https://developers.openai.com/plugins/deploy/submission) for public-submission requirements.
+Behavioral cases require lowercase slug IDs, descriptions, prompts, fixtures, and an `expected` object with nonempty `requiredSignals`, `prohibitedSignals`, and `repositoryState`; `expected.outcome` remains optional. Case-level suite metadata remains open, but `expected` accepts no other fields and behavioral cases cannot contain routing expectations. Trigger cases contain only an ID, prompt, boolean `expectActivation`, and one canonical `expectedOwner`; execution expectations do not belong in triggers. IDs must be unique across behavioral, trigger, and live cases within one suite, while different suites may reuse an ID.
+
+Signal comparison collapses whitespace and applies Unicode case folding. Normalized duplicates within a list and direct overlap between required and prohibited signals are invalid. Diagnostics identify the field location without printing the signal value. The validator also preserves its read-only boundary and rejects hidden golden-response fields inside `expected`.
+
+Every suite must include at least one behavioral case, one positive trigger, and one negative trigger. The common contract imposes no arbitrary suite-size threshold; scenario-specific repetition remains valid when the behavior itself requires it. This contract follows [OpenAI's evaluation guidance](https://developers.openai.com/api/docs/guides/evaluation-best-practices) by requiring task-specific structured evidence without reducing quality to a numerical score. OpenAI is deprecating its legacy Evals platform, so this repository's contract does not depend on that API. See the separate [submission guidance](https://developers.openai.com/plugins/deploy/submission) for public-submission requirements.
 
 Fixture references, including aliases, must resolve beneath the suite's `fixtures/` directory without traversal, `.git`, symlinks, junctions, or reparse points. Known path-bearing metadata must be repository-relative, although generated targets need not exist. Every manifest string is checked for Windows or Unix personal-home absolute paths. Skill owners use bare discovered slugs; `$slug` is reserved for explicit invocation inside prompts. Non-skill owners must be declared in [`routing-matrix.json`](routing-matrix.json), including `no-skill` for requests that no skill in this plugin owns. Positive triggers must name their suite, while negative triggers must name another skill or a registered non-skill owner.
 
@@ -104,7 +108,7 @@ python -B -m unittest evals/test_repository_layout.py -v
 
 ## Comparison method
 
-Freeze the current `HEAD` skill package as the baseline, then run the baseline and candidate with the same model, reasoning effort, prompts, fixtures, tools, limits, and authorization. Grade required signals, prohibited behavior, privacy, mutation scope, and repository-state preservation rather than exact wording or an aggregate quality score. For routing changes, hide `expectedOwner` from test agents and repeat the same matrix-derived prompt set three times; require stable activation and primary ownership before accepting a routing change.
+Freeze the current `HEAD` skill package as the baseline, then run the baseline and candidate with the same model, reasoning effort, prompts, fixtures, tools, limits, and authorization. Apply the [behavior-first evaluation contract](behavior-first-contract.md): grade activation separately from execution, record each applicable verdict dimension, bind consequential claims to evidence, and exercise indexed false-positive controls. Grade prose and implementation shape semantically; reserve exact matching for stable machine contracts, protected literals, exit codes, archive membership, and repository-state invariants. Do not produce an aggregate quality score. For routing changes, hide `expectedOwner` from test agents and repeat the same matrix-derived prompt set three times; require stable activation and primary ownership before accepting a routing change.
 
 Retain a skill change only when it corrects a reproduced failure and the revised suite passes without weakening false-positive resistance or safety boundaries. Keep generated transcripts, reports, screenshots, browser URLs, and run outputs temporary and untracked.
 

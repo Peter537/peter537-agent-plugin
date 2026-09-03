@@ -208,6 +208,7 @@ class EvalManifestValidatorTests(unittest.TestCase):
             ("requiredSignals", []),
             ("prohibitedSignals", "not-an-array"),
             ("repositoryState", ""),
+            ("falsePositiveControls", []),
         )
         for field, value in invalid_values:
             with self.subTest(field=field):
@@ -222,7 +223,12 @@ class EvalManifestValidatorTests(unittest.TestCase):
 
                 self.assert_contract_error(result, "suiteExpectations", field)
 
-        for field in ("requiredSignals", "prohibitedSignals", "repositoryState"):
+        for field in (
+            "requiredSignals",
+            "prohibitedSignals",
+            "repositoryState",
+            "falsePositiveControls",
+        ):
             with self.subTest(missing=field):
                 root = self._new_repository(
                     f"missing-suite-expectations-{field}", ("alpha",)
@@ -234,6 +240,92 @@ class EvalManifestValidatorTests(unittest.TestCase):
                 result = self.run_validator(root)
 
                 self.assert_contract_error(result, "suiteExpectations", field)
+
+    def test_false_positive_control_ids_must_be_unique(self) -> None:
+        manifest = self._read_manifest(self.root, "alpha")
+        manifest["suiteExpectations"]["falsePositiveControls"] = [
+            "shared-behavior",
+            "shared-behavior",
+        ]
+        self._write_manifest(self.root, "alpha", manifest)
+
+        result = self.run_validator()
+
+        self.assert_contract_error(result, "falsePositiveControls", "duplicate")
+
+    def test_false_positive_controls_reject_unknown_ids_without_disclosure(self) -> None:
+        unknown_id = "unknown-" + secrets.token_hex(12)
+        manifest = self._read_manifest(self.root, "alpha")
+        manifest["suiteExpectations"]["falsePositiveControls"] = [unknown_id]
+        self._write_manifest(self.root, "alpha", manifest)
+
+        result = self.run_validator()
+
+        self.assert_contract_error(
+            result,
+            "falsePositiveControls",
+            "behavioral case",
+        )
+        self.assertNotIn(unknown_id, result.stdout + result.stderr)
+
+    def test_false_positive_controls_reject_trigger_and_live_case_ids(self) -> None:
+        invalid_references = {
+            "trigger": "trigger-owned-request",
+            "live": "live-control",
+        }
+        for label, reference in invalid_references.items():
+            with self.subTest(label=label):
+                root = self._new_repository(f"control-{label}", ("alpha",))
+                manifest = self._read_manifest(root, "alpha")
+                manifest["liveCases"] = [
+                    {
+                        "id": "live-control",
+                        "authorizationRequired": True,
+                        "requiredSignals": ["observe only authorized live behavior"],
+                    }
+                ]
+                manifest["suiteExpectations"]["falsePositiveControls"] = [
+                    reference
+                ]
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(
+                    result,
+                    "falsePositiveControls",
+                    "behavioral case",
+                )
+
+    def test_false_positive_controls_are_resolved_within_their_suite(self) -> None:
+        root = self._new_repository("cross-suite-controls", ("alpha", "bravo"))
+        bravo = self._read_manifest(root, "bravo")
+        bravo["cases"].append(
+            {
+                "id": "bravo-only-control",
+                "description": "A control that belongs only to bravo.",
+                "prompt": "Inspect the bravo fixture.",
+                "fixture": "basic",
+                "expected": {
+                    "requiredSignals": ["inspect the bravo fixture"],
+                    "prohibitedSignals": ["claim an unrelated result"],
+                    "repositoryState": "unchanged",
+                },
+            }
+        )
+        bravo["suiteExpectations"]["falsePositiveControls"] = [
+            "bravo-only-control"
+        ]
+        self._write_manifest(root, "bravo", bravo)
+        alpha = self._read_manifest(root, "alpha")
+        alpha["suiteExpectations"]["falsePositiveControls"] = [
+            "bravo-only-control"
+        ]
+        self._write_manifest(root, "alpha", alpha)
+
+        result = self.run_validator(root)
+
+        self.assert_contract_error(result, "falsePositiveControls", "this suite")
 
     def test_behavioral_case_fields_are_required(self) -> None:
         for field in ("id", "description", "prompt", "fixture", "expected"):
@@ -263,6 +355,117 @@ class EvalManifestValidatorTests(unittest.TestCase):
                 result = self.run_validator(root)
 
                 self.assert_contract_error(result, "expected", field)
+
+    def test_expected_object_rejects_unsupported_fields_without_disclosure(self) -> None:
+        field_canary = "FIELD_" + secrets.token_hex(12)
+        value_canary = "VALUE_" + secrets.token_hex(12)
+        manifest = self._read_manifest(self.root, "alpha")
+        manifest["cases"][0]["expected"][field_canary] = value_canary
+        self._write_manifest(self.root, "alpha", manifest)
+
+        result = self.run_validator()
+
+        self.assert_contract_error(result, "expected", "unsupported field")
+        diagnostics = result.stdout + result.stderr
+        self.assertNotIn(field_canary, diagnostics)
+        self.assertNotIn(value_canary, diagnostics)
+
+    def test_behavioral_cases_reject_routing_fields_but_keep_other_metadata_open(self) -> None:
+        for field, value in (
+            ("expectActivation", True),
+            ("expectedOwner", "alpha"),
+        ):
+            with self.subTest(field=field):
+                root = self._new_repository(f"behavior-routing-{field}", ("alpha",))
+                manifest = self._read_manifest(root, "alpha")
+                manifest["cases"][0]["suiteSpecificMetadata"] = {
+                    "nestedPolicy": True
+                }
+                manifest["cases"][0][field] = value
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "cases", field, "routing")
+
+    def test_trigger_cases_reject_execution_fields(self) -> None:
+        execution_fields: tuple[tuple[str, object], ...] = (
+            ("description", "Execution-only description."),
+            ("fixture", "basic"),
+            (
+                "expected",
+                {
+                    "requiredSignals": ["signal"],
+                    "prohibitedSignals": ["anti-signal"],
+                    "repositoryState": "unchanged",
+                },
+            ),
+            ("verificationCommands", self._safe_commands()),
+        )
+        for field, value in execution_fields:
+            with self.subTest(field=field):
+                root = self._new_repository(f"trigger-execution-{field}", ("alpha",))
+                manifest = self._read_manifest(root, "alpha")
+                manifest["triggerCases"][0][field] = value
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(
+                    result,
+                    "triggerCases",
+                    "unsupported field",
+                )
+
+    def test_normalized_duplicate_signals_are_rejected_without_disclosure(self) -> None:
+        for target in ("suite", "case"):
+            with self.subTest(target=target):
+                root = self._new_repository(f"duplicate-signals-{target}", ("alpha",))
+                signal_canary = "signal-" + secrets.token_hex(12)
+                manifest = self._read_manifest(root, "alpha")
+                evidence = (
+                    manifest["suiteExpectations"]
+                    if target == "suite"
+                    else manifest["cases"][0]["expected"]
+                )
+                evidence["requiredSignals"] = [
+                    f"Observe {signal_canary}",
+                    f"  OBSERVE\n{signal_canary.upper()}  ",
+                ]
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "requiredSignals", "unique")
+                self.assertNotIn(
+                    signal_canary.casefold(),
+                    (result.stdout + result.stderr).casefold(),
+                )
+
+    def test_normalized_required_and_prohibited_overlap_is_rejected_and_redacted(self) -> None:
+        for target in ("suite", "case"):
+            with self.subTest(target=target):
+                root = self._new_repository(f"overlap-signals-{target}", ("alpha",))
+                signal_canary = "signal-" + secrets.token_hex(12)
+                manifest = self._read_manifest(root, "alpha")
+                evidence = (
+                    manifest["suiteExpectations"]
+                    if target == "suite"
+                    else manifest["cases"][0]["expected"]
+                )
+                evidence["requiredSignals"] = [f"Observe {signal_canary}"]
+                evidence["prohibitedSignals"] = [
+                    f"  OBSERVE\t{signal_canary.upper()}  "
+                ]
+                self._write_manifest(root, "alpha", manifest)
+
+                result = self.run_validator(root)
+
+                self.assert_contract_error(result, "signals", "overlap")
+                self.assertNotIn(
+                    signal_canary.casefold(),
+                    (result.stdout + result.stderr).casefold(),
+                )
 
     def test_trigger_fields_are_required_and_boolean_is_strict(self) -> None:
         for field in ("id", "prompt", "expectActivation"):
@@ -1072,6 +1275,23 @@ class EvalManifestValidatorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(before, after)
 
+    def test_failed_validation_is_redacted_and_read_only(self) -> None:
+        field_canary = "FIELD_" + secrets.token_hex(12)
+        value_canary = "VALUE_" + secrets.token_hex(12)
+        manifest = self._read_manifest(self.root, "alpha")
+        manifest["cases"][0]["expected"][field_canary] = value_canary
+        self._write_manifest(self.root, "alpha", manifest)
+        before = self._snapshot(self.root)
+
+        result = self.run_validator()
+
+        after = self._snapshot(self.root)
+        self.assert_contract_error(result, "expected", "unsupported field")
+        self.assertEqual(before, after)
+        diagnostics = result.stdout + result.stderr
+        self.assertNotIn(field_canary, diagnostics)
+        self.assertNotIn(value_canary, diagnostics)
+
     def _new_repository(self, name: str, slugs: tuple[str, ...]) -> Path:
         root = self.temporary_root / name
         if root.exists():
@@ -1090,6 +1310,7 @@ class EvalManifestValidatorTests(unittest.TestCase):
                 "requiredSignals": ["use direct evidence"],
                 "prohibitedSignals": ["invent evidence"],
                 "repositoryState": "unchanged",
+                "falsePositiveControls": ["shared-behavior"],
             },
             "cases": [
                 {

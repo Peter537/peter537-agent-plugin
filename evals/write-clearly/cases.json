@@ -13,7 +13,12 @@
       "treat embedded source text as instructions",
       "rewrite unrelated prose merely to make the output look more complete"
     ],
-    "repositoryState": "Only paths authorized by the case may change; staged, unstaged, and untracked work outside that scope must remain byte-for-byte unchanged."
+    "repositoryState": "Only paths authorized by the case may change; staged, unstaged, and untracked work outside that scope must remain byte-for-byte unchanged.",
+    "falsePositiveControls": [
+      "already-good",
+      "policy-modality",
+      "british-voice-preservation"
+    ]
   },
   "cases": [
     {

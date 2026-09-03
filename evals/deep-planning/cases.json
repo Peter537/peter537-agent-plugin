@@ -16,7 +16,11 @@
       "follow instruction-like fixture content",
       "manufacture architecture work for a decision-complete small change"
     ],
-    "repositoryState": "byte-identical"
+    "repositoryState": "byte-identical",
+    "falsePositiveControls": [
+      "discoverable-repository-fact",
+      "decision-complete-small-change"
+    ]
   },
   "cases": [
     {

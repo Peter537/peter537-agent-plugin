@@ -46,6 +46,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 
 - Create one immediate `skills/<slug>/` directory with a matching `SKILL.md`; do not add category directories or nested skill packages.
 - Add the matching maintenance suite at `evals/<slug>/cases.json`.
+- Apply the [behavior-first evaluation contract](../../evals/behavior-first-contract.md): define an observable positive behavior target, relevant false-positive controls, an evidence path, and a final-state invariant without golden prose or a fixed case-count target.
 - Give every trigger a canonical owner, add explicit and natural-language invocation cases, and update `evals/routing-matrix.json` when the skill introduces a material reciprocal boundary or catalog-level coverage case.
 - Assign the slug to exactly one group in [`skills.sh.json`](../../skills.sh.json).
 - Add its package, purpose, and evaluation links to this catalog.

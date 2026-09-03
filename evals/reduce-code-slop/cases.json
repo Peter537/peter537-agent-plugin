@@ -13,7 +13,13 @@
       "weaken tests, add broad suppressions, swallow failures, or replace failures with success-like defaults",
       "apply blanket bans on casts, dynamic behavior, reflection, wrappers, factories, or long code"
     ],
-    "repositoryState": "Only paths authorized by the case may change; all unrelated staged, unstaged, and untracked work must remain byte-for-byte unchanged."
+    "repositoryState": "Only paths authorized by the case may change; all unrelated staged, unstaged, and untracked work must remain byte-for-byte unchanged.",
+    "falsePositiveControls": [
+      "python-justified-dynamic-plugin",
+      "csharp-justified-reflection",
+      "clean-direct-code",
+      "missing-enforcement-tool"
+    ]
   },
   "cases": [
     {

@@ -13,7 +13,12 @@
       "treat regex matches as sufficient evidence or quote sensitive fixture values",
       "change executable code during a comment-only task"
     ],
-    "repositoryState": "Review-only and broad unapproved cases remain unchanged; precise edits may modify only authorized paths, and all pre-existing staged, unstaged, and untracked work remains byte-for-byte intact."
+    "repositoryState": "Review-only and broad unapproved cases remain unchanged; precise edits may modify only authorized paths, and all pre-existing staged, unstaged, and untracked work remains byte-for-byte intact.",
+    "falsePositiveControls": [
+      "executable-docs-and-directives",
+      "necessary-rationale",
+      "precise-comment-keep"
+    ]
   },
   "cases": [
     {

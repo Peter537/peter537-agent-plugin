@@ -99,6 +99,14 @@ REQUIRED_COVERAGE_KINDS = {
     "full-catalog-collision",
 }
 CASE_SECTIONS = {"cases", "triggerCases", "liveCases"}
+EXPECTED_REQUIRED_FIELDS = {
+    "requiredSignals",
+    "prohibitedSignals",
+    "repositoryState",
+}
+EXPECTED_OPTIONAL_FIELDS = {"outcome"}
+TRIGGER_CASE_FIELDS = {"id", "prompt", "expectActivation", "expectedOwner"}
+BEHAVIORAL_ROUTING_FIELDS = {"expectActivation", "expectedOwner"}
 PYTHON_COMMANDS = {"python", "python.exe", "python3", "python3.exe", "py", "py.exe"}
 DOTNET_COMMANDS = {"dotnet", "dotnet.exe"}
 FORBIDDEN_PYTHON_MODULES = {
@@ -141,6 +149,7 @@ DIAGNOSTIC_FIELD_NAMES = ALLOWED_TOP_LEVEL_FIELDS | PATH_FIELDS | {
     "expected",
     "expectedOwner",
     "expectedSignals",
+    "falsePositiveControls",
     "fixture",
     "id",
     "outcome",
@@ -238,6 +247,49 @@ def _repository_state(value: object) -> bool:
     """Accept the current scalar contract and a future list representation."""
 
     return _nonempty_string(value) or _string_list(value)
+
+
+def _normalize_signal(value: str) -> str:
+    """Normalize a signal for semantic duplicate and contradiction checks."""
+
+    return " ".join(value.split()).casefold()
+
+
+def _validate_signal_list(
+    value: object,
+    *,
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> set[str] | None:
+    """Validate and normalize a signal list without disclosing its contents."""
+
+    if not _string_list(value):
+        result.errors.append(f"{label}:{location}: must be a non-empty string array")
+        return None
+    assert isinstance(value, list)
+    normalized = [_normalize_signal(item) for item in value]
+    if len(normalized) != len(set(normalized)):
+        result.errors.append(
+            f"{label}:{location}: signals must be unique after whitespace and case normalization"
+        )
+    return set(normalized)
+
+
+def _reject_signal_overlap(
+    required: set[str] | None,
+    prohibited: set[str] | None,
+    *,
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> None:
+    """Reject a direct signal contradiction without echoing the signal text."""
+
+    if required is not None and prohibited is not None and required & prohibited:
+        result.errors.append(
+            f"{label}:{location}: required and prohibited signals must not overlap"
+        )
 
 
 def _contains_control_characters(value: str) -> bool:
@@ -493,11 +545,33 @@ def _validate_evidence_object(
     if not isinstance(value, dict):
         result.errors.append(f"{label}:{location}: expected evidence must be an object")
         return
-    for field_name in ("requiredSignals", "prohibitedSignals"):
-        if not _string_list(value.get(field_name)):
-            result.errors.append(
-                f"{label}:{location}.{field_name}: must be a non-empty string array"
-            )
+    _validate_exact_fields(
+        value,
+        required=EXPECTED_REQUIRED_FIELDS,
+        optional=EXPECTED_OPTIONAL_FIELDS,
+        label=label,
+        location=location,
+        result=result,
+    )
+    required = _validate_signal_list(
+        value.get("requiredSignals"),
+        label=label,
+        location=f"{location}.requiredSignals",
+        result=result,
+    )
+    prohibited = _validate_signal_list(
+        value.get("prohibitedSignals"),
+        label=label,
+        location=f"{location}.prohibitedSignals",
+        result=result,
+    )
+    _reject_signal_overlap(
+        required,
+        prohibited,
+        label=label,
+        location=location,
+        result=result,
+    )
     if not _repository_state(value.get("repositoryState")):
         result.errors.append(
             f"{label}:{location}.repositoryState: must be a non-empty string or string array"
@@ -511,20 +585,59 @@ def _validate_suite_expectations(
     *,
     label: str,
     result: ValidationResult,
-) -> None:
+) -> list[tuple[int, str]]:
     location = "$.suiteExpectations"
     if not isinstance(value, dict):
         result.errors.append(f"{label}:{location}: must be an object")
-        return
-    for field_name in ("requiredSignals", "prohibitedSignals"):
-        if not _string_list(value.get(field_name)):
-            result.errors.append(
-                f"{label}:{location}.{field_name}: must be a non-empty string array"
-            )
+        return []
+    required = _validate_signal_list(
+        value.get("requiredSignals"),
+        label=label,
+        location=f"{location}.requiredSignals",
+        result=result,
+    )
+    prohibited = _validate_signal_list(
+        value.get("prohibitedSignals"),
+        label=label,
+        location=f"{location}.prohibitedSignals",
+        result=result,
+    )
+    _reject_signal_overlap(
+        required,
+        prohibited,
+        label=label,
+        location=location,
+        result=result,
+    )
     if not _repository_state(value.get("repositoryState")):
         result.errors.append(
             f"{label}:{location}.repositoryState: must be a non-empty string or string array"
         )
+
+    controls = value.get("falsePositiveControls")
+    controls_location = f"{location}.falsePositiveControls"
+    if not isinstance(controls, list) or not controls:
+        result.errors.append(
+            f"{label}:{controls_location}: must be a non-empty behavioral-case ID array"
+        )
+        return []
+    references: list[tuple[int, str]] = []
+    seen: set[str] = set()
+    for index, control_id in enumerate(controls):
+        control_location = f"{controls_location}[{index}]"
+        if not isinstance(control_id, str) or not SLUG.fullmatch(control_id):
+            result.errors.append(
+                f"{label}:{control_location}: must be a behavioral-case ID"
+            )
+            continue
+        if control_id in seen:
+            result.errors.append(
+                f"{label}:{control_location}: false-positive control ID is duplicated"
+            )
+        else:
+            seen.add(control_id)
+        references.append((index, control_id))
+    return references
 
 
 def _command_path_is_unsafe(value: str) -> bool:
@@ -662,6 +775,10 @@ def _validate_behavioral_case(
         valid_id = None
     else:
         valid_id = case_id
+    for field_name in sorted(BEHAVIORAL_ROUTING_FIELDS & set(case)):
+        result.errors.append(
+            f"{label}:{location}.{field_name}: routing fields are not permitted in behavioral cases"
+        )
     for field_name in ("description", "prompt"):
         if not _nonempty_string(case.get(field_name)):
             result.errors.append(f"{label}:{location}.{field_name}: must be a non-empty string")
@@ -703,6 +820,13 @@ def _validate_trigger_case(
     if not isinstance(case, dict):
         result.errors.append(f"{label}:{location}: trigger case must be an object")
         return None, None
+    _validate_exact_fields(
+        case,
+        required=TRIGGER_CASE_FIELDS,
+        label=label,
+        location=location,
+        result=result,
+    )
     case_id = case.get("id")
     if not isinstance(case_id, str) or not SLUG.fullmatch(case_id):
         result.errors.append(f"{label}:{location}.id: must be a lowercase slug")
@@ -786,11 +910,33 @@ def _validate_live_case(
     signal_fields = [field_name for field_name in ("requiredSignals", "expectedSignals") if field_name in case]
     if not signal_fields:
         result.errors.append(f"{label}:{location}: live case requires requiredSignals or expectedSignals")
+    positive_signals: list[set[str]] = []
     for field_name in signal_fields:
-        if not _string_list(case[field_name]):
-            result.errors.append(f"{label}:{location}.{field_name}: must be a non-empty string array")
-    if "prohibitedSignals" in case and not _string_list(case["prohibitedSignals"]):
-        result.errors.append(f"{label}:{location}.prohibitedSignals: must be a non-empty string array")
+        normalized = _validate_signal_list(
+            case[field_name],
+            label=label,
+            location=f"{location}.{field_name}",
+            result=result,
+        )
+        if normalized is not None:
+            positive_signals.append(normalized)
+    prohibited = None
+    if "prohibitedSignals" in case:
+        prohibited = _validate_signal_list(
+            case["prohibitedSignals"],
+            label=label,
+            location=f"{location}.prohibitedSignals",
+            result=result,
+        )
+    if prohibited is not None:
+        for positive in positive_signals:
+            _reject_signal_overlap(
+                positive,
+                prohibited,
+                label=label,
+                location=location,
+                result=result,
+            )
 
     if "fixture" in case:
         _validate_fixture(
@@ -830,13 +976,14 @@ def _validate_manifest(
         result.errors.append(f"{label}:$.schemaVersion: must be integer 1")
     if "suite" in manifest and manifest["suite"] != suite_slug:
         result.errors.append(f"{label}:$.suite: must match the evaluation directory")
-    _validate_suite_expectations(
+    control_references = _validate_suite_expectations(
         manifest.get("suiteExpectations"),
         label=label,
         result=result,
     )
 
     seen_ids: dict[str, str] = {}
+    behavioral_ids: set[str] = set()
     cases = manifest.get("cases")
     if not isinstance(cases, list) or not cases:
         result.errors.append(f"{label}:$.cases: must be a non-empty array")
@@ -854,10 +1001,18 @@ def _validate_manifest(
             result=result,
         )
         if case_id is not None:
+            behavioral_ids.add(case_id)
             if case_id in seen_ids:
                 result.errors.append(f"{label}:{location}.id: ID duplicates another case in this suite")
             else:
                 seen_ids[case_id] = location
+
+    for control_index, control_id in control_references:
+        if control_id not in behavioral_ids:
+            result.errors.append(
+                f"{label}:$.suiteExpectations.falsePositiveControls[{control_index}]: "
+                "must reference a behavioral case in this suite"
+            )
 
     triggers = manifest.get("triggerCases")
     if not isinstance(triggers, list) or not triggers:
@@ -955,6 +1110,7 @@ def _validate_exact_fields(
     value: dict[object, object],
     *,
     required: set[str],
+    optional: set[str] | None = None,
     label: str,
     location: str,
     result: ValidationResult,
@@ -962,10 +1118,11 @@ def _validate_exact_fields(
     """Validate a closed object shape without disclosing unknown key values."""
 
     keys = {key for key in value if isinstance(key, str)}
+    allowed = required | (optional or set())
     for field_name in sorted(required - keys):
         result.errors.append(f"{label}:{location}.{field_name}: required field is missing")
     unknown_count = sum(
-        not isinstance(key, str) or key not in required for key in value
+        not isinstance(key, str) or key not in allowed for key in value
     )
     if unknown_count:
         result.errors.append(
@@ -1379,11 +1536,25 @@ def _validate_coverage_cases(
             result.errors.append(f"{label}:{item_location}.kind: coverage kind is not recognized")
         else:
             kinds.add(kind)
-        for field_name in ("requiredSignals", "prohibitedSignals"):
-            if not _string_list(item.get(field_name)):
-                result.errors.append(
-                    f"{label}:{item_location}.{field_name}: must be a non-empty string array"
-                )
+        required_signals = _validate_signal_list(
+            item.get("requiredSignals"),
+            label=label,
+            location=f"{item_location}.requiredSignals",
+            result=result,
+        )
+        prohibited_signals = _validate_signal_list(
+            item.get("prohibitedSignals"),
+            label=label,
+            location=f"{item_location}.prohibitedSignals",
+            result=result,
+        )
+        _reject_signal_overlap(
+            required_signals,
+            prohibited_signals,
+            label=label,
+            location=item_location,
+            result=result,
+        )
         refs = item.get("caseRefs")
         if not isinstance(refs, list) or not refs:
             result.errors.append(f"{label}:{item_location}.caseRefs: must be a non-empty array")

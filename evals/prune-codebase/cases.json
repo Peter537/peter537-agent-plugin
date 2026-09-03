@@ -13,7 +13,14 @@
       "remove dependencies, mutate external feature flags, execute migrations, or retire compatibility behavior without separate authorization",
       "use a numerical cleanup score or reproduce sensitive fixture values"
     ],
-    "repositoryState": "Review-only and broad unapproved cases remain unchanged; approved batches may touch only authorized paths, and unrelated staged, unstaged, and untracked work remains byte-for-byte intact."
+    "repositoryState": "Review-only and broad unapproved cases remain unchanged; approved batches may touch only authorized paths, and unrelated staged, unstaged, and untracked work remains byte-for-byte intact.",
+    "falsePositiveControls": [
+      "precise-live-target",
+      "dynamic-route-plugin",
+      "external-public-consumer",
+      "reflection-serialization-generated",
+      "wrappers-and-side-effects"
+    ]
   },
   "cases": [
     {

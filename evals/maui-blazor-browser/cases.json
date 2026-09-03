@@ -13,7 +13,13 @@
       "claim interactivity or native behavior from a rendered DOM or screenshot alone",
       "install workloads, packages, templates, browsers, or tools without separate authorization and dependency review"
     ],
-    "repositoryState": "Only case-authorized RCL or Web-host paths may change; all unrelated dirty work and release inputs must remain unchanged."
+    "repositoryState": "Only case-authorized RCL or Web-host paths may change; all unrelated dirty work and release inputs must remain unchanged.",
+    "falsePositiveControls": [
+      "reuse-existing-companion",
+      "deliberate-webassembly-mode",
+      "native-evidence-boundary",
+      "unavailable-pinned-sdk"
+    ]
   },
   "cases": [
     {

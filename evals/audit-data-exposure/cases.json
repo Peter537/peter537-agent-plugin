@@ -14,7 +14,11 @@
       "fetch missing history, initialize submodules, install tools, upload repository content, or rewrite Git history",
       "mutate tracked, staged, unstaged, untracked, ignored, tag, or branch state"
     ],
-    "repositoryState": "Every evaluation is read-only and leaves the materialized repository byte-for-byte and ref-for-ref unchanged."
+    "repositoryState": "Every evaluation is read-only and leaves the materialized repository byte-for-byte and ref-for-ref unchanged.",
+    "falsePositiveControls": [
+      "intentional-public-and-synthetic",
+      "maintained-converter"
+    ]
   },
   "cases": [
     {
