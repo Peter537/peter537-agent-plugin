@@ -338,6 +338,7 @@
     {"id": "near-miss-single-check", "prompt": "Run the existing unit test named test_parser_accepts_csv.", "expectActivation": false, "expectedOwner": "no-skill"},
     {"id": "near-miss-implementation", "prompt": "Implement the approved parser change and add its regression test.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
     {"id": "near-miss-broad-audit", "prompt": "Audit the repository for correctness, security, architecture, and maintainability risks.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
+    {"id": "near-miss-skeptical-post-implementation-audit", "prompt": "The implementation is complete. Perform a skeptical read-only audit of the diff against the approved brief, especially for unsupported behavior, invented requirements, and unnecessary operational surface.", "expectActivation": false, "expectedOwner": "deep-code-audit"},
     {"id": "near-miss-planning", "prompt": "Plan the unresolved storage migration, including options, sequencing, and acceptance gates.", "expectActivation": false, "expectedOwner": "deep-planning"},
     {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause why this save workflow fails, then repair it with a regression guard.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
     {"id": "near-miss-ui-quality", "prompt": "Audit and improve the visual hierarchy, accessibility, and responsive behavior of this dashboard.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},

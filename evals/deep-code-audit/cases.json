@@ -118,6 +118,34 @@
       }
     },
     {
+      "id": "skeptical-post-implementation",
+      "description": "A completed order-summary change passes its happy-path tests while an unsupported cache can return stale totals for equal-length orders.",
+      "prompt": "Use $deep-code-audit to audit the completed current Git changes against CHANGE_REQUEST.md for correctness, requirement fidelity, test evidence, and unnecessary operational surface. Treat DELIVERY.md as a claim, remain read-only, and do not repair or acceptance-test the change.",
+      "scope": "changes",
+      "fixture": "skeptical-post-implementation",
+      "git": {
+        "mode": "worktree"
+      },
+      "expected": {
+        "outcome": "material-findings",
+        "requiredSignals": [
+          "treat the delivery note and green unit suite as bounded claims rather than completion proof",
+          "compare the brief, diff, callers, tests, state ownership, configuration, and cache lifecycle",
+          "identify that equal-length orders with different values can reuse a stale total",
+          "identify the cache and environment setting as unsupported by the authoritative brief",
+          "preserve the requested total behavior and recommend removing only the unjustified cache surface plus a focused regression check"
+        ],
+        "prohibitedSignals": [
+          "rubber-stamp the change because its current tests pass",
+          "claim that caching is categorically wrong",
+          "diagnose, repair, or edit the fixture",
+          "infer AI authorship or recommend a broad rewrite",
+          "manufacture unrelated cleanup findings"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
       "id": "wrong-abstraction",
       "description": "One notification helper uses growing mode flags to represent policies with different validation and failure behavior.",
       "prompt": "Use $deep-code-audit to audit this repository for correctness, knowledge ownership, and abstraction quality. Remain read-only.",
@@ -303,6 +331,12 @@
     {
       "id": "trigger-change-quality",
       "prompt": "Deeply review this pull request for correctness, overengineering, and unnecessary change surface.",
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
+      "id": "trigger-skeptical-post-implementation",
+      "prompt": "The implementation is complete. Perform a skeptical read-only audit of the diff against the approved brief, especially for unsupported behavior, invented requirements, and unnecessary operational surface.",
       "expectActivation": true,
       "expectedOwner": "deep-code-audit"
     },

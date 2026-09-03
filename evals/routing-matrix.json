@@ -280,7 +280,7 @@
       "skills": ["deep-code-audit", "verify-change"],
       "directions": [
         {"from": "deep-code-audit", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
-        {"from": "verify-change", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}
+        {"from": "verify-change", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit", "near-miss-skeptical-post-implementation-audit"]}
       ]
     },
     {
