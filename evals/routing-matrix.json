@@ -104,6 +104,11 @@
       "naturalLanguageTrigger": "trigger-product-ui-audit"
     },
     {
+      "skill": "verify-change",
+      "explicitTrigger": "trigger-explicit-invocation",
+      "naturalLanguageTrigger": "trigger-completed-change"
+    },
+    {
       "skill": "write-clearly",
       "explicitTrigger": "trigger-explicit-invocation",
       "naturalLanguageTrigger": "trigger-proofreading"
@@ -172,6 +177,14 @@
       "directions": [
         {"from": "audit-dependencies", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]},
         {"from": "reduce-code-slop", "to": "audit-dependencies", "triggers": ["near-miss-dependency"]}
+      ]
+    },
+    {
+      "id": "audit-dependencies--verify-change",
+      "skills": ["audit-dependencies", "verify-change"],
+      "directions": [
+        {"from": "audit-dependencies", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "audit-dependencies", "triggers": ["near-miss-dependency-tool"]}
       ]
     },
     {
@@ -263,11 +276,27 @@
       ]
     },
     {
+      "id": "deep-code-audit--verify-change",
+      "skills": ["deep-code-audit", "verify-change"],
+      "directions": [
+        {"from": "deep-code-audit", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}
+      ]
+    },
+    {
       "id": "deep-planning--prune-codebase",
       "skills": ["deep-planning", "prune-codebase"],
       "directions": [
         {"from": "deep-planning", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
         {"from": "prune-codebase", "to": "deep-planning", "triggers": ["near-miss-architecture"]}
+      ]
+    },
+    {
+      "id": "deep-planning--verify-change",
+      "skills": ["deep-planning", "verify-change"],
+      "directions": [
+        {"from": "deep-planning", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "deep-planning", "triggers": ["near-miss-planning"]}
       ]
     },
     {
@@ -287,6 +316,14 @@
       ]
     },
     {
+      "id": "diagnose-bugs--verify-change",
+      "skills": ["diagnose-bugs", "verify-change"],
+      "directions": [
+        {"from": "diagnose-bugs", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "diagnose-bugs", "triggers": ["near-miss-bug-diagnosis"]}
+      ]
+    },
+    {
       "id": "docs-audit--write-clearly",
       "skills": ["docs-audit", "write-clearly"],
       "directions": [
@@ -300,6 +337,14 @@
       "directions": [
         {"from": "maui-blazor-browser", "to": "ui-design-and-polish", "triggers": ["near-miss-ui-polish"]},
         {"from": "ui-design-and-polish", "to": "maui-blazor-browser", "triggers": ["near-miss-maui-host"]}
+      ]
+    },
+    {
+      "id": "maui-blazor-browser--verify-change",
+      "skills": ["maui-blazor-browser", "verify-change"],
+      "directions": [
+        {"from": "maui-blazor-browser", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "maui-blazor-browser", "triggers": ["near-miss-maui-host"]}
       ]
     },
     {
@@ -319,6 +364,14 @@
       ]
     },
     {
+      "id": "ui-design-and-polish--verify-change",
+      "skills": ["ui-design-and-polish", "verify-change"],
+      "directions": [
+        {"from": "ui-design-and-polish", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
+        {"from": "verify-change", "to": "ui-design-and-polish", "triggers": ["near-miss-ui-quality"]}
+      ]
+    },
+    {
       "id": "ui-design-and-polish--write-clearly",
       "skills": ["ui-design-and-polish", "write-clearly"],
       "directions": [
@@ -334,16 +387,22 @@
       "caseRefs": [
         {"suite": "deep-code-audit", "section": "triggerCases", "id": "near-miss-comment-health"},
         {"suite": "comment-health", "section": "triggerCases", "id": "near-miss-code-audit"},
+        {"suite": "diagnose-bugs", "section": "triggerCases", "id": "near-miss-change-verification"},
+        {"suite": "verify-change", "section": "triggerCases", "id": "near-miss-bug-diagnosis"},
         {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-maui-host"},
-        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "near-miss-ui-polish"}
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "near-miss-ui-polish"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-change-verification"},
+        {"suite": "verify-change", "section": "triggerCases", "id": "near-miss-ui-quality"}
       ],
       "requiredSignals": [
         "select the declared specialist owner without activating the containing suite",
-        "preserve explicit-only invocation when the destination skill requires it"
+        "preserve explicit-only invocation when the destination skill requires it",
+        "keep completed-change proof separate from diagnosis, repair, and UI-quality work"
       ],
       "prohibitedSignals": [
         "activate both specialists for one bounded request",
-        "use a router skill or invent an unregistered owner"
+        "use a router skill or invent an unregistered owner",
+        "treat failed verification as authorization to diagnose, repair, or redesign"
       ]
     },
     {
@@ -353,7 +412,9 @@
         {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-explicit-invocation"},
         {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-whole-audit"},
         {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "explicit-host-request"},
-        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "implicit-same-request"}
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "implicit-same-request"},
+        {"suite": "verify-change", "section": "triggerCases", "id": "trigger-explicit-invocation"},
+        {"suite": "verify-change", "section": "triggerCases", "id": "trigger-completed-change"}
       ],
       "requiredSignals": [
         "honor direct $skill invocation",
@@ -370,16 +431,19 @@
       "caseRefs": [
         {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-full-catalog-audit"},
         {"suite": "deep-planning", "section": "triggerCases", "id": "trigger-full-catalog-plan"},
-        {"suite": "deep-planning", "section": "triggerCases", "id": "near-miss-full-catalog-implementation"}
+        {"suite": "deep-planning", "section": "triggerCases", "id": "near-miss-full-catalog-implementation"},
+        {"suite": "verify-change", "section": "triggerCases", "id": "trigger-completed-change"}
       ],
       "requiredSignals": [
         "select deep-code-audit for one comprehensive read-only audit",
         "select deep-planning for unresolved cross-domain design decisions",
-        "select ordinary-implementation for a decision-complete bounded change"
+        "select ordinary-implementation for a decision-complete bounded change",
+        "select verify-change for standalone proof of an already-completed change"
       ],
       "prohibitedSignals": [
         "activate every named specialist for one comprehensive request",
-        "force planning or audit onto decision-complete implementation"
+        "force planning or audit onto decision-complete implementation",
+        "route completed-change verification to planning, audit, diagnosis, or ordinary implementation"
       ]
     }
   ]

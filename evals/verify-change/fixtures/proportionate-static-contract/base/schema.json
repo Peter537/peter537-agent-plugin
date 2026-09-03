@@ -1,0 +1,1 @@
+{"type": "object", "required": ["id", "label"], "additionalProperties": false, "properties": {"id": {"type": "integer"}, "label": {"type": "string"}}}

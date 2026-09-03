@@ -371,6 +371,12 @@
       "prompt": "Audit the complete documentation set against the implementation and repair it.",
       "expectActivation": false,
       "expectedOwner": "docs-audit"
+    },
+    {
+      "id": "near-miss-change-verification",
+      "prompt": "The implementation is complete; prove its named acceptance criteria through repository-native evidence and leave the source unchanged.",
+      "expectActivation": false,
+      "expectedOwner": "verify-change"
     }
   ]
 }

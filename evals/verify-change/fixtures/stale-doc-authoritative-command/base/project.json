@@ -1,0 +1,1 @@
+{"verification": {"purpose": "formatter contract", "argv": ["python", "verify_contract.py"]}}

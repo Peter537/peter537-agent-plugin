@@ -31,7 +31,7 @@ Python 3, local Git, and writable operating-system temporary storage are prerequ
 
 ## Suite contract
 
-Each suite uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
+Each of the fourteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
 
 The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
 
@@ -58,7 +58,7 @@ Fixture references, including aliases, must resolve beneath the suite's `fixture
 
 ## Cross-skill routing matrix
 
-[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the thirteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
+[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the fourteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
 
 The common validator derives effective implicit-invocation policy from `skills/<slug>/agents/openai.yaml`; omission means the documented default `true`. Each explicit case must contain the exact `$slug` token and activate its skill. A natural-language case must contain no explicit skill mention and must follow that skill's effective policy. Boundary rows contain two sorted skill slugs and both negative routing directions, with every referenced trigger owned by the opposite skill.
 
@@ -73,6 +73,8 @@ python -B -m unittest evals/test_eval_manifests.py -v
 ```
 
 ## Materializers
+
+Thirteen suites expose one materializer: twelve use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
 
 Non-repository suites may provide a standard-library packet materializer, such as `materialize_packets.py`, with the same selection and external-output safety contract.
 
@@ -110,13 +112,15 @@ python -B -m unittest evals/test_repository_layout.py -v
 
 Freeze the current `HEAD` skill package as the baseline, then run the baseline and candidate with the same model, reasoning effort, prompts, fixtures, tools, limits, and authorization. Apply the [behavior-first evaluation contract](behavior-first-contract.md): grade activation separately from execution, record each applicable verdict dimension, bind consequential claims to evidence, and exercise indexed false-positive controls. Grade prose and implementation shape semantically; reserve exact matching for stable machine contracts, protected literals, exit codes, archive membership, and repository-state invariants. Do not produce an aggregate quality score. For routing changes, hide `expectedOwner` from test agents and repeat the same matrix-derived prompt set three times; require stable activation and primary ownership before accepting a routing change.
 
+For completed-change verification, grade static inspection, build, tests, API behavior, UI rendering and interaction, persistence, operational behavior, telemetry, and native behavior as separate evidence layers. Require only the layers needed by the claim, but never let success in one layer stand in for an unexercised layer. Capture exact revision and runtime identity, observed evidence, limitations, cleanup, and final state without reproducing sensitive values.
+
 Retain a skill change only when it corrects a reproduced failure and the revised suite passes without weakening false-positive resistance or safety boundaries. Keep generated transcripts, reports, screenshots, browser URLs, and run outputs temporary and untracked.
 
 ## Deterministic and live checks
 
 The canonical offline command is the required baseline. Run an individual standard-library suite with `python -B -m unittest discover -s evals/<skill>/tests -v` when focused evidence or debugging is needed.
 
-Cases under a manifest's `liveCases` field are optional and require separate authorization. They may use only the exact public data and destination named by the case. Never track account-specific browser state, ChatGPT conversation URLs, live reports, private package coordinates, or repository content transmitted to an external service.
+Five tracked cases currently appear under manifests' `liveCases` fields. They are optional, require separate authorization, and may use only the exact public data and destination named by the case. Never track account-specific browser state, ChatGPT conversation URLs, live reports, private package coordinates, or repository content transmitted to an external service.
 
 ## Safety
 

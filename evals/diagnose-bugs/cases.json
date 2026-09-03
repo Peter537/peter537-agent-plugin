@@ -268,6 +268,7 @@
     {"id": "near-miss-dependencies", "prompt": "Audit every package before updating the lockfile.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
     {"id": "near-miss-production", "prompt": "Production is down; rotate credentials and restart the service now.", "expectActivation": false, "expectedOwner": "incident-response"},
     {"id": "near-miss-code-simplification", "prompt": "Simplify this scoped Python adapter without changing its established behavior.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
-    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to diagnose why this Hybrid companion prerenders but never becomes interactive.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"}
+    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to diagnose why this Hybrid companion prerenders but never becomes interactive.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"},
+    {"id": "near-miss-change-verification", "prompt": "The fix is already implemented; verify its acceptance criteria and regression behavior, but do not diagnose or repair any failure.", "expectActivation": false, "expectedOwner": "verify-change"}
   ]
 }

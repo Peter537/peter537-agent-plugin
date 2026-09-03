@@ -273,7 +273,8 @@
     {"id": "near-miss-code-simplification", "prompt": "Simplify this Python parser without changing behavior or dependencies.", "expectActivation": false, "expectedOwner": "reduce-code-slop"},
     {"id": "near-miss-privacy", "prompt": "Review Git history for personal data and disposable migrations.", "expectActivation": false, "expectedOwner": "audit-data-exposure"},
     {"id": "near-miss-docs", "prompt": "Update the dependency installation prose in README.md for clarity.", "expectActivation": false, "expectedOwner": "write-clearly"},
-    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to make this MAUI Blazor Hybrid route safely browser-testable without adding packages.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"}
+    {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to make this MAUI Blazor Hybrid route safely browser-testable without adding packages.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"},
+    {"id": "near-miss-change-verification", "prompt": "The dependency upgrade is complete; prove the requested application workflow and persistence behavior still work without changing packages.", "expectActivation": false, "expectedOwner": "verify-change"}
   ],
   "liveCases": [
     {

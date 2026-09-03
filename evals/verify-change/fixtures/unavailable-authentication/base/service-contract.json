@@ -1,0 +1,1 @@
+{"endpoint": "loopback-test-service", "identity": "isolated-verification-user", "authState": "test-auth-state.json", "anonymousAllowed": false}

@@ -233,7 +233,8 @@
     {"id": "near-miss-browser-test", "prompt": "Run the existing Playwright tests for this React application.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
     {"id": "near-miss-dependency", "prompt": "Install the MAUI workload and add a Blazor package.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
     {"id": "near-miss-backend", "prompt": "Add a server-side export endpoint to this API.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
-    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this concrete failing integration test in the existing Blazor Web companion.", "expectActivation": false, "expectedOwner": "diagnose-bugs"}
+    {"id": "near-miss-bug-diagnosis", "prompt": "Reproduce and root-cause this concrete failing integration test in the existing Blazor Web companion.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
+    {"id": "near-miss-change-verification", "prompt": "Use $verify-change to prove the completed MAUI Blazor change meets its browser acceptance criteria through the existing host.", "expectActivation": false, "expectedOwner": "verify-change"}
   ],
   "liveCases": [
     {

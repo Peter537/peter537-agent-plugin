@@ -1,0 +1,7 @@
+interface:
+  display_name: "Evidence-Driven Change Verification"
+  short_description: "Prove completed changes with layered evidence"
+  default_prompt: "Use $verify-change to prove this completed change meets its acceptance criteria with repository-native evidence and complete cleanup."
+
+policy:
+  allow_implicit_invocation: true

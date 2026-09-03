@@ -180,6 +180,7 @@
     {"id": "near-miss-implementation", "prompt": "Implement the already specified parser change now.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
     {"id": "near-miss-deep-research", "prompt": "Research current external standards and vendor evidence to resolve this product decision with traceable citations.", "expectActivation": false, "expectedOwner": "chatgpt-research"},
     {"id": "near-miss-pruning", "prompt": "Find proven dead code and obsolete repository surface, then report stable removal candidates.", "expectActivation": false, "expectedOwner": "prune-codebase"},
-    {"id": "near-miss-full-catalog-implementation", "prompt": "Implement the already specified parser change, add the existing-framework regression test, and update README.md with the verified command.", "expectActivation": false, "expectedOwner": "ordinary-implementation"}
+    {"id": "near-miss-full-catalog-implementation", "prompt": "Implement the already specified parser change, add the existing-framework regression test, and update README.md with the verified command.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-change-verification", "prompt": "The implementation is complete; prove it meets the agreed acceptance criteria without planning another change.", "expectActivation": false, "expectedOwner": "verify-change"}
   ]
 }

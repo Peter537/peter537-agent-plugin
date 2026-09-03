@@ -390,6 +390,12 @@
       "prompt": "Simplify this C# view model without changing behavior.",
       "expectActivation": false,
       "expectedOwner": "reduce-code-slop"
+    },
+    {
+      "id": "near-miss-change-verification",
+      "prompt": "The interface implementation is complete; prove the named workflow, responsive, keyboard, and persistence acceptance criteria without redesigning it.",
+      "expectActivation": false,
+      "expectedOwner": "verify-change"
     }
   ]
 }
