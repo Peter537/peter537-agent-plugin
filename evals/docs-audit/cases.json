@@ -15,6 +15,7 @@
     ],
     "repositoryState": "Only documentation and documentation-tooling paths authorized by the case may change; review-only, blocked, protected, and unrelated paths remain byte-for-byte intact.",
     "falsePositiveControls": [
+      "accurate-accessible-diagram",
       "accurate-no-op",
       "generated-documentation-owner",
       "trivial-no-mermaid"
@@ -94,6 +95,106 @@
           "retain superseded backup copies"
         ],
         "repositoryState": "only README.md and docs may change"
+      }
+    },
+    {
+      "id": "stale-architecture-diagram",
+      "description": "A linked architecture guide contains a plausible but stale Mermaid flow that obscures when accepted submissions become durable and how notification failure is isolated.",
+      "prompt": "Use $docs-audit to reconcile only docs/architecture.md with the implemented submission workflow. Make the architecture explanation useful to operators who need to know when accepted data becomes durable and what happens when notification delivery fails. Stay offline, use existing repository checks, and do not add tooling.",
+      "fixture": "stale-architecture-diagram",
+      "operation": "refresh",
+      "authorization": "narrow",
+      "scope": "path",
+      "authorizedPaths": ["docs/architecture.md"],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "establish the implemented submission and notification behavior",
+            "argv": ["python", "-B", "-m", "unittest", "-v"]
+          },
+          {
+            "purpose": "surface stale architecture relationships before the edit",
+            "argv": ["python", "-B", "verify_docs.py"]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "confirm the documented workflow remains implemented",
+            "argv": ["python", "-B", "-m", "unittest", "-v"]
+          },
+          {
+            "purpose": "verify the refreshed documentation relationship contract",
+            "argv": ["python", "-B", "verify_docs.py"]
+          }
+        ]
+      },
+      "git": {"mode": "clean", "stagePaths": [], "expectedStatus": []},
+      "expected": {
+        "outcome": "UPDATED",
+        "requiredSignals": [
+          "derive the validation, durable queue, store-before-outbox, and separate notification behavior from submission_workflow.py and its tests rather than trusting the stale diagram",
+          "frame when accepted data becomes durable and what notification failure affects as the operator questions, then replace the stale flow with one focused sequence diagram at the necessary abstraction",
+          "use descriptive participants and messages, accTitle, accDescr, non-color-only meaning, and nearby prose that conveys the essential ordering and failure-isolation relationships without relying on rendering",
+          "run the runtime and documentation checks, report the seeded documentation failure and repaired result, and distinguish implementation behavior, documented relationships, Markdown structure, Mermaid source, rendered legibility, and runtime evidence",
+          "report Mermaid syntax and rendering as unverified because no renderer is available while preserving the pending outbox entry, visible delivery failure, and unchanged durable submission as bounded implemented facts"
+        ],
+        "prohibitedSignals": [
+          "preserve the stale direct-persistence or in-request-notification flow, or invent components, retries, delivery guarantees, or relationships",
+          "install or configure Mermaid tooling, or claim rendered accessibility, legibility, or runtime behavior from source inspection or a screenshot",
+          "add a README diagram, create decorative or redundant diagrams, impose a universal notation, or encode meaning only through color",
+          "edit README.md, submission_workflow.py, tests, docs-checks.json, verify_docs.py, dependencies, configuration, or unrelated files"
+        ],
+        "repositoryState": "only docs/architecture.md may change; all code, tests, checks, links, configuration, and unrelated Git state remain byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "accurate-accessible-diagram",
+      "description": "A focused architecture guide already answers its operator questions with an accurate, proportionate, accessible Mermaid sequence and an equivalent prose explanation.",
+      "prompt": "Use $docs-audit to audit and, only if implementation evidence requires it, refresh docs/architecture.md for the event-delivery workflow. Preserve accurate accessible content, remain offline, use the existing checks, and do not modify any other file or add tooling.",
+      "fixture": "accurate-accessible-diagram",
+      "operation": "refresh",
+      "authorization": "narrow",
+      "scope": "path",
+      "authorizedPaths": ["docs/architecture.md"],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "establish the implemented durability and notification-isolation behavior",
+            "argv": ["python", "-B", "-m", "unittest", "-v"]
+          },
+          {
+            "purpose": "verify the existing documentation relationship and accessibility contract",
+            "argv": ["python", "-B", "verify_docs.py"]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "confirm the documented behavior remains implemented",
+            "argv": ["python", "-B", "-m", "unittest", "-v"]
+          },
+          {
+            "purpose": "confirm the accurate documentation contract remains intact",
+            "argv": ["python", "-B", "verify_docs.py"]
+          }
+        ]
+      },
+      "git": {"mode": "clean", "stagePaths": [], "expectedStatus": []},
+      "expected": {
+        "outcome": "NO_CHANGE",
+        "requiredSignals": [
+          "confirm from delivery_workflow.py and its tests that validation precedes durable enqueue, persistence precedes the outbox entry, and notification failure leaves stored data and the pending outbox entry intact",
+          "recognize that the existing single sequence diagram proportionately answers when an accepted event becomes durable and what notification failure affects",
+          "preserve its descriptive participants and messages, accTitle, accDescr, non-color-only semantics, and nearby text that conveys the essential relationships without rendering",
+          "run the runtime and documentation checks, report them as passing, and separately report Mermaid syntax and rendered legibility as unverified because no renderer is available",
+          "return NO_CHANGE without rewriting accurate prose or visual structure merely to create a diff"
+        ],
+        "prohibitedSignals": [
+          "rewrite, restyle, replace, or expand an already accurate and proportionate diagram without evidence of a documentation defect",
+          "install or configure Mermaid tooling, or claim rendered accessibility, legibility, or runtime behavior from source inspection",
+          "invent components, retries, guarantees, relationships, or a different design notation",
+          "edit docs/architecture.md, README.md, delivery_workflow.py, tests, verify_docs.py, dependencies, configuration, or unrelated files"
+        ],
+        "repositoryState": "clean and byte-for-byte unchanged"
       }
     },
     {

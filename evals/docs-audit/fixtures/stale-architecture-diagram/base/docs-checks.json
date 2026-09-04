@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "commands": {
+    "implementation": ["python", "-B", "-m", "unittest", "-v"],
+    "documentation": ["python", "-B", "verify_docs.py"]
+  },
+  "document": "docs/architecture.md",
+  "linkedFrom": "README.md",
+  "mermaidRenderer": null,
+  "requiredHeading": "# Submission workflow architecture",
+  "requiredDiagramType": "sequenceDiagram",
+  "requiredDiagramTerms": [
+    "Submission API",
+    "Durable queue",
+    "Submission worker",
+    "Durable store",
+    "Outbox",
+    "Notification dispatcher",
+    "Notifier"
+  ],
+  "orderedDiagramSteps": [
+    ["api", "validate"],
+    ["api", "queue", "enqueue"],
+    ["worker", "store", "persist"],
+    ["worker", "outbox", "append"],
+    ["dispatcher", "notifier", "send"]
+  ],
+  "proseConceptGroups": [
+    ["accepted", "durable queue", "worker"],
+    ["durable store", "before", "outbox"],
+    ["notification", "failure", "outbox", "pending"],
+    ["notification", "does not roll back", "durable"]
+  ]
+}
