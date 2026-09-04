@@ -1,0 +1,5 @@
+{
+  "required": ["format", "id"],
+  "format": 3,
+  "idType": "non-empty-string"
+}

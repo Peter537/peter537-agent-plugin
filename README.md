@@ -1,13 +1,13 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, repository verification context, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
 | Group | Skills |
 | --- | --- |
 | [Planning & research](docs/skills/README.md#planning--research) | `deep-planning`, `chatgpt-research` |
-| [Engineering quality](docs/skills/README.md#engineering-quality) | `deep-code-audit`, `diagnose-bugs`, `verify-change`, `comment-health`, `prune-codebase`, `reduce-code-slop` |
+| [Engineering quality](docs/skills/README.md#engineering-quality) | `deep-code-audit`, `diagnose-bugs`, `verification-context`, `verify-change`, `comment-health`, `prune-codebase`, `reduce-code-slop` |
 | [Security & supply chain](docs/skills/README.md#security--supply-chain) | `audit-dependencies`, `audit-data-exposure` |
 | [Documentation & writing](docs/skills/README.md#documentation--writing) | `docs-audit`, `write-clearly` |
 | [UI & .NET](docs/skills/README.md#ui--net) | `ui-design-and-polish`, `maui-blazor-browser` |
@@ -30,6 +30,7 @@ The `skills/` and `evals/` directories intentionally remain flat: every installa
 - `chatgpt-research` requires ChatGPT Deep Research and signed-in in-app Browser control.
 - `audit-dependencies` keeps explicit reviews read-only, does not execute dependency code or install scanners, and automatically researches only public package coordinates.
 - `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
+- `verification-context` is explicit-only, changes only a user-approved guidance artifact or separately authorized dependency-free thin wrapper, keeps private evidence local, and records commands and evidence states without treating authored context as execution proof.
 - `verify-change` keeps source and acceptance criteria read-only, separates evidence layers, preserves existing work, and requires separate authorization for shared, remote, credentialed, or production environments.
 - `comment-health` keeps source comments and native-tool evidence local, protects comments with legal, documentation, or machine semantics, and previews broad cleanup candidates before editing.
 - `prune-codebase` treats analyzer results as candidates, preserves uncertain dynamic and external consumers, and previews broad removal candidates before editing.
@@ -104,6 +105,7 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $deep-planning to plan this repository change.`
 - `Use $deep-code-audit to audit this codebase.`
 - `Use $diagnose-bugs to reproduce, diagnose, and fix this flaky CI failure.`
+- `Use $verification-context to create or update this repository's authoritative verification context from existing local evidence.`
 - `Use $verify-change to prove this completed change meets its acceptance criteria with layered evidence and complete cleanup.`
 - `Use $docs-audit to refresh this project's documentation.`
 - `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`

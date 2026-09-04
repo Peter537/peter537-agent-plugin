@@ -344,7 +344,8 @@
     {"id": "near-miss-ui-quality", "prompt": "Audit and improve the visual hierarchy, accessibility, and responsive behavior of this dashboard.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},
     {"id": "near-miss-dependency-tool", "prompt": "Add Playwright and its browser runtime so we can test this workflow.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
     {"id": "near-miss-maui-host", "prompt": "Use $maui-blazor-browser to create a safe browser companion for this tightly coupled Hybrid UI.", "expectActivation": false, "expectedOwner": "maui-blazor-browser"},
-    {"id": "near-miss-release", "prompt": "Commit the release files, create the version tag, and push it to GitHub.", "expectActivation": false, "expectedOwner": "release-workflow"}
+    {"id": "near-miss-release", "prompt": "Commit the release files, create the version tag, and push it to GitHub.", "expectActivation": false, "expectedOwner": "release-workflow"},
+    {"id": "near-miss-verification-context", "prompt": "Use $verification-context to create or maintain reusable repository verification guidance from existing evidence without running a completed-change verdict.", "expectActivation": false, "expectedOwner": "verification-context"}
   ],
   "liveCases": [
     {

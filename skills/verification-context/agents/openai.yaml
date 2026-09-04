@@ -1,0 +1,7 @@
+interface:
+  display_name: "Repository Verification Context"
+  short_description: "Maintain authoritative project verification guidance"
+  default_prompt: "Use $verification-context to create or update this repository's authoritative verification context from existing evidence."
+
+policy:
+  allow_implicit_invocation: false

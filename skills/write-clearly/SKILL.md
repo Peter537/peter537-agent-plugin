@@ -1,6 +1,6 @@
 ---
 name: write-clearly
-description: Draft, edit, proofread, audit, and apply human feedback to intentional prose stored in software repositories while preserving meaning, language, voice, and format. Use for tasks that materially create or change repository prose, including documentation, plans, policies, release notes, wording in comments or docstrings, UI copy, errors, CLI help, localization strings, articles, brand writing, and personal nonfiction; also use for plain-language, clarity, tone, audience-fit, house-style, or voice-matching requests in any source language. Do not use for semantic source-comment health, stale-comment, TODO, commented-out-code, or machine-directive audits; code-only work; translation-only requests; summarization; data extraction; factual verification; or poetry and fiction unless explicitly invoked.
+description: Draft, edit, proofread, audit, and apply human feedback to intentional prose stored in software repositories while preserving meaning, language, voice, and format. Use for tasks that materially create or change repository prose, including documentation, plans, policies, release notes, wording in comments or docstrings, UI copy, errors, CLI help, localization strings, articles, brand writing, and personal nonfiction; also use for plain-language, clarity, tone, audience-fit, house-style, or voice-matching requests in any language. Do not use for creating or maintaining authoritative repository verification context unless the task is limited to its wording; without an explicit `$verification-context` invocation, that remains ordinary repository work. Also exclude semantic source-comment health, stale-comment, TODO, commented-out-code, or machine-directive audits; code-only work; translation-only requests; summarization; data extraction; factual verification; and poetry or fiction unless explicitly invoked.
 license: MIT
 ---
 
@@ -128,6 +128,7 @@ For high-risk prose, make conservative wording-only edits. Stop for review when 
 - Use `$docs-audit` when the primary task is comprehensive documentation truth, lifecycle, navigation, or information architecture. Apply this skill to prose quality within that workflow.
 - Use `$comment-health` when the task decides whether source comments or docstrings are true, necessary, correctly placed, stale, or safe to change. Keep wording-only edits here after retention and technical meaning are established.
 - Let `$ui-design-and-polish` control interface hierarchy, interaction context, and rendered UI evidence. Apply this skill to the wording itself.
+- Use `$verification-context` only when it is explicitly invoked to create or maintain authoritative repository verification guidance. Without that invocation, context maintenance is ordinary repository work; use this skill only for wording after authority and technical truth are settled.
 - Use repository facts and domain skills as authorities; this skill must not rewrite uncertainty into unsupported confidence.
 
 ## Return the handoff

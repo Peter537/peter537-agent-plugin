@@ -422,6 +422,12 @@
       "prompt": "Redesign this settings workflow's hierarchy and interactions while preserving behavior.",
       "expectActivation": false,
       "expectedOwner": "ui-design-and-polish"
+    },
+    {
+      "id": "near-miss-verification-context",
+      "prompt": "Use $verification-context to create or update this repository's authoritative verification context from existing evidence.",
+      "expectActivation": false,
+      "expectedOwner": "verification-context"
     }
   ]
 }

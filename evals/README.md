@@ -31,7 +31,7 @@ Python 3, local Git, and writable operating-system temporary storage are prerequ
 
 ## Suite contract
 
-Each of the fourteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
+Each of the fifteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
 
 The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
 
@@ -58,9 +58,11 @@ Fixture references, including aliases, must resolve beneath the suite's `fixture
 
 ## Cross-skill routing matrix
 
-[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the fourteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
+[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the fifteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
 
 The common validator derives effective implicit-invocation policy from `skills/<slug>/agents/openai.yaml`; omission means the documented default `true`. Each explicit case must contain the exact `$slug` token and activate its skill. A natural-language case must contain no explicit skill mention and must follow that skill's effective policy. Boundary rows contain two sorted skill slugs and both negative routing directions, with every referenced trigger owned by the opposite skill.
+
+`verification-context` sets `allow_implicit_invocation: false`. Its routing evaluation must therefore activate only on explicit `$verification-context` invocation and keep an otherwise matching natural-language request inactive. Its behavioral evaluation is separate: it grades authored repository context without treating that artifact as proof that verification ran.
 
 This is a structural and expectation contract. A passing matrix does not prove that ChatGPT or Codex will select the expected skill, perform an ordered handoff, or disclose skill instructions progressively in every model and context.
 
@@ -74,7 +76,7 @@ python -B -m unittest evals/test_eval_manifests.py -v
 
 ## Materializers
 
-Thirteen suites expose one materializer: twelve use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
+Fourteen suites expose one materializer: thirteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
 
 Non-repository suites may provide a standard-library packet materializer, such as `materialize_packets.py`, with the same selection and external-output safety contract.
 
@@ -113,6 +115,8 @@ python -B -m unittest evals/test_repository_layout.py -v
 Freeze the current `HEAD` skill package as the baseline, then run the baseline and candidate with the same model, reasoning effort, prompts, fixtures, tools, limits, and authorization. Apply the [behavior-first evaluation contract](behavior-first-contract.md): grade activation separately from execution, record each applicable verdict dimension, bind consequential claims to evidence, and exercise indexed false-positive controls. Grade prose and implementation shape semantically; reserve exact matching for stable machine contracts, protected literals, exit codes, archive membership, and repository-state invariants. Do not produce an aggregate quality score. For routing changes, hide `expectedOwner` from test agents and repeat the same matrix-derived prompt set three times; require stable activation and primary ownership before accepting a routing change.
 
 For completed-change verification, grade static inspection, build, tests, API behavior, UI rendering and interaction, persistence, operational behavior, telemetry, and native behavior as separate evidence layers. Require only the layers needed by the claim, but never let success in one layer stand in for an unexercised layer. Capture exact revision and runtime identity, observed evidence, limitations, cleanup, and final state without reproducing sensitive values.
+
+The [`verification-context` suite](verification-context/cases.json) grades whether an explicitly invoked agent records current authorities, direct commands, evidence states, side effects, cleanup boundaries, and limitations in only the approved artifact. A passing authored-context case does not establish that a documented command ran or that a completed change meets its acceptance criteria.
 
 Retain a skill change only when it corrects a reproduced failure and the revised suite passes without weakening false-positive resistance or safety boundaries. Keep generated transcripts, reports, screenshots, browser URLs, and run outputs temporary and untracked.
 

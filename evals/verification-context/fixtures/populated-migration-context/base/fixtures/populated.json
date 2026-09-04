@@ -1,0 +1,8 @@
+{
+  "format": 1,
+  "records": [
+    {"id": "synthetic-a", "enabled": true},
+    {"id": "synthetic-b", "enabled": false},
+    {"id": "synthetic-c", "enabled": true}
+  ]
+}

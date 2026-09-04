@@ -510,6 +510,12 @@
       "prompt": "Explain how this repository works without changing its documentation.",
       "expectActivation": false,
       "expectedOwner": "repository-analysis"
+    },
+    {
+      "id": "near-miss-verification-context",
+      "prompt": "Use $verification-context to update only the repository's approved verification context from existing commands, entrypoints, fixtures, cleanup rules, and evidence limits.",
+      "expectActivation": false,
+      "expectedOwner": "verification-context"
     }
   ]
 }

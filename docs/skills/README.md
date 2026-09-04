@@ -17,6 +17,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 | --- | --- | --- |
 | [`deep-code-audit`](../../skills/deep-code-audit/SKILL.md) | Audit correctness, security, architecture, maintainability, and change quality across a codebase or scoped change. | [`cases.json`](../../evals/deep-code-audit/cases.json) |
 | [`diagnose-bugs`](../../skills/diagnose-bugs/SKILL.md) | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. | [`cases.json`](../../evals/diagnose-bugs/cases.json) |
+| [`verification-context`](../../skills/verification-context/SKILL.md) | Create or maintain approved repository verification guidance from existing local evidence without treating that context as execution proof. | [`cases.json`](../../evals/verification-context/cases.json) |
 | [`verify-change`](../../skills/verify-change/SKILL.md) | Prove that a completed local or CI change meets its acceptance criteria through layered evidence and complete cleanup. | [`cases.json`](../../evals/verify-change/cases.json) |
 | [`comment-health`](../../skills/comment-health/SKILL.md) | Audit and safely improve source comments without losing contracts, rationale, documentation, or tool semantics. | [`cases.json`](../../evals/comment-health/cases.json) |
 | [`prune-codebase`](../../skills/prune-codebase/SKILL.md) | Prove and retire dead or obsolete repository surface without guessing about consumers or compatibility. | [`cases.json`](../../evals/prune-codebase/cases.json) |
