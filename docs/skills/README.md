@@ -41,7 +41,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 
 | Skill | Purpose | Evaluation |
 | --- | --- | --- |
-| [`ui-design-and-polish`](../../skills/ui-design-and-polish/SKILL.md) | Design, audit, refine, and verify accessible product interfaces. | [`cases.json`](../../evals/ui-design-and-polish/cases.json) |
+| [`ui-design-and-polish`](../../skills/ui-design-and-polish/SKILL.md) | Design, audit, refine, and verify accessible product interfaces, and create or maintain persistent project design context on direct request. | [`cases.json`](../../evals/ui-design-and-polish/cases.json) |
 | [`maui-blazor-browser`](../../skills/maui-blazor-browser/SKILL.md) | Develop and verify MAUI Blazor Hybrid UI through a safe Web companion or temporary browser harness. | [`cases.json`](../../evals/maui-blazor-browser/cases.json) |
 
 ## Adding a skill

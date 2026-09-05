@@ -516,6 +516,12 @@
       "prompt": "Use $verification-context to update only the repository's approved verification context from existing commands, entrypoints, fixtures, cleanup rules, and evidence limits.",
       "expectActivation": false,
       "expectedOwner": "verification-context"
+    },
+    {
+      "id": "near-miss-design-context-authoring",
+      "prompt": "Create or maintain this repository's persistent product design context at the approved path from current repository evidence and explicit human decisions, preserving unresolved choices without editing the UI.",
+      "expectActivation": false,
+      "expectedOwner": "ui-design-and-polish"
     }
   ]
 }

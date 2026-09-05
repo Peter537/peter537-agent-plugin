@@ -118,6 +118,8 @@ For completed-change verification, grade static inspection, build, tests, API be
 
 The [`verification-context` suite](verification-context/cases.json) grades whether an explicitly invoked agent records current authorities, direct commands, evidence states, side effects, cleanup boundaries, and limitations in only the approved artifact. A passing authored-context case does not establish that a documented command ran or that a completed change meets its acceptance criteria.
 
+The [`ui-design-and-polish` suite](ui-design-and-polish/cases.json) grades persistent project design-context authoring separately from UI modification. Require a direct request, an existing authoritative or exact approved path, classified source authority and provenance, canonical token identifiers without copied mutable values, component interfaces without copied implementation details, bounded exemplar reuse, explicit unresolved decisions, and unchanged protected files. Treat the artifact as static context evidence only: it does not prove rendering, runtime behavior, accessibility, acceptance, or human approval. Route unresolved product decisions to `deep-planning`, comprehensive documentation lifecycle work to `docs-audit`, and repository verification guidance to the explicit-only `verification-context` skill.
+
 Retain a skill change only when it corrects a reproduced failure and the revised suite passes without weakening false-positive resistance or safety boundaries. Keep generated transcripts, reports, screenshots, browser URLs, and run outputs temporary and untracked.
 
 ## Deterministic and live checks

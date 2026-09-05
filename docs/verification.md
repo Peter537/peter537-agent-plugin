@@ -34,6 +34,7 @@ No evidence class substitutes for another. In particular:
 
 - Fixture materialization does not prove that an agent follows the skill.
 - An authored verification-context artifact records repository guidance; it does not prove that a documented command ran or that acceptance criteria passed.
+- An authored product design-context artifact records source authority, durable decisions, scoped exceptions, and unresolved choices; it does not approve itself or prove rendered UI, runtime behavior, accessibility, or acceptance.
 - A static manifest pass does not prove installed discovery, activation, or runtime behavior.
 - `tools/list` proves only that a connection advertises tools, not that every tool is correct or safe.
 - A rendered DOM or screenshot does not prove Blazor interactivity, native MAUI behavior, complete accessibility, or release packaging.
@@ -72,6 +73,12 @@ Choose the cheapest combination that fully supports each acceptance claim. Recor
 | ID | Changed surface and owner | Trigger and gate | Evidence class | Authoritative check and expected evidence | Temporary effects and cleanup | What it cannot prove |
 | --- | --- | --- | --- | --- | --- | --- |
 | `CONTEXT-01` | A repository-owned verification artifact and any separately authorized dependency-free thin wrapper created or maintained through `$verification-context`; context owner | Approved context or wrapper creation or change; `when-changed` | `static-offline`, and `local-runtime` only for safely exercised repository-native commands | Confirm every exact authorized path; the artifact's owner, audience, scope, acceptance authorities, target variants, direct commands and working directories, prerequisites, side effects, persistence boundaries, reset procedures, cleanup ownership, evidence limits, and `verified-current`, `discovered-unverified`, `stale`, or `blocked` states; and that any wrapper only sequences already-authoritative commands and propagates failure. Reconcile cleanup prose with executable behavior. Record a last-verified revision only for a command actually exercised against that target. | Context and wrapper edits are persistent. Any exercised command keeps its own documented effects and cleanup boundary; do not install tooling, create a harness, add assertions or retries, or run a command whose complete cleanup target is not task-owned. | That a documented command ran on another revision, that a wrapper adds verification coverage, that acceptance criteria pass, implicit skill activation, runtime behavior not exercised during maintenance, or release readiness. |
+
+## Product design context
+
+| ID | Changed surface and owner | Trigger and gate | Evidence class | Authoritative check and expected evidence | Temporary effects and cleanup | What it cannot prove |
+| --- | --- | --- | --- | --- | --- | --- |
+| `DESIGN-CONTEXT-01` | A repository-owned persistent project design-context artifact created or maintained through `ui-design-and-polish`; design-context owner | Directly requested context creation or maintenance at an existing authoritative or exact approved path; `when-changed` | `static-offline` | Confirm the authorized path, source authority and provenance, applicable scope and product or platform variants, approved decisions, observed facts, provisional synthesis, unresolved choices, valid historical rationale, scoped exceptions, locale and accessibility constraints, canonical token identifiers without copied mutable values, component interfaces without copied implementation details, bounded exemplar provenance and non-copy limits, local links, protected files, and final Git state. | The context edit is persistent; inspection and repository-native static checks remain read-only and must preserve unrelated staged, unstaged, and untracked work. | Human approval, current truth beyond the inspected revision, implicit activation, rendered hierarchy, UI interaction, runtime behavior, accessibility conformance, acceptance, or release readiness. |
 
 ## Skills, layout, grouping, and catalog
 

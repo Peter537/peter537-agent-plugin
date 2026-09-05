@@ -305,6 +305,14 @@
       ]
     },
     {
+      "id": "deep-planning--ui-design-and-polish",
+      "skills": ["deep-planning", "ui-design-and-polish"],
+      "directions": [
+        {"from": "deep-planning", "to": "ui-design-and-polish", "triggers": ["near-miss-design-context-authoring"]},
+        {"from": "ui-design-and-polish", "to": "deep-planning", "triggers": ["near-miss-design-context-planning"]}
+      ]
+    },
+    {
       "id": "deep-planning--verification-context",
       "skills": ["deep-planning", "verification-context"],
       "directions": [
@@ -342,6 +350,14 @@
       "directions": [
         {"from": "diagnose-bugs", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
         {"from": "verify-change", "to": "diagnose-bugs", "triggers": ["near-miss-bug-diagnosis"]}
+      ]
+    },
+    {
+      "id": "docs-audit--ui-design-and-polish",
+      "skills": ["docs-audit", "ui-design-and-polish"],
+      "directions": [
+        {"from": "docs-audit", "to": "ui-design-and-polish", "triggers": ["near-miss-design-context-authoring"]},
+        {"from": "ui-design-and-polish", "to": "docs-audit", "triggers": ["near-miss-design-context-docs-audit"]}
       ]
     },
     {
@@ -390,6 +406,14 @@
       "directions": [
         {"from": "reduce-code-slop", "to": "ui-design-and-polish", "triggers": ["near-miss-ui"]},
         {"from": "ui-design-and-polish", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]}
+      ]
+    },
+    {
+      "id": "ui-design-and-polish--verification-context",
+      "skills": ["ui-design-and-polish", "verification-context"],
+      "directions": [
+        {"from": "ui-design-and-polish", "to": "verification-context", "triggers": ["near-miss-verification-context"]},
+        {"from": "verification-context", "to": "ui-design-and-polish", "triggers": ["near-miss-design-context-authoring"]}
       ]
     },
     {

@@ -41,7 +41,7 @@
     },
     {
       "title": "UI & .NET",
-      "description": "Design product interfaces and develop MAUI Blazor Hybrid UI.",
+      "description": "Design product interfaces, author persistent project design context on direct request, and develop MAUI Blazor Hybrid UI.",
       "skills": [
         "ui-design-and-polish",
         "maui-blazor-browser"

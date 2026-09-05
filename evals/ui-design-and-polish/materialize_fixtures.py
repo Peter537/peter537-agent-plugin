@@ -20,8 +20,8 @@ REPOSITORY_ROOT = SCRIPT_DIR.parents[1]
 MANIFEST_PATH = SCRIPT_DIR / "cases.json"
 FIXTURES_ROOT = SCRIPT_DIR / "fixtures"
 CASE_ID_PATTERN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
-OPERATIONS = {"audit", "polish", "refine", "redesign", "create"}
-RENDER_POLICIES = {"required-when-safe", "blocked-by-fixture"}
+OPERATIONS = {"audit", "polish", "refine", "redesign", "create", "context"}
+RENDER_POLICIES = {"required-when-safe", "blocked-by-fixture", "not-applicable"}
 GIT_MODES = {"clean", "worktree"}
 MAX_FIXTURE_FILE_BYTES = 1_048_576
 

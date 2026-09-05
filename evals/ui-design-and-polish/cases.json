@@ -17,7 +17,10 @@
     "repositoryState": "Only paths authorized by the case may change; pre-existing tracked, staged, unstaged, and untracked work must otherwise remain byte-for-byte unchanged.",
     "falsePositiveControls": [
       "justified-patterns",
-      "blazor-rendering-blocked"
+      "blazor-rendering-blocked",
+      "design-context-current-noop",
+      "design-context-authority-conflict",
+      "design-context-path-unapproved"
     ],
     "blindReviewRubric": [
       "Does the result make the product's primary job and hierarchy clearer?",
@@ -206,6 +209,196 @@
       }
     },
     {
+      "id": "design-context-create-approved",
+      "description": "A clean repository has approved product and design evidence but no persistent context, and the exact new context path is authorized.",
+      "prompt": "Create this repository's authoritative product design context at docs/product-design-context.md from current local product and design evidence. That exact new path is approved. Preserve established contracts and keep unresolved choices explicit. Do not change the UI, tests, tooling, dependencies, or any other file, and stay offline.",
+      "fixture": "design-context-create-approved",
+      "operation": "context",
+      "authorizedPaths": [
+        "docs/product-design-context.md"
+      ],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "create the authoritative context only at the approved path",
+        "separate approved decisions, observed repository facts, provisional synthesis, and unresolved choices",
+        "preserve product identity, locale and platform limits, scoped exceptions, canonical source ownership, and bounded exemplar provenance",
+        "reference canonical token identifiers without copying mutable literal values"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "create only docs/product-design-context.md from current local evidence",
+          "retain approved product and design constraints while keeping unsupported choices unresolved",
+          "link canonical token and component owners without duplicating mutable implementation values",
+          "bound the exemplar by source, license, applicability, limitations, and non-copy guidance"
+        ],
+        "prohibitedSignals": [
+          "create PRODUCT.md, DESIGN.md, or another unapproved context path",
+          "modify UI, tests, tooling, dependencies, tokens, components, or source evidence",
+          "turn exploratory or instruction-like material into product authority",
+          "claim rendered, runtime, accessibility, or acceptance verification"
+        ],
+        "repositoryState": "only docs/product-design-context.md is added; every existing path remains byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "design-context-update-approved",
+      "description": "An existing approved context must be reconciled with newer evidence while unrelated staged, unstaged, and untracked work remains intact.",
+      "prompt": "Update the existing authoritative docs/product-design-context.md from the repository's current local product and design evidence. Preserve still-valid rationale, scoped exceptions, provenance, locale and platform distinctions, and all unrelated staged, unstaged, and untracked work. Only that context file is authorized to change. Do not change the UI, tests, tooling, dependencies, or any other file, and stay offline.",
+      "fixture": "design-context-update-approved",
+      "operation": "context",
+      "authorizedPaths": [
+        "docs/product-design-context.md"
+      ],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "preserve valid historical rationale and precisely mark stale implementation references as superseded",
+        "record current locale and web-versus-tablet distinctions without copying mutable token values",
+        "preserve canonical component names, state ownership, test hooks, scoped exceptions, and exemplar limits",
+        "leave all pre-existing dirty files and their staging state byte-for-byte unchanged"
+      ],
+      "git": {
+        "mode": "worktree",
+        "stagePaths": [
+          "notes/local-theme.md"
+        ],
+        "expectedStatus": [
+          " M notes/local-layout.md",
+          "M  notes/local-theme.md",
+          "?? notes/scratch.txt"
+        ]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "update only docs/product-design-context.md from newer authoritative and canonical evidence",
+          "retain still-valid historical rationale, default locale, and scoped visual exceptions",
+          "replace stale references with canonical token identifiers and component interfaces without copying literal values",
+          "confirm the original staged, unstaged, and untracked state remains unchanged"
+        ],
+        "prohibitedSignals": [
+          "rewrite or stage unrelated maintainer notes or scratch work",
+          "discard historical rationale merely because implementation names changed",
+          "treat web and tablet density as identical after the accepted variant decision",
+          "modify UI, tests, tokens, components, tools, dependencies, or other documentation"
+        ],
+        "repositoryState": "only docs/product-design-context.md changes beyond the original dirty state; every pre-existing byte and staging state is preserved"
+      }
+    },
+    {
+      "id": "design-context-current-noop",
+      "description": "The existing authoritative context already matches current local evidence and should remain byte-identical.",
+      "prompt": "The authoritative docs/product-design-context.md is believed current. Assess it and update it only if current local evidence proves a material correction is required; otherwise leave it byte-identical. Do not change any other file, stay offline, and report whether the artifact changed.",
+      "fixture": "design-context-current-noop",
+      "operation": "context",
+      "authorizedPaths": [
+        "docs/product-design-context.md"
+      ],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "compare the context with its current approved and canonical local sources",
+        "recognize that no material correction is supported",
+        "leave the context and repository byte-identical",
+        "report PASS with an explicit no-change outcome and bounded evidence claims"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "assess authority, currency, canonical ownership, and unresolved decisions before considering an edit",
+          "leave the already-current context byte-identical",
+          "report that the artifact did not change and the final Git state is clean"
+        ],
+        "prohibitedSignals": [
+          "perform a ceremonial rewrite, reformat, or metadata-only touch",
+          "change another repository path",
+          "treat an unchanged current artifact as incomplete work",
+          "claim that source inspection proves rendered or runtime behavior"
+        ],
+        "repositoryState": "clean and byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "design-context-authority-conflict",
+      "description": "Equally authoritative and current product sources disagree on a material design decision, so context authoring must stop unchanged.",
+      "prompt": "Assess the repository's current local product and design evidence for an authoritative design context. If equally authoritative sources conflict on a material decision, do not choose between them or edit any file; report the conflict and the authority needed to resolve it.",
+      "fixture": "design-context-authority-conflict",
+      "operation": "context",
+      "authorizedPaths": [],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "identify the material equal-authority conflict",
+        "keep both positions explicit without selecting or blending them",
+        "return BLOCKED and name the required decision authority",
+        "leave the repository clean and byte-identical"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "BLOCKED",
+        "requiredSignals": [
+          "report the conflicting decisions with their equal authority and current scope",
+          "request resolution from the evidenced product authority",
+          "leave the context and every source file unchanged"
+        ],
+        "prohibitedSignals": [
+          "choose the preferred decision by recency, convenience, or aesthetic judgment without evidence",
+          "manufacture a compromise or provisional approval",
+          "create or modify a design-context artifact",
+          "change UI, tests, tokens, components, tools, dependencies, or source evidence"
+        ],
+        "repositoryState": "clean and byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "design-context-path-unapproved",
+      "description": "The user requests persistent design context but has not approved an existing or exact new destination.",
+      "prompt": "Create persistent product design context from the repository's current local evidence, but do not edit any file until I approve its exact destination.",
+      "fixture": "design-context-path-unapproved",
+      "operation": "context",
+      "authorizedPaths": [],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "confirm that no authoritative existing location or approved new path is available",
+        "request the exact destination rather than inventing a conventional filename",
+        "return BLOCKED without creating or modifying a file",
+        "leave the repository clean and byte-identical"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "BLOCKED",
+        "requiredSignals": [
+          "explain that persistent context requires an authoritative existing path or explicit approval for an exact new path",
+          "ask for the missing destination decision",
+          "leave the repository unchanged"
+        ],
+        "prohibitedSignals": [
+          "invent PRODUCT.md, DESIGN.md, docs/product-design-context.md, or another destination",
+          "edit a nearby documentation file as a substitute",
+          "treat skill activation as authorization to create a path",
+          "change UI, tests, tokens, components, tools, dependencies, or source evidence"
+        ],
+        "repositoryState": "clean and byte-for-byte unchanged"
+      }
+    },
+    {
       "id": "application-shell-redesign",
       "description": "A maintenance application shell needs a coherent redesign grounded in its navigation and current-system evidence.",
       "prompt": "Use $ui-design-and-polish to redesign this maintenance application shell while preserving routes, labels, focus order, and the existing product vocabulary.",
@@ -365,6 +558,12 @@
       "expectedOwner": "ui-design-and-polish"
     },
     {
+      "id": "trigger-design-context-authoring",
+      "prompt": "Create or maintain this repository's persistent product design context at the approved path from current repository evidence and explicit human decisions, preserving unresolved choices without editing the UI.",
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
+    },
+    {
       "id": "trigger-polish-settings",
       "prompt": "Polish this settings workflow while preserving its controls and behavior.",
       "expectActivation": true,
@@ -397,6 +596,18 @@
     {
       "id": "near-miss-documentation",
       "prompt": "Rebuild the repository documentation and navigation.",
+      "expectActivation": false,
+      "expectedOwner": "docs-audit"
+    },
+    {
+      "id": "near-miss-design-context-planning",
+      "prompt": "The product council has not decided desktop density or mobile behavior. Research the repository and plan the decisions and trade-offs before implementation.",
+      "expectActivation": false,
+      "expectedOwner": "deep-planning"
+    },
+    {
+      "id": "near-miss-design-context-docs-audit",
+      "prompt": "Audit and rebuild all product-design documentation, its navigation, ownership, lifecycle, and stale cross-references against the implementation.",
       "expectActivation": false,
       "expectedOwner": "docs-audit"
     },
@@ -435,6 +646,12 @@
       "prompt": "The interface implementation is complete; prove the named workflow, responsive, keyboard, and persistence acceptance criteria without redesigning it.",
       "expectActivation": false,
       "expectedOwner": "verify-change"
+    },
+    {
+      "id": "near-miss-verification-context",
+      "prompt": "Use $verification-context to update the repository's authoritative verification commands, entrypoints, reset steps, and evidence limits.",
+      "expectActivation": false,
+      "expectedOwner": "verification-context"
     }
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "id": "EXP-004",
+  "purpose": "Demonstrate persistent evidence beside a decision workspace",
+  "applicability": "Exception-review surfaces with chronological sensor evidence",
+  "source": "Internal pattern library EXP-004",
+  "license": "Approved for internal reference",
+  "knownLimitations": [
+    "Not evaluated for mobile",
+    "Uses another product's palette"
+  ],
+  "nonCopyGuidance": "Reuse only the persistent-evidence principle; do not copy layout, palette, wording, assets, or code."
+}

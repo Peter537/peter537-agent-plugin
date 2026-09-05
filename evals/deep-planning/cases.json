@@ -236,6 +236,7 @@
     {"id": "near-miss-pruning", "prompt": "Find proven dead code and obsolete repository surface, then report stable removal candidates.", "expectActivation": false, "expectedOwner": "prune-codebase"},
     {"id": "near-miss-full-catalog-implementation", "prompt": "Implement the already specified parser change, add the existing-framework regression test, and update README.md with the verified command.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
     {"id": "near-miss-change-verification", "prompt": "The implementation is complete; prove it meets the agreed acceptance criteria without planning another change.", "expectActivation": false, "expectedOwner": "verify-change"},
-    {"id": "near-miss-verification-context", "prompt": "Use $verification-context to update the approved repository verification context from settled commands, entrypoints, fixtures, reset paths, and evidence limits; no design decision is unresolved.", "expectActivation": false, "expectedOwner": "verification-context"}
+    {"id": "near-miss-verification-context", "prompt": "Use $verification-context to update the approved repository verification context from settled commands, entrypoints, fixtures, reset paths, and evidence limits; no design decision is unresolved.", "expectActivation": false, "expectedOwner": "verification-context"},
+    {"id": "near-miss-design-context-authoring", "prompt": "Create or maintain this repository's persistent product design context at the approved path from current repository evidence and explicit human decisions, preserving unresolved choices without editing the UI.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"}
   ]
 }

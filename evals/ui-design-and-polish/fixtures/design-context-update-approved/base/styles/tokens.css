@@ -1,0 +1,8 @@
+:root {
+  --surface-panel: #ffffff;
+  --text-primary: #20252b;
+  --status-risk-border: #8a5a00;
+  --space-control-inline: 0.75rem;
+  --focus-ring: #005fcc;
+  --target-tablet-min: 44px;
+}

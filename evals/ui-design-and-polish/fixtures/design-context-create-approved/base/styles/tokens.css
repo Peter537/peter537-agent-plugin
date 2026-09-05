@@ -1,0 +1,13 @@
+:root {
+  --surface-canvas: #f7faf9;
+  --surface-panel: #ffffff;
+  --text-primary: #17322d;
+  --text-muted: #526963;
+  --border-default: #a8bbb6;
+  --focus-ring: #005fcc;
+  --status-release-border: #2d6a4f;
+  --status-hold-border: #996515;
+  --status-quarantine-border: #a42424;
+  --evidence-rail-accent: #147d73;
+  --space-inline-control: 0.75rem;
+}

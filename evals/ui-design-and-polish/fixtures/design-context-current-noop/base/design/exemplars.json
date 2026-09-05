@@ -1,0 +1,12 @@
+{
+  "id": "EXP-011",
+  "purpose": "Show stable evidence grouping in a dense comparison task",
+  "applicability": "Desktop dispatch comparison only",
+  "source": "Internal operations pattern collection",
+  "license": "Approved for internal reference",
+  "knownLimitations": [
+    "No tablet evidence",
+    "Different product identity"
+  ],
+  "nonCopyGuidance": "Use the grouping principle only; do not copy layout, palette, content, assets, or code."
+}

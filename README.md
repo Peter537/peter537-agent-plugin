@@ -1,6 +1,6 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, repository verification context, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, repository verification context, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, persistent product design-context authoring, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
 
 ## Included skills
 
@@ -32,6 +32,7 @@ The `skills/` and `evals/` directories intentionally remain flat: every installa
 - `diagnose-bugs` keeps diagnostic evidence local and redacted, preserves existing work, and requires separate authorization for high-risk or external actions.
 - `verification-context` is explicit-only, changes only a user-approved guidance artifact or separately authorized dependency-free thin wrapper, keeps private evidence local, and records commands and evidence states without treating authored context as execution proof.
 - `verify-change` keeps source and acceptance criteria read-only, separates evidence layers, preserves existing work, and requires separate authorization for shared, remote, credentialed, or production environments.
+- `ui-design-and-polish` creates or maintains persistent project design context only on direct request at an existing authoritative or explicitly approved path, keeps private repository evidence local, preserves source provenance and unresolved choices, and does not treat authored context as rendered or runtime proof.
 - `comment-health` keeps source comments and native-tool evidence local, protects comments with legal, documentation, or machine semantics, and previews broad cleanup candidates before editing.
 - `prune-codebase` treats analyzer results as candidates, preserves uncertain dynamic and external consumers, and previews broad removal candidates before editing.
 - `reduce-code-slop` inspects source, tests, and existing verification output locally, preserves justified complexity, and does not install analyzers or dependencies.
@@ -110,6 +111,7 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $docs-audit to refresh this project's documentation.`
 - `Use $maui-blazor-browser to make this MAUI Blazor Hybrid UI safely browser-testable.`
 - `Use $reduce-code-slop to simplify this C# or Python code without changing its behavior.`
+- `Use $ui-design-and-polish to create this repository's persistent product design context at docs/product-design-context.md from approved local evidence without editing the UI.`
 - `Use $ui-design-and-polish to improve this product UI.`
 - `Use $write-clearly to improve this repository prose without changing its meaning or voice.`
 - `Use $chatgpt-research to compare the current official guidance.`
