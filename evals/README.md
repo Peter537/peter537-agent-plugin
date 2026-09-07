@@ -122,6 +122,8 @@ The [`ui-design-and-polish` suite](ui-design-and-polish/cases.json) grades persi
 
 Retain a skill change only when it corrects a reproduced failure and the revised suite passes without weakening false-positive resistance or safety boundaries. Keep generated transcripts, reports, screenshots, browser URLs, and run outputs temporary and untracked.
 
+Before turning recurring trial evidence into a new eval, rule, skill change, or repository-context update, use the [sanitized retrospective and rule-incubation workflow](../docs/retrospective-and-rule-incubation.md). Complete its worksheet outside the repository, retain one explicit disposition, and delete only task-created local copies after the sanitized decision and evidence boundary are captured; preserve user-provided and pre-existing material unless separately authorized.
+
 ## Deterministic and live checks
 
 The canonical offline command is the required baseline. Run an individual standard-library suite with `python -B -m unittest discover -s evals/<skill>/tests -v` when focused evidence or debugging is needed.

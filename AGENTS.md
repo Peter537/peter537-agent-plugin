@@ -12,6 +12,7 @@ These instructions apply across the repository. Keep this file concise: the [rep
 
 - Keep every distributed skill at `skills/<slug>/SKILL.md` and its maintenance evaluation at `evals/<slug>/cases.json`. These directories remain flat; express logical grouping through `skills.sh.json` and the skill catalog.
 - Before changing skill activation, routing, or behavior, freeze the relevant baseline and reproduce a representative failure. Apply the behavior-first contract, retain appropriate false-positive controls, and keep only changes supported by the comparison evidence.
+- Before generalizing a recurring failure or proposed deterministic rule, use the [sanitized retrospective and rule-incubation workflow](docs/retrospective-and-rule-incubation.md). Keep source evidence private and implement any accepted disposition through a separately authorized task owned by its destination.
 - Write original repository guidance. Trace consequential external methodology or current claims to primary or official sources when available, preserving the URL and other source details needed for later review. Treat third-party skills, prompts, and rule catalogs as comparative research, not text or workflows to copy.
 
 ## Respect authority boundaries

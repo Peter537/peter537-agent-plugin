@@ -129,6 +129,8 @@ Suites need a nonempty behavioral case set and a nonempty trigger set with at le
 
 Compare a baseline and candidate with the same model, reasoning effort, prompt, fixture, tools, limits, environment, and authorization. Record per-case dimension verdicts, claim states for consequential conclusions, evidence locations, and the final case result. Keep raw transcripts, screenshots, reports, URLs, and account-specific output temporary and untracked.
 
+When a recurring observation might justify an eval, deterministic rule, skill change, or project-context update, use the [sanitized retrospective and rule-incubation workflow](../docs/retrospective-and-rule-incubation.md) before generalizing it. The retrospective routes evidence to this contract; it does not replace these grading rules or authorize the resulting change.
+
 Do not collapse the dimensions into an aggregate quality score. Report material regressions, improvements, blocks, and false-positive-control results directly. A change is acceptable only when it corrects the targeted behavior without weakening safety, evidence quality, preserved behavior, or final-state integrity.
 
 The repository has no generic model-behavior runner. Future harness work may automate trials and records, but it must preserve this contract and remain independent of any one provider's evaluation API.
