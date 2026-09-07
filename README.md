@@ -44,11 +44,11 @@ The `skills/` and `evals/` directories intentionally remain flat: every installa
 
 ## Install the complete GitHub edition
 
-The published `v0.3.0` GitHub marketplace edition contains thirteen skills and all four MCP servers. The Codex CLI is not required.
+The published `v0.4.0` GitHub marketplace edition contains fifteen skills and all four MCP servers. The Codex CLI is not required.
 
 1. In ChatGPT/Codex desktop, open **Plugins**, open the **Add** menu, and select **Add plugin marketplace**.
 2. Enter `Peter537/peter537-agent-plugin` as the source.
-3. Enter `v0.3.0` as the Git ref.
+3. Enter `v0.4.0` as the Git ref.
 4. Leave **Sparse paths** empty and add the marketplace.
 5. Open **Peter537 Plugins**, install **Peter537 Agent Plugin**, and start a new task so its skills and MCP tools are loaded.
 
@@ -82,14 +82,16 @@ Skills.sh availability is separate from repository compatibility and begins only
 
 ## Install from the OpenAI shared Plugins Directory
 
-The public-directory edition is submitted separately from the GitHub release. Its `v0.3.0` bundle contains all thirteen skills but does not include the four MCP servers; it becomes available only after OpenAI review and publication. Once available, search for **Peter537 Agent Plugin** in the shared Plugins Directory, open its details, and select the plus button to install it.
+The public-directory edition is submitted separately from the GitHub release. Its `v0.4.0` bundle contains all fifteen skills but does not include the four MCP servers; it becomes available only after OpenAI review and publication. Once available, search for **Peter537 Agent Plugin** in the shared Plugins Directory, open its details, and select the plus button to install it.
+
+See the [v0.4.0 public-submission document](docs/public-submission-v0.4.0.md) for listing copy, review scenarios, and the reproducible skills-only upload bundle.
 
 ## Optional: Codex CLI
 
 The Codex CLI is not required to install either desktop edition. Existing CLI users can instead add and install the GitHub marketplace with:
 
 ```powershell
-codex plugin marketplace add Peter537/peter537-agent-plugin --ref v0.3.0
+codex plugin marketplace add Peter537/peter537-agent-plugin --ref v0.4.0
 codex plugin add peter537-agent-plugin@peter537
 ```
 
@@ -120,7 +122,7 @@ Clone or download this repository and follow the installation workflow provided 
 
 ## Version
 
-Current version: `0.3.0`.
+Current version: `0.4.0`.
 
 ## Support, privacy, and terms
 
