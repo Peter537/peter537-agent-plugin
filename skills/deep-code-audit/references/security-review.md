@@ -31,6 +31,7 @@ Use this reference when an audit includes trust boundaries, authentication, auth
 
 - Inspect validation and output encoding for query, command, template, header, log, path, expression, and markup injection.
 - Review filesystem paths, archives, uploads, downloads, redirects, outbound requests, URL parsing, and network destinations for traversal, overwrite, unsafe schemes, and server-side request forgery.
+- For uploads, trace byte limits through request parsing, validation, and storage. Record a handler's absent size check separately from unverified upstream limits, and assess memory or storage exhaustion within that evidence boundary. Include size enforcement in remediation and negative tests; fixing filename traversal or active-content serving does not establish bounded resource use. Preserve equivalent limits when their enforcement is evidenced.
 - Examine deserialization, reflection, dynamic loading, plugins, regular expressions, parsers, native calls, and process execution for unsafe inputs, surprising authority, and resource limits.
 - For applicable web software, review cross-site scripting, request forgery, cross-origin policy, clickjacking, cookies, browser storage, caching, and content security controls.
 - Identify destructive or irreversible operations and verify authorization, confirmation, auditability, rollback, recovery, idempotency, and partial-failure behavior.
@@ -79,3 +80,7 @@ Version-sensitive statuses below were verified on 2026-08-19 and must be recheck
 - [OWASP Code Review Guide](https://owasp.org/www-project-code-review-guide/): manual secure-review technique and historical vulnerability guidance.
 
 Use these as methodological anchors, not legal certification, penetration-test evidence, or proof that every relevant control is implemented.
+
+Upload guidance checked on 2026-09-07:
+
+- [OWASP File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html#upload-and-download-limits): upload size limits protect storage capacity; inspect expanded sizes when decompression applies.

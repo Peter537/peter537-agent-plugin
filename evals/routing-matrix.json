@@ -451,6 +451,26 @@
   ],
   "coverageCases": [
     {
+      "id": "prelaunch-security-audit",
+      "kind": "full-catalog-collision",
+      "caseRefs": [
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-explicit-prelaunch-security"},
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "trigger-natural-prelaunch-security"},
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "near-miss-security-fix"},
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "near-miss-dependencies"},
+        {"suite": "deep-code-audit", "section": "triggerCases", "id": "near-miss-privacy"}
+      ],
+      "requiredSignals": [
+        "select deep-code-audit for an explicit or natural-language read-only prelaunch security review",
+        "preserve ordinary implementation ownership for an approved bounded security fix",
+        "preserve specialist ownership for dependency-only and repository-data-exposure reviews"
+      ],
+      "prohibitedSignals": [
+        "activate a read-only audit skill to implement an already specified fix",
+        "require an AI runtime security review merely because an app was built with a coding assistant"
+      ]
+    },
+    {
       "id": "specialist-handoff-boundaries",
       "kind": "specialist-handoff",
       "caseRefs": [

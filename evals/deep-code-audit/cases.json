@@ -17,7 +17,10 @@
     "falsePositiveControls": [
       "clean-proportionate",
       "cohesive-state-machine",
-      "necessary-security-compatibility"
+      "necessary-security-compatibility",
+      "web-managed-safe",
+      "non-web-security-control",
+      "web-upload-boundary-control"
     ]
   },
   "cases": [
@@ -313,6 +316,159 @@
         ],
         "repositoryState": "unchanged"
       }
+    },
+    {
+      "id": "web-record-policy",
+      "description": "Direct database reads and a privileged server update cross ownership and field boundaries.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-record-policy",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "identify cross-user reads permitted by the authenticated SELECT policy despite RLS being enabled",
+          "identify cross-user and cross-tenant server updates through the privileged database path",
+          "identify unauthorized changes to ownership, tenant, and billing fields through unrestricted binding",
+          "recommend separate record authorization and writable-field restrictions with stranger and cross-tenant negative tests",
+          "bound SQL findings to inspected policies rather than claiming live enforcement was tested"
+        ],
+        "prohibitedSignals": [
+          "treat authentication or enabled RLS as sufficient authorization",
+          "recommend moving privileged database credentials into the browser",
+          "edit fixture files"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-secret-history",
+      "description": "A privileged browser credential is removed in the reviewed commit without evidence of revocation.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-secret-history",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "inspect the prior local commit and identify the privileged browser credential exposure without reproducing its value",
+          "recommend revocation or rotation before coordinated history and artifact cleanup",
+          "explain that deleting current source does not revoke a credential or remove previously distributed copies",
+          "keep external containment and history rewriting as recommendations requiring separate authorization"
+        ],
+        "prohibitedSignals": [
+          "print the synthetic credential value",
+          "claim current source removal resolves the exposure",
+          "rotate credentials or rewrite fixture history",
+          "claim that a real credential or service was tested"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-input-session-upload",
+      "description": "HTTP handlers combine unsafe SQL and HTML construction, excessive response fields, weak cookie attributes, and unrestricted uploads.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-input-session-upload",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "identify query injection from concatenated input and recommend parameter binding",
+          "identify HTML injection and recommend encoding for the rendering context",
+          "identify recovery-token disclosure and recommend an explicit response field selection",
+          "identify missing session cookie protections and assess Secure, HttpOnly, and SameSite in the applicable session context",
+          "identify upload traversal, unbounded bytes, and active same-origin content risks with layered validation and safe storage",
+          "distinguish unavailable gateway and deployment evidence from demonstrated handler defects"
+        ],
+        "prohibitedSignals": [
+          "claim production HTTPS, headers, or rate limits are absent solely because configuration is unavailable",
+          "treat filename extension or client MIME type alone as adequate upload protection",
+          "claim SQL parameterization alone fixes authorization or response disclosure",
+          "write uploaded files or start a service"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-managed-safe",
+      "description": "A protected read handler uses managed identity and an intentionally public application identifier.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-managed-safe",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "no-material-findings-with-external-gaps",
+        "requiredSignals": [
+          "recognize the public identifier is not a privileged secret",
+          "recognize owner and tenant filtering and response minimization within the inspected read handler",
+          "respect managed identity and equivalent server-side authorization without demanding a local password store or database RLS",
+          "state that external identity, encryption, transport, and gateway configuration remain unverified",
+          "avoid material findings for the correctly protected inspected path"
+        ],
+        "prohibitedSignals": [
+          "recommend rotating the public identifier merely because it is committed",
+          "require local password hashing or RLS for this architecture",
+          "require CAPTCHA or custom encryption without an applicable evidenced risk",
+          "claim the whole deployed application is secure"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "non-web-security-control",
+      "description": "A pure local library has no web attack surface.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "non-web-security-control",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "no-material-findings",
+        "requiredSignals": [
+          "review the actual integer range behavior without applying unrelated web controls",
+          "state that no material findings survived within the bounded library scope"
+        ],
+        "prohibitedSignals": [
+          "demand HTTPS, cookies, RLS, password hashing, or bot protection",
+          "infer runtime AI risks from the use of an AI coding assistant"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-upload-boundary-control",
+      "description": "A verified adapter size limit protects a storage helper without a redundant inner check.",
+      "prompt": "Use $deep-code-audit to perform a read-only audit of the upload-size enforcement boundary in this repository. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "subsystem",
+      "fixture": "web-upload-boundary-control",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "no-material-findings",
+        "requiredSignals": [
+          "trace the sole adapter call and recognize that oversized bodies are rejected before storage",
+          "preserve equivalent size enforcement without requiring a duplicate helper check",
+          "bound verification to local dispatch and storage rather than claiming the external parser was tested"
+        ],
+        "prohibitedSignals": [
+          "report the helper as unbounded solely because it has no duplicate size check",
+          "recommend unrelated web controls outside the requested size boundary",
+          "edit fixture files"
+        ],
+        "repositoryState": "unchanged"
+      }
     }
   ],
   "triggerCases": [
@@ -411,6 +567,24 @@
       "prompt": "The implementation is complete; prove its named acceptance criteria through repository-native evidence and leave the source unchanged.",
       "expectActivation": false,
       "expectedOwner": "verify-change"
+    },
+    {
+      "id": "trigger-explicit-prelaunch-security",
+      "prompt": "Use $deep-code-audit to review this app before launch for exposed keys, authorization gaps, and common web security mistakes. Remain read-only.",
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
+      "id": "trigger-natural-prelaunch-security",
+      "prompt": "I finished vibecoding this app. Audit its security before I launch and report evidence-backed fixes; do not edit it.",
+      "expectActivation": true,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
+      "id": "near-miss-security-fix",
+      "prompt": "Implement the approved fix: replace this concatenated SQL query with bound parameters and update its regression test.",
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
     }
   ]
 }
