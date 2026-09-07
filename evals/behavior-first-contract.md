@@ -127,14 +127,18 @@ Suites need a nonempty behavioral case set and a nonempty trigger set with at le
 
 ## Comparisons and records
 
-Compare a baseline and candidate with the same model, reasoning effort, prompt, fixture, tools, limits, environment, and authorization. Record per-case dimension verdicts, claim states for consequential conclusions, evidence locations, and the final case result. Keep raw transcripts, screenshots, reports, URLs, and account-specific output temporary and untracked.
+Compare a baseline and candidate with the same model, reasoning effort, prompt, fixture, tools, limits, environment, context-management settings, and authorization. Record per-case dimension verdicts, claim states for consequential conclusions, evidence locations, and the final case result. Keep raw transcripts, screenshots, reports, URLs, and account-specific output temporary and untracked.
+
+For skill changes, declare whether the candidate corrects behavior or preserves it before comparison. Corrections require an authentic failing baseline and a repaired outcome. Simplifications may start from a passing baseline: preserve the required outcomes and demonstrate the intended benefit, such as clearer ownership, less irrelevant context loaded, or fewer redundant pauses or checks. Record static instruction-size differences separately from observed reading, execution, token usage, or latency; fewer characters do not prove faster or better task completion. Exercise the applicable positive cases and indexed false-positive controls in either comparison. If required evidence is unavailable, mark it `BLOCKED`; do not infer improvement from the rewrite or relax expectations afterward.
 
 When a recurring observation might justify an eval, deterministic rule, skill change, or project-context update, use the [sanitized retrospective and rule-incubation workflow](../docs/retrospective-and-rule-incubation.md) before generalizing it. The retrospective routes evidence to this contract; it does not replace these grading rules or authorize the resulting change.
 
-Do not collapse the dimensions into an aggregate quality score. Report material regressions, improvements, blocks, and false-positive-control results directly. A change is acceptable only when it corrects the targeted behavior without weakening safety, evidence quality, preserved behavior, or final-state integrity.
+Do not collapse the dimensions into an aggregate quality score. Report material regressions, improvements, blocks, and false-positive-control results directly. A change is acceptable only when it corrects the targeted behavior or demonstrates the declared simplification benefit without weakening safety, evidence quality, preserved behavior, or final-state integrity.
 
 The repository has no generic model-behavior runner. Future harness work may automate trials and records, but it must preserve this contract and remain independent of any one provider's evaluation API.
 
 ## Sources
 
 This policy applies the task-specific, criteria-based approach in [OpenAI's evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) without depending on its legacy Evals platform, which OpenAI is deprecating. It also follows [Anthropic's outcome-oriented guidance for agent evaluations](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) and [Google's warning against change-detector tests](https://testing.googleblog.com/2015/01/testing-on-toilet-change-detector-tests.html).
+
+The simplification comparison also supports the instruction audit recommended by [OpenAI's GPT-6 Astra guidance](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra) and the conditional loading and concise discovery guidance in [Build skills](https://learn.chatgpt.com/docs/build-skills), checked on 2026-09-07. These motivate hypotheses to test; they do not establish that removing a particular instruction is safe or beneficial.

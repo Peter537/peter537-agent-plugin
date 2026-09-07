@@ -20,7 +20,7 @@ Make repository prose appropriate for its reader, purpose, language, and author.
 ## Read the focused references
 
 - Read [decision-model-and-fidelity.md](references/decision-model-and-fidelity.md) before selecting edit intensity, resolving instruction conflicts, drafting factual prose, or changing meaning-sensitive text.
-- Read [document-functions-and-profiles.md](references/document-functions-and-profiles.md) before choosing a document function or style profile.
+- Read [document-functions-and-profiles.md](references/document-functions-and-profiles.md) for drafting, substantive rewriting, mixed document functions, or a requested change of style. Narrow proofreading and local copyediting can preserve the established function and voice without selecting a new profile.
 - Read [google-developer-documentation.md](references/google-developer-documentation.md) only when the user explicitly requests Google developer documentation style or the repository adopts it as a controlling house style.
 - Read [editorial-diagnostics.md](references/editorial-diagnostics.md) before a standard or structural rewrite, or when auditing generic, inflated, repetitive, or poorly organized prose.
 - Read [language-voice-and-accessibility.md](references/language-voice-and-accessibility.md) for multilingual work, voice calibration, dialect, non-native writing, global audiences, or accessibility goals.
@@ -51,7 +51,7 @@ Choose one operating mode:
 - **Audit only:** remain read-only and return prioritized, location-specific findings.
 - **Apply feedback:** give exact human edits precedence and reconcile comments with the authoritative source.
 
-Classify each material section by function rather than forcing one style across the file. Select the matching profile from the reference. Apply the Google developer-documentation overlay only when the user explicitly requests it or repository instructions adopt it; software subject matter alone does not activate it. Use controlled technical guidance only when explicitly requested; never claim certification or conformance from an automated edit.
+For drafts or substantive rewrites, classify material sections by function and select a matching profile from the reference. For narrow proofreading and local copyediting, preserve the existing function and voice unless the request or a material conflict requires a style decision. Apply the Google developer-documentation overlay only when the user explicitly requests it or repository instructions adopt it; software subject matter alone does not activate it. Use controlled technical guidance only when explicitly requested; never claim certification or conformance from an automated edit.
 
 Use the least invasive intensity that satisfies the task:
 
