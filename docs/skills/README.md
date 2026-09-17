@@ -34,7 +34,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 
 | Skill | Purpose | Evaluation |
 | --- | --- | --- |
-| [`docs-audit`](../../skills/docs-audit/SKILL.md) | Audit and rebuild repository documentation against implementation evidence. | [`cases.json`](../../evals/docs-audit/cases.json) |
+| [`docs-audit`](../../skills/docs-audit/SKILL.md) | Review repository documentation against implementation evidence; update or rebuild it when requested. | [`cases.json`](../../evals/docs-audit/cases.json) |
 | [`write-clearly`](../../skills/write-clearly/SKILL.md) | Draft, edit, and audit repository prose for clarity, reader fit, fidelity, and voice in its source language. | [`cases.json`](../../evals/write-clearly/cases.json) |
 
 ## UI & .NET
