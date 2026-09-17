@@ -508,16 +508,64 @@
         {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "implicit-same-request"},
         {"suite": "verification-context", "section": "triggerCases", "id": "trigger-explicit-invocation"},
         {"suite": "verification-context", "section": "triggerCases", "id": "implicit-same-request"},
+        {"suite": "write-clearly", "section": "triggerCases", "id": "trigger-explicit-creative-writing"},
+        {"suite": "write-clearly", "section": "triggerCases", "id": "near-miss-creative-writing"},
         {"suite": "verify-change", "section": "triggerCases", "id": "trigger-explicit-invocation"},
         {"suite": "verify-change", "section": "triggerCases", "id": "trigger-completed-change"}
       ],
       "requiredSignals": [
         "honor direct $skill invocation",
+        "preserve write-clearly's explicit-invocation requirement for creative writing even though its ordinary prose editing allows implicit discovery",
         "use natural-language discovery only when the skill policy permits implicit invocation"
       ],
       "prohibitedSignals": [
         "require an explicit mention for an implicit-enabled skill",
         "activate an explicit-only skill from natural language alone"
+      ]
+    },
+    {
+      "id": "verification-context-wording-boundary",
+      "kind": "full-catalog-collision",
+      "caseRefs": [
+        {"suite": "write-clearly", "section": "triggerCases", "id": "trigger-verification-context-wording"},
+        {"suite": "verification-context", "section": "triggerCases", "id": "near-miss-wording-only"},
+        {"suite": "write-clearly", "section": "triggerCases", "id": "near-miss-verification-context"},
+        {"suite": "verification-context", "section": "triggerCases", "id": "implicit-same-request"}
+      ],
+      "requiredSignals": [
+        "select write-clearly for wording-only improvements to authoritative verification guidance, with or without explicit invocation",
+        "reserve verification-context for explicitly invoked authoring and retain ordinary-implementation ownership when that authoring request does not invoke the skill"
+      ],
+      "prohibitedSignals": [
+        "exclude wording-only edits merely because their source is authoritative verification guidance",
+        "activate write-clearly or verification-context for uninvoked technical verification-context authoring"
+      ]
+    },
+    {
+      "id": "product-ui-and-context-discovery",
+      "kind": "full-catalog-collision",
+      "caseRefs": [
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "trigger-design-context-authoring"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "trigger-design-context-assessment"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "trigger-new-product-workspace"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "trigger-operational-catalog"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-storefront-commerce"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-editorial"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-marketing"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-design-context-docs-audit"},
+        {"suite": "ui-design-and-polish", "section": "triggerCases", "id": "near-miss-design-context-planning"},
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "near-miss-native-xaml"},
+        {"suite": "maui-blazor-browser", "section": "triggerCases", "id": "near-miss-blazor-web"}
+      ],
+      "requiredSignals": [
+        "select ui-design-and-polish for direct design-context assessment or authoring and for new task-oriented product interfaces",
+        "distinguish staff inventory workflows from customer-facing commerce, editorial, and marketing surfaces outside this plugin's UI skill",
+        "preserve native UI ownership while keeping ordinary framework implementation, comprehensive documentation auditing, and unresolved planning with their existing owners"
+      ],
+      "prohibitedSignals": [
+        "require an explicit skill mention for direct product-UI or design-context requests",
+        "treat every product catalog as a storefront or every documentation request as design-context work",
+        "activate the UI skill merely because a request names a UI framework"
       ]
     },
     {

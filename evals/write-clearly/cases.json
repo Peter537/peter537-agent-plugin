@@ -429,6 +429,18 @@
       "expectedOwner": "write-clearly"
     },
     {
+      "id": "trigger-explicit-creative-writing",
+      "prompt": "Use $write-clearly to write a poem about debugging.",
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
+    },
+    {
+      "id": "trigger-verification-context-wording",
+      "prompt": "Improve only the wording and readability of this already-authoritative verification context without changing its technical meaning.",
+      "expectActivation": true,
+      "expectedOwner": "write-clearly"
+    },
+    {
       "id": "near-miss-code-only",
       "prompt": "Refactor this parser without changing comments or user-visible strings.",
       "expectActivation": false,

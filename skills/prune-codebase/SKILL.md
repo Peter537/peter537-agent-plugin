@@ -1,6 +1,6 @@
 ---
 name: prune-codebase
-description: Prove and safely retire dead or obsolete repository surface, including unused symbols, files, exports, routes, handlers, assets, flags, experiments, shims, compatibility paths, and migration paths. Use for clear requests to find or remove dead code, retire obsolete behavior, clean up stale feature flags or migrations, or prune a codebase. Do not use for broad code audits, local C# or Python simplification, dependency removal, bug diagnosis, architecture redesign, feature work, or cleanup justified only by style.
+description: Prove and safely retire dead or obsolete repository surface, including unused code, exports, routes, and assets or obsolete flags, experiments, compatibility, and migration paths. Use for clear requests to find or remove dead code, retire obsolete behavior, or prune a codebase. Excludes broad code audits, local C# or Python simplification, dependency removal, bug diagnosis, architecture redesign, feature work, and cleanup justified only by style.
 license: MIT
 ---
 

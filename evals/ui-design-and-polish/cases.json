@@ -624,6 +624,24 @@
       "expectedOwner": "ui-design-and-polish"
     },
     {
+      "id": "trigger-design-context-assessment",
+      "prompt": "Assess whether the existing product design context still matches current repository evidence and approved decisions. Report findings without editing the artifact or UI.",
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
+    },
+    {
+      "id": "trigger-new-product-workspace",
+      "prompt": "Build a new support-agent workspace for assigning tickets, filtering the queue, and replying to customers. Design the page hierarchy and interaction states using the existing product requirements.",
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
+    },
+    {
+      "id": "trigger-operational-catalog",
+      "prompt": "Design the stock-management screen staff use to search products, inspect inventory, and resolve availability problems.",
+      "expectActivation": true,
+      "expectedOwner": "ui-design-and-polish"
+    },
+    {
       "id": "trigger-polish-settings",
       "prompt": "Polish this settings workflow while preserving its controls and behavior.",
       "expectActivation": true,
@@ -674,6 +692,18 @@
     {
       "id": "near-miss-marketing",
       "prompt": "Design a campaign landing page for our product launch.",
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
+    },
+    {
+      "id": "near-miss-storefront-commerce",
+      "prompt": "Design a customer-facing online storefront with product browsing, promotions, a shopping cart, and checkout.",
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
+    },
+    {
+      "id": "near-miss-editorial",
+      "prompt": "Design the article layouts and reading experience for an online magazine.",
       "expectActivation": false,
       "expectedOwner": "no-skill"
     },
