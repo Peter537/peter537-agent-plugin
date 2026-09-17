@@ -104,13 +104,21 @@ Change only the authorized files. Report an outside-scope finding only when it m
 
 ## 7. Validate fidelity, format, and domain behavior
 
-For an existing tracked file that was clean at task start, run the bundled checker when its supported categories materially apply:
+Run the bundled checker when its supported categories materially apply. Resolve `scripts/check_prose_fidelity.py` relative to the directory containing this loaded `SKILL.md`, then invoke its quoted absolute path. The skill may be installed outside the target repository; do not copy it into the target or change into its directory to run a Git comparison.
+
+For an existing tracked file that was clean at task start, run from the target repository's root with `--path` relative to that root. Replace the placeholders in these examples with the resolved paths:
 
 ```powershell
-python skills/write-clearly/scripts/check_prose_fidelity.py --git-base HEAD --path README.md
+python -B "<absolute-skill-directory>/scripts/check_prose_fidelity.py" --git-base HEAD --path "docs/user guide.md"
 ```
 
-Use `--git-base HEAD` only when the target was clean at task start or the requested review intentionally covers the complete `HEAD`-to-worktree delta. If the target already had staged or unstaged work, or was an untracked sole copy, preserve a private pre-task copy outside the repository and compare it with the final file using `--before` and `--after`; remove the temporary copy after verification. Add `--json` only when machine-readable output helps. Treat exit `1` as a review gate, not proof of an error; inspect every reported category locally. The checker cannot establish semantic equivalence, factual truth, voice quality, or reader comprehension.
+Use `--git-base HEAD` only when the target was clean at task start or the requested review intentionally covers the complete `HEAD`-to-worktree delta. If the target already had staged or unstaged work, or was an untracked sole copy, preserve a private pre-task copy outside the repository and compare it with the final file using absolute paths:
+
+```powershell
+python -B "<absolute-skill-directory>/scripts/check_prose_fidelity.py" --before "<absolute-pre-task-copy>" --after "<absolute-target-file>"
+```
+
+Remove the temporary copy after verification. Add `--json` only when machine-readable output helps. Exit `0` means no protected-content differences were detected; exit `1` is a review gate, not proof of an error; exit `2` means inspection failed. Findings are redacted; inspect every reported category locally. The checker cannot establish semantic equivalence, factual truth, voice quality, or reader comprehension.
 
 Then:
 

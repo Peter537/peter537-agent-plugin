@@ -45,6 +45,7 @@ class FidelityCheckerTests(unittest.TestCase):
     def run_checker(
         self,
         *arguments: str,
+        checker: Path = CHECKER,
         cwd: Path | None = None,
         environment_updates: dict[str, str] | None = None,
         timeout_seconds: float = 10.0,
@@ -53,7 +54,7 @@ class FidelityCheckerTests(unittest.TestCase):
         if environment_updates:
             environment.update(environment_updates)
         return subprocess.run(
-            [sys.executable, "-B", str(CHECKER), *arguments],
+            [sys.executable, "-B", str(checker), *arguments],
             cwd=cwd or REPOSITORY_ROOT,
             check=False,
             capture_output=True,
@@ -118,14 +119,34 @@ class FidelityCheckerTests(unittest.TestCase):
         payload = json.loads(result.stdout) if json_output and result.stdout else None
         return result, payload
 
-    def init_repository(self) -> Path:
-        repository = self.temporary_root / "repository"
+    def init_repository(self, name: str = "repository") -> Path:
+        repository = self.temporary_root / name
         repository.mkdir()
         self.run_git(repository, "init", "--quiet")
         self.run_git(repository, "config", "user.name", "Fixture User")
         self.run_git(repository, "config", "user.email", "fixture@example.invalid")
         self.run_git(repository, "config", "core.autocrlf", "false")
         return repository
+
+    def install_checker(self) -> Path:
+        checker = self.temporary_root / "installed skills" / "write clearly" / "scripts" / CHECKER.name
+        checker.parent.mkdir(parents=True)
+        checker.write_bytes(CHECKER.read_bytes())
+        return checker
+
+    def repository_state(self, repository: Path) -> dict[str, object]:
+        return {
+            "files": {
+                path.relative_to(repository).as_posix(): path.read_bytes()
+                for path in repository.rglob("*")
+                if path.is_file() and ".git" not in path.relative_to(repository).parts
+            },
+            "index": (repository / ".git" / "index").read_bytes(),
+            "staged": self.run_git(repository, "diff", "--cached", "--binary").stdout,
+            "status": self.run_git(
+                repository, "--no-optional-locks", "status", "--porcelain=v1", "--untracked-files=all"
+            ).stdout,
+        }
 
     def run_git(self, repository: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
         result = subprocess.run(
@@ -660,19 +681,60 @@ class FidelityCheckerTests(unittest.TestCase):
         self.assertEqual(payload["status"], "error")
         self.assertIn("20 MiB", payload["message"])
 
+    def test_installed_checker_git_mode_from_separate_repository(self) -> None:
+        checker = self.install_checker()
+        repository = self.init_repository("target repository")
+        guide = repository / "user guide.md"
+        guide.write_text("See https://example.invalid/setup.\n", encoding="utf-8")
+        self.commit_all(repository)
+        checker_bytes = checker.read_bytes()
+        self.assertFalse((repository / "skills").exists())
+
+        for text, expected_code, expected_status in (
+            ("For setup details, see https://example.invalid/setup.\n", 0, "pass"),
+            (f"For setup details, see https://example.invalid/{self.canary}.\n", 1, "review"),
+        ):
+            with self.subTest(status=expected_status):
+                guide.write_text(text, encoding="utf-8")
+                before = self.repository_state(repository)
+                result = self.run_checker(
+                    "--git-base", "HEAD", "--path", guide.name, "--json",
+                    checker=checker, cwd=repository,
+                )
+                self.assertEqual(result.returncode, expected_code, result.stderr)
+                self.assertEqual(json.loads(result.stdout)["status"], expected_status)
+                self.assert_canary_redacted(result)
+                self.assertEqual(self.repository_state(repository), before)
+                self.assertEqual(checker.read_bytes(), checker_bytes)
+                self.assertFalse((repository / "skills").exists())
+
     def test_preexisting_dirty_work_requires_pair_baseline(self) -> None:
-        repository = self.init_repository()
-        guide = repository / "guide.md"
+        checker = self.install_checker()
+        repository = self.init_repository("dirty target repository")
+        guide = repository / "user guide.md"
+        unrelated = repository / "unrelated notes.md"
         guide.write_text("See https://example.invalid/original.\n", encoding="utf-8")
+        unrelated.write_text("Original unrelated prose.\n", encoding="utf-8")
         self.commit_all(repository)
 
+        guide.write_text("See https://example.invalid/staged-edit.\n", encoding="utf-8")
+        unrelated.write_text("Staged unrelated prose.\n", encoding="utf-8")
+        self.run_git(repository, "add", "--", guide.name, unrelated.name)
         guide.write_text("See https://example.invalid/user-edit.\n", encoding="utf-8")
-        pre_task = self.temporary_root / "pre-task.md"
+        unrelated.write_text("Unstaged unrelated prose.\n", encoding="utf-8")
+        (repository / "untracked notes.md").write_text("Untracked user work.\n", encoding="utf-8")
+        pre_task = self.temporary_root / "comparison copies" / "pre task guide.md"
+        pre_task.parent.mkdir()
         pre_task.write_bytes(guide.read_bytes())
         guide.write_text(
             "For setup details, see https://example.invalid/user-edit.\n",
             encoding="utf-8",
         )
+        before = self.repository_state(repository)
+        self.assertIn('MM "user guide.md"', before["status"])
+        self.assertIn('MM "unrelated notes.md"', before["status"])
+        pre_task_bytes = pre_task.read_bytes()
+        checker_bytes = checker.read_bytes()
 
         pair_result = self.run_checker(
             "--before",
@@ -680,14 +742,17 @@ class FidelityCheckerTests(unittest.TestCase):
             "--after",
             str(guide),
             "--json",
+            checker=checker,
             cwd=repository,
         )
+        self.assertEqual(self.repository_state(repository), before)
         git_result = self.run_checker(
             "--git-base",
             "HEAD",
             "--path",
-            "guide.md",
+            guide.name,
             "--json",
+            checker=checker,
             cwd=repository,
         )
 
@@ -695,6 +760,10 @@ class FidelityCheckerTests(unittest.TestCase):
         self.assertEqual(git_result.returncode, 1, git_result.stderr)
         self.assertEqual(json.loads(pair_result.stdout)["status"], "pass")
         self.assertEqual(json.loads(git_result.stdout)["status"], "review")
+        self.assertEqual(self.repository_state(repository), before)
+        self.assertEqual(pre_task.read_bytes(), pre_task_bytes)
+        self.assertEqual(checker.read_bytes(), checker_bytes)
+        self.assertFalse((repository / "skills").exists())
 
 
 if __name__ == "__main__":

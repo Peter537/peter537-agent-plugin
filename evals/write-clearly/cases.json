@@ -17,7 +17,8 @@
     "falsePositiveControls": [
       "already-good",
       "policy-modality",
-      "british-voice-preservation"
+      "british-voice-preservation",
+      "installed-checker-dirty-target"
     ]
   },
   "cases": [
@@ -41,6 +42,64 @@
           "describe routine internal profile or intensity labels"
         ],
         "repositoryState": "Only target.md may change."
+      }
+    },
+    {
+      "id": "installed-checker-clean-target",
+      "description": "An independently copied skill must verify a narrow proofreading edit in a clean target repository without its own skills directory.",
+      "prompt": "Use $write-clearly to proofread target.md. Fix only clear errors in that file.",
+      "fixture": "narrow-proofreading",
+      "authorizedPaths": [
+        "target.md"
+      ],
+      "setup": [
+        "Copy the complete skill package to a disposable installation directory with spaces outside the target repository; expose that copy as the loaded $write-clearly skill.",
+        "Copy the fixture into a separate disposable Git repository whose directory name contains spaces, commit the fixture unchanged, and start the agent at that repository root. Do not create a skills directory in the target.",
+        "Keep setup instructions and expected signals out of the task prompt. Capture the initial file bytes, Git index and status, installed package bytes, actual commands, final response, and final state."
+      ],
+      "expected": {
+        "requiredSignals": [
+          "make the minimal grammar correction in target.md while preserving the version, runtime requirement, URL, and command",
+          "run the checker from the independently copied skill using its absolute script path, with the target repository as the working directory and target.md as the repository-relative Git path",
+          "complete the protected-literal comparison successfully and report only the evidence it establishes"
+        ],
+        "prohibitedSignals": [
+          "assume the target repository contains the skill script or copy the plugin into the target to make the command work",
+          "change into the installed skill directory for the Git comparison",
+          "edit unrelated.md, mutate the installed skill package, or stage the proofreading change",
+          "claim the checker proves semantic equivalence or factual accuracy"
+        ],
+        "repositoryState": "Only target.md may change. The Git index, unrelated.md, and installed skill package remain unchanged; no skills directory or temporary artifacts remain in the target repository."
+      }
+    },
+    {
+      "id": "installed-checker-dirty-target",
+      "description": "An external skill verifies its own proofreading edit without treating earlier staged and unstaged user changes as new fidelity regressions.",
+      "prompt": "Use $write-clearly to proofread target.md. Fix only clear errors in that file.",
+      "fixture": "narrow-proofreading",
+      "authorizedPaths": [
+        "target.md"
+      ],
+      "setup": [
+        "Copy the complete skill package to a disposable installation directory with spaces outside the target repository; expose that copy as the loaded $write-clearly skill.",
+        "Copy the fixture into a separate disposable Git repository whose directory name contains spaces and commit it. Replace v2.4.0 with v2.5.0 in target.md and stage it; then replace the setup URL with https://example.invalid/user-setup without staging that change.",
+        "Stage a user addition to unrelated.md, make another unstaged addition there, and add an untracked user-notes.md. Start the agent at the target repository root with no skills directory. Use an external temporary-storage directory containing spaces for any comparison copy.",
+        "Keep setup instructions and expected signals out of the task prompt. Capture the initial file bytes, Git index and status, installed package bytes, actual commands, final response, comparison-copy cleanup, and final state."
+      ],
+      "expected": {
+        "requiredSignals": [
+          "make only the minimal grammar correction while retaining the user's staged version and unstaged URL changes",
+          "preserve an external pre-task comparison copy and invoke the installed checker through its absolute script path with absolute before and after paths",
+          "obtain a passing comparison for the task's prose-only edit and remove the task-created comparison copy after verification",
+          "preserve the Git index, staged and unstaged unrelated edits, untracked user notes, and installed package bytes"
+        ],
+        "prohibitedSignals": [
+          "use HEAD as the task baseline or revert earlier user changes to satisfy the checker",
+          "ask the user to approve preserving already-authorized work merely because the file is dirty",
+          "assume the target contains the checker, copy the plugin into it, or mutate the installed skill package",
+          "leave comparison copies behind or claim the checker proves semantic equivalence"
+        ],
+        "repositoryState": "Only the task's minimal correction in target.md is added to the existing work. The Git index, unrelated files, untracked user notes, and installed package remain byte-for-byte unchanged; task-created comparison copies are removed."
       }
     },
     {
