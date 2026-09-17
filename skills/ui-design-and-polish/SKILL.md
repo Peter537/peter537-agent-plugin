@@ -8,9 +8,22 @@ license: MIT
 
 Improve product interfaces without losing product truth, framework behavior, or accessibility. Base decisions on repository evidence and the rendered application, not generic visual trends.
 
+## Select the operation
+
+Select one operation from the user's request before loading references:
+
+- `context`: assess, create, or maintain persistent project design context on direct request. Follow [design-context-authoring.md](references/design-context-authoring.md) and finish with its artifact-specific verification and report. Context-only work does not enter the UI workflow below.
+- `audit`: inspect and report; do not edit.
+- `refine`: improve hierarchy, clarity, consistency, accessibility, specificity, and responsive behavior while preserving recognizable identity and product behavior. Use this for vague requests such as "make it prettier," "clean up the UI," or "improve the interface."
+- `polish`: make a narrow finishing pass within the established design language.
+- `redesign`: replace the visual language only when the user explicitly asks for a redesign. Preserve product truth and functionality unless the request says otherwise.
+- `create`: build a new product surface within repository, product, and framework conventions.
+
+Skill activation does not expand mutation authority. An audit or context assessment stays read-only, and a focused request stays within its stated scope. A UI request may consume existing context without authorizing its maintenance. When the user requests both context and UI work, apply each operation only to its authorized artifact or surface and verify each separately.
+
 ## Load guidance by operation and concern
 
-Read only the references that change the current task:
+For UI operations, read only the references that change the current task:
 
 | Condition | Read |
 | --- | --- |
@@ -34,17 +47,7 @@ For a narrow audit or polish request, do not load unrelated framework, content, 
 
 Use real copy and data shapes where available. Do not fabricate product capabilities, data, navigation, or states to make a screen appear complete.
 
-## Classify the operation
-
-Select one operation from the user's request:
-
-- `audit`: inspect and report; do not edit.
-- `refine`: improve hierarchy, clarity, consistency, accessibility, specificity, and responsive behavior while preserving recognizable identity and product behavior. Use this for vague requests such as "make it prettier," "clean up the UI," or "improve the interface."
-- `polish`: make a narrow finishing pass within the established design language.
-- `redesign`: replace the visual language only when the user explicitly asks for a redesign. Preserve product truth and functionality unless the request says otherwise.
-- `create`: build a new product surface within repository, product, and framework conventions.
-
-Skill activation does not expand mutation authority. An audit stays read-only, and a focused request stays within its stated scope.
+## Record the Design Read
 
 Before implementation, or before reaching design conclusions in an audit, state a concise Design Read containing:
 

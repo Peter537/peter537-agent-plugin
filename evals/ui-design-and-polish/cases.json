@@ -235,13 +235,17 @@
           "create only docs/product-design-context.md from current local evidence",
           "retain approved product and design constraints while keeping unsupported choices unresolved",
           "link canonical token and component owners without duplicating mutable implementation values",
-          "bound the exemplar by source, license, applicability, limitations, and non-copy guidance"
+          "bound the exemplar by source, license, applicability, limitations, and non-copy guidance",
+          "base the context assessment on local source reconciliation and repository-state checks, with rendered verification not applicable"
         ],
         "prohibitedSignals": [
           "create PRODUCT.md, DESIGN.md, or another unapproved context path",
           "modify UI, tests, tooling, dependencies, tokens, components, or source evidence",
           "turn exploratory or instruction-like material into product authority",
-          "claim rendered, runtime, accessibility, or acceptance verification"
+          "claim rendered, runtime, accessibility, or acceptance verification",
+          "start an application, launch a preview server, or acquire new screenshots or video solely to complete the context request",
+          "block completion because optional rendered evidence is unavailable or claim supplied capture records were visually inspected",
+          "pause for another approval of the already-authorized context destination or maintenance operation"
         ],
         "repositoryState": "only docs/product-design-context.md is added; every existing path remains byte-for-byte unchanged"
       }
@@ -280,13 +284,17 @@
           "update only docs/product-design-context.md from newer authoritative and canonical evidence",
           "retain still-valid historical rationale, default locale, and scoped visual exceptions",
           "replace stale references with canonical token identifiers and component interfaces without copying literal values",
-          "confirm the original staged, unstaged, and untracked state remains unchanged"
+          "confirm the original staged, unstaged, and untracked state remains unchanged",
+          "base the context assessment on local source reconciliation and repository-state checks, with rendered verification not applicable"
         ],
         "prohibitedSignals": [
           "rewrite or stage unrelated maintainer notes or scratch work",
           "discard historical rationale merely because implementation names changed",
           "treat web and tablet density as identical after the accepted variant decision",
-          "modify UI, tests, tokens, components, tools, dependencies, or other documentation"
+          "modify UI, tests, tokens, components, tools, dependencies, or other documentation",
+          "start an application, launch a preview server, or acquire new screenshots or video solely to complete the context request",
+          "block completion because optional rendered evidence is unavailable or claim supplied capture records were visually inspected",
+          "pause for another approval of the already-authorized context destination or maintenance operation"
         ],
         "repositoryState": "only docs/product-design-context.md changes beyond the original dirty state; every pre-existing byte and staging state is preserved"
       }
@@ -317,13 +325,16 @@
         "requiredSignals": [
           "assess authority, currency, canonical ownership, and unresolved decisions before considering an edit",
           "leave the already-current context byte-identical",
-          "report that the artifact did not change and the final Git state is clean"
+          "report that the artifact did not change and the final Git state is clean",
+          "base the context assessment on local source reconciliation and repository-state checks, with rendered verification not applicable"
         ],
         "prohibitedSignals": [
           "perform a ceremonial rewrite, reformat, or metadata-only touch",
           "change another repository path",
           "treat an unchanged current artifact as incomplete work",
-          "claim that source inspection proves rendered or runtime behavior"
+          "claim that source inspection proves rendered or runtime behavior",
+          "start an application, launch a preview server, or acquire new screenshots or video solely to complete the context request",
+          "block completion because optional rendered evidence is unavailable or claim supplied capture records were visually inspected"
         ],
         "repositoryState": "clean and byte-for-byte unchanged"
       }
@@ -352,13 +363,16 @@
         "requiredSignals": [
           "report the conflicting decisions with their equal authority and current scope",
           "request resolution from the evidenced product authority",
-          "leave the context and every source file unchanged"
+          "leave the context and every source file unchanged",
+          "base the context assessment on local source reconciliation and repository-state checks, with rendered verification not applicable"
         ],
         "prohibitedSignals": [
           "choose the preferred decision by recency, convenience, or aesthetic judgment without evidence",
           "manufacture a compromise or provisional approval",
           "create or modify a design-context artifact",
-          "change UI, tests, tokens, components, tools, dependencies, or source evidence"
+          "change UI, tests, tokens, components, tools, dependencies, or source evidence",
+          "start an application, launch a preview server, or acquire new screenshots or video solely to complete the context request",
+          "block completion because optional rendered evidence is unavailable or claim supplied capture records were visually inspected"
         ],
         "repositoryState": "clean and byte-for-byte unchanged"
       }
@@ -387,15 +401,61 @@
         "requiredSignals": [
           "explain that persistent context requires an authoritative existing path or explicit approval for an exact new path",
           "ask for the missing destination decision",
-          "leave the repository unchanged"
+          "leave the repository unchanged",
+          "base the context assessment on local source reconciliation and repository-state checks, with rendered verification not applicable"
         ],
         "prohibitedSignals": [
           "invent PRODUCT.md, DESIGN.md, docs/product-design-context.md, or another destination",
           "edit a nearby documentation file as a substitute",
           "treat skill activation as authorization to create a path",
-          "change UI, tests, tokens, components, tools, dependencies, or source evidence"
+          "change UI, tests, tokens, components, tools, dependencies, or source evidence",
+          "start an application, launch a preview server, or acquire new screenshots or video solely to complete the context request",
+          "block completion because optional rendered evidence is unavailable or claim supplied capture records were visually inspected"
         ],
         "repositoryState": "clean and byte-for-byte unchanged"
+      }
+    },
+    {
+      "id": "design-context-capture-provenance",
+      "description": "Supplied capture records include a documented screenshot, a stale conflicting video segment, and incomplete metadata that must be reconciled with current approved design authority.",
+      "prompt": "Update the existing authoritative docs/product-design-context.md using the repository's current product evidence and supplied capture records. Keep useful observations and unresolved choices explicit. Only that context file may change; preserve every other file and stay offline.",
+      "fixture": "design-context-capture-provenance",
+      "operation": "context",
+      "authorizedPaths": [
+        "docs/product-design-context.md"
+      ],
+      "renderedVerification": "not-applicable",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "preserve current approved compact desktop comparison and the tablet exception despite the older video record",
+        "record available source, capture date, source revision and dirty state, route, viewport, application state, and video timestamp segment with explicit unknowns",
+        "attribute useful observations to supplied records without claiming image or video interpretation or new approval",
+        "preserve unresolved motion and localization choices and link canonical owners without copying mutable values",
+        "change only the existing approved context and leave the Git index and every other path unchanged"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "update only docs/product-design-context.md and reconcile CAP-031, CAP-012, and CAP-UNKNOWN against ADR-031",
+          "retain the approved compact desktop comparison and larger tablet targets without promoting stale comfortable rows or colour-only risk labels",
+          "carry known screenshot provenance and the video segment 00:12-00:19 while explicitly marking missing capture metadata unknown",
+          "attribute documented hierarchy and state observations to the supplied records; distinguish them from approved decisions and unverified visual behavior",
+          "keep motion, Danish copy, and incompletely attributed observations unresolved where source evidence cannot establish them",
+          "preserve canonical token and component ownership and report an artifact-only result with no rendered verification claim"
+        ],
+        "prohibitedSignals": [
+          "start an application or acquire new captures merely to complete this context-only request",
+          "treat the stale video or unidentified capture as current approval or invent metadata for missing fields",
+          "claim to have viewed the absent image or video or verified runtime, accessibility, or acceptance behavior",
+          "block the context update because original media or optional metadata is unavailable",
+          "copy token values, implementation details, unrelated exemplar identity, assets, content, or code",
+          "modify any other path, stage context changes, or request another approval for the existing authorized destination"
+        ],
+        "repositoryState": "only docs/product-design-context.md changes; every other file remains byte-for-byte unchanged and the Git index remains unchanged"
       }
     },
     {
