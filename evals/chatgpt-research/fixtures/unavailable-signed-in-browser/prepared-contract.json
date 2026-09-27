@@ -1,0 +1,7 @@
+{
+  "publicQuestion": "Compare public event-stream storage approaches for durable replay.",
+  "scope": "Publicly documented ordering, retention, and replay guarantees.",
+  "sourceRequirements": "Prefer official documentation; distinguish supported claims from unresolved evidence.",
+  "output": "A cited comparison with limitations and decision criteria.",
+  "privateInputsIncluded": false
+}

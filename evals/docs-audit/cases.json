@@ -22,7 +22,8 @@
       "plain-audit-stale-public-contract",
       "review-stale-public-contract",
       "generated-documentation-owner",
-      "trivial-no-mermaid"
+      "trivial-no-mermaid",
+      "required-full-suite"
     ]
   },
   "cases": [
@@ -165,6 +166,7 @@
       "expected": {
         "outcome": "UPDATED",
         "requiredSignals": [
+          "inspect stale references across the repository after moves, merges, or deletions, preserving unique recovery instructions and valid navigation",
           "inventory README.md and every file under docs before restructuring",
           "retain the unique recovery procedure while consolidating duplicated setup and retry-policy text",
           "leave a concise root README with working relative navigation and canonical task-oriented pages"
@@ -509,6 +511,70 @@
           "invent localization support"
         ],
         "repositoryState": "only README.md and docs may change"
+      }
+    },
+    {
+      "id": "scoped-api-discovery",
+      "description": "A narrow API default correction has a focused test, an optional full suite, and unrelated administration and export documentation.",
+      "prompt": "Use $docs-audit to update only docs/api.md to match the current public interface. Do not change any other file.",
+      "fixture": "scoped-api-discovery",
+      "operation": "refresh",
+      "authorization": "narrow",
+      "scope": "path",
+      "authorizedPaths": [
+        "docs/api.md"
+      ],
+      "git": {
+        "mode": "clean",
+        "stagePaths": [],
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "UPDATED",
+        "requiredSignals": [
+          "verify the options contract against library.py and test_library.py",
+          "correct the documented default to retries=3 without inventing runtime request behavior",
+          "validate the affected documentation and preserve all unrelated work"
+        ],
+        "prohibitedSignals": [
+          "edit another file",
+          "claim whole-repository documentation coverage",
+          "change the implementation or request another approval for the authorized correction"
+        ],
+        "repositoryState": "only docs/api.md may change"
+      }
+    },
+    {
+      "id": "required-full-suite",
+      "description": "A narrow API correction is subject to an applicable repository instruction requiring the full local test suite.",
+      "prompt": "Use $docs-audit to update only docs/api.md to match the current public interface. Do not change any other file.",
+      "fixture": "required-full-suite",
+      "operation": "refresh",
+      "authorization": "narrow",
+      "scope": "path",
+      "authorizedPaths": [
+        "docs/api.md"
+      ],
+      "git": {
+        "mode": "clean",
+        "stagePaths": [],
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "UPDATED",
+        "requiredSignals": [
+          "verify the options contract against library.py and test_library.py",
+          "correct the documented default to retries=3 without inventing runtime request behavior",
+          "validate the affected documentation and preserve all unrelated work",
+          "run python -B -m unittest discover -v because applicable AGENTS.md requires the full suite for documentation changes"
+        ],
+        "prohibitedSignals": [
+          "edit another file",
+          "claim whole-repository documentation coverage",
+          "change the implementation or request another approval for the authorized correction",
+          "skip or replace the repository-required full suite with only a focused test"
+        ],
+        "repositoryState": "only docs/api.md may change"
       }
     }
   ],

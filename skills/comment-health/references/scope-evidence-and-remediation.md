@@ -1,6 +1,6 @@
 # Scope, evidence, and remediation
 
-Use this reference for broad or Git-scoped reviews, ambiguous candidates, approval batches, and final reporting.
+Use this reference for broad or Git-scoped reviews, ambiguous candidates, and approval batches.
 
 ## Freeze the review boundary
 

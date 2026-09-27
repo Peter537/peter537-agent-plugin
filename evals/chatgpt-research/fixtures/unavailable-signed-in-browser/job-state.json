@@ -2,5 +2,6 @@
   "researchWarranted": true,
   "inAppBrowserAvailable": false,
   "authorizedAlternativeBrowser": false,
-  "submitted": false
+  "submitted": false,
+  "preparedContract": "prepared-contract.json"
 }

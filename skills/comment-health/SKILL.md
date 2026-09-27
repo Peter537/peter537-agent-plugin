@@ -31,7 +31,9 @@ Route wording, grammar, tone, or voice changes with settled semantics to `$write
 
 - Read [references/comment-roles-and-quality.md](references/comment-roles-and-quality.md) before classifying a material comment or proposing an addition, rewrite, move, or removal.
 - Read [references/protected-comments-and-native-checks.md](references/protected-comments-and-native-checks.md) before changing public API documentation, doctests, legal or generated markers, suppressions, directives, build annotations, or any comment that might be machine-consumed.
-- Read [references/scope-evidence-and-remediation.md](references/scope-evidence-and-remediation.md) for broad reviews, Git-change scopes, ambiguous candidates, approval batches, and final reporting.
+- Read [references/scope-evidence-and-remediation.md](references/scope-evidence-and-remediation.md) for broad reviews, Git-change scopes, ambiguous candidates, and approval batches. The outcome and handoff requirements below are sufficient for reporting a precise, unambiguous update.
+
+Conditional discovery follows [OpenAI’s skill guidance](https://learn.chatgpt.com/docs/build-skills) and [instruction-modernization guidance](https://learn.chatgpt.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra), checked 2026-09-27. Apply it within the task’s evidence and authority requirements.
 
 ## Establish repository truth
 

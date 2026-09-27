@@ -92,11 +92,13 @@ During an audit, inspect tooling and report needed changes; do not modify it. Th
 ## Verify the result
 
 1. Re-read the reviewed documentation and surrounding navigation as a reader would; after an update, include every changed document.
-2. Run repository-discovered documentation builds, Markdown checks, link checks, Mermaid checks, example compilation, CLI help, tests, or builds needed to verify documented behavior. During an audit, avoid fixer flags and commands that rewrite repository files; use a non-mutating check or report the verification gap. Prefer targeted checks, then run the documented full suite when it is safe and practical.
+2. Run repository-discovered documentation builds, Markdown checks, link checks, Mermaid checks, example compilation, CLI help, tests, or builds needed to verify documented behavior. During an audit, avoid fixer flags and commands that rewrite repository files; use a non-mutating check or report the verification gap. Choose checks that establish the affected claims and documentation integrity. Run the documented full suite when repository instructions require it or the affected behavior cannot be verified adequately with targeted checks.
 3. Verify relative links, anchors, moved paths, commands, filenames, configuration keys, public symbols, version claims, and diagram relationships against repository truth.
-4. Search the entire repository for retired paths, stale headings, obsolete terminology, duplicated canonical explanations, and references to deleted files.
+4. Search for stale references within the reviewed scope. Search the entire repository when paths, headings, navigation, shared terminology, or canonical locations change, or when restructuring or deletion could leave inbound references or duplicated canonical explanations elsewhere.
 5. Compare the final worktree with its starting state. For an audit, verify that files and existing Git state are unchanged. For an update, review the task's diff for accidental application changes, protected-file changes, sensitive data, malformed Markdown, and whitespace errors; use `git diff --check` when Git is available.
 6. If a check is unavailable, unsafe, failing for a pre-existing reason, or requires unapproved external access, preserve the limitation in the handoff instead of claiming success.
+
+Conditional discovery follows [OpenAI’s skill guidance](https://learn.chatgpt.com/docs/build-skills) and [instruction-modernization guidance](https://learn.chatgpt.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra), checked 2026-09-27. Apply it within the task’s evidence and authority requirements.
 
 ## Report the outcome
 
@@ -122,4 +124,4 @@ For an authorized update, report:
 - validation commands and their results;
 - unresolved, conflicted, or unverified claims and what would resolve them;
 - protected files intentionally left unchanged; and
-- the repository-wide stale-reference search result.
+- the stale-reference search scope and result.
