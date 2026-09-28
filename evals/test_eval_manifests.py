@@ -8,6 +8,7 @@ without copying a distributed skill or executing any declared command.
 from __future__ import annotations
 
 import importlib.util
+import copy
 import json
 import os
 from pathlib import Path
@@ -1292,6 +1293,233 @@ class EvalManifestValidatorTests(unittest.TestCase):
         self.assertNotIn(field_canary, diagnostics)
         self.assertNotIn(value_canary, diagnostics)
 
+    def test_handoff_index_is_required_and_does_not_change_case_counts(self) -> None:
+        result = VALIDATOR_MODULE.validate_repository(self.root)
+        self.assertTrue(result.ok, result.errors)
+        self.assertEqual((result.suite_count, result.case_count, result.trigger_count, result.live_count), (1, 1, 3, 0))
+        (self.root / "evals" / "handoff-scenarios.json").unlink()
+        self.assert_contract_error(self.run_validator(), "handoff-scenarios.json", "missing")
+
+    def test_handoff_closed_shapes_and_required_metadata(self) -> None:
+        locations = (
+            (), ("scenarios", 0), ("scenarios", 0, "seed"),
+            ("scenarios", 0, "bindings", 0), ("scenarios", 0, "events", 0),
+            ("scenarios", 0, "turns", 0), ("scenarios", 0, "turns", 0, "expected"),
+        )
+        for location in locations:
+            baseline = self._valid_handoff_index()
+            selected = baseline
+            for key in location:
+                selected = selected[key]
+            for field in tuple(selected):
+                with self.subTest(location=location, field=field):
+                    document = copy.deepcopy(baseline)
+                    target = document
+                    for key in location:
+                        target = target[key]
+                    del target[field]
+                    self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                    self.assert_contract_error(self.run_validator(), "handoff-scenarios.json", "required field")
+            canary = "UNKNOWN_" + secrets.token_hex(12)
+            selected[canary] = canary
+            self._write_json(self.root / "evals" / "handoff-scenarios.json", baseline)
+            result = self.run_validator()
+            self.assert_contract_error(result, "unsupported field")
+            self.assertNotIn(canary, result.stdout + result.stderr)
+
+    def test_handoff_malformed_metadata_is_rejected(self) -> None:
+        invalid_values = (
+            (("schemaVersion",), True), (("scenarios",), []), (("scenarios",), {}),
+            (("scenarios", 0), None), (("scenarios", 0, "heldOut"), "false"),
+            (("scenarios", 0, "seed"), []), (("scenarios", 0, "participants"), []),
+            (("scenarios", 0, "preservationControls"), ["  "]),
+            (("scenarios", 0, "bindings"), {}), (("scenarios", 0, "bindings", 0), []),
+            (("scenarios", 0, "bindings", 0, "selectionRule"), " "),
+            (("scenarios", 0, "bindings", 0, "missing"), "invent-value"),
+            (("scenarios", 0, "events"), {}), (("scenarios", 0, "events", 0), []),
+            (("scenarios", 0, "events", 0, "content"), 42),
+            (("scenarios", 0, "events", 0, "reason"), " "),
+            (("scenarios", 0, "turns"), []), (("scenarios", 0, "turns", 0), []),
+            (("scenarios", 0, "turns", 0, "userMessage"), "  "),
+            (("scenarios", 0, "turns", 0, "authority"), "any"),
+            (("scenarios", 0, "turns", 0, "permittedPaths"), "input.txt"),
+            (("scenarios", 0, "turns", 1, "permittedPaths"), []),
+            (("scenarios", 0, "turns", 0, "requiredEvidence"), []),
+            (("scenarios", 0, "turns", 1, "consumesBindings"), []),
+        )
+        for location, value in invalid_values:
+            with self.subTest(location=location):
+                document = self._valid_handoff_index()
+                target = document
+                for key in location[:-1]:
+                    target = target[key]
+                target[location[-1]] = value
+                self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                self.assert_contract_error(self.run_validator(), "handoff-scenarios.json")
+
+    def test_handoff_seed_requires_behavioral_case_and_known_participants(self) -> None:
+        root = self._new_repository("handoff-owners", ("alpha", "bravo"))
+        invalid_updates = (
+            {"seed": {"suite": "missing", "caseId": "shared-behavior"}},
+            {"seed": {"suite": "alpha", "caseId": "trigger-owned-request"}},
+            {"seed": {"suite": "alpha", "caseId": "live-external"}},
+            {"seed": {"suite": "alpha", "caseId": []}},
+            {"participants": ["alpha", "unknown"]},
+            {"participants": ["alpha", "alpha"]}, {"participants": ["bravo"]},
+            {"participants": [None]},
+        )
+        manifest = self._read_manifest(root, "alpha")
+        manifest["liveCases"] = [{"id": "live-external", "authorizationRequired": True, "requiredSignals": ["Keep local evidence."]}]
+        self._write_manifest(root, "alpha", manifest)
+        for update in invalid_updates:
+            with self.subTest(update=update):
+                document = self._valid_handoff_index()
+                document["scenarios"][0].update(update)
+                self._write_json(root / "evals" / "handoff-scenarios.json", document)
+                self.assert_contract_error(self.run_validator(root), "handoff-scenarios.json")
+
+    def test_handoff_ids_and_references_are_ordered_and_unique(self) -> None:
+        mutations = (
+            lambda s: s["turns"][1].update(id="review"),
+            lambda s: s["turns"][0].update(id="INVALID"),
+            lambda s: s["bindings"].append(copy.deepcopy(s["bindings"][0])),
+            lambda s: s["events"].append(copy.deepcopy(s["events"][0])),
+            lambda s: s["bindings"][0].update(fromTurn="missing"),
+            lambda s: s["bindings"][0].update(fromTurn="repair"),
+            lambda s: s["turns"][0].update(consumesBindings=["finding-id"]),
+            lambda s: s["turns"][1].update(consumesBindings=["missing"]),
+            lambda s: s["turns"][1].update(consumesBindings=["finding-id", "finding-id"]),
+            lambda s: s["turns"][1].pop("consumesBindings"),
+            lambda s: s["turns"][1].update(userMessage="Repair the input without a finding binding."),
+            lambda s: s["events"][0].update(afterTurn="missing"),
+            lambda s: s["events"][0].update(afterTurn="repair"),
+        )
+        for number, mutate in enumerate(mutations):
+            with self.subTest(number=number):
+                document = self._valid_handoff_index()
+                mutate(document["scenarios"][0])
+                self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                self.assert_contract_error(self.run_validator(), "handoff-scenarios.json")
+        document = self._valid_handoff_index()
+        document["scenarios"].append(copy.deepcopy(document["scenarios"][0]))
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assert_contract_error(self.run_validator(), "identifier must be unique")
+
+    def test_handoff_rejects_undeclared_reserved_placeholders(self) -> None:
+        for consumed in (False, True):
+            with self.subTest(consumed=consumed):
+                document = self._valid_handoff_index()
+                turn = document["scenarios"][0]["turns"][1]
+                turn["userMessage"] = "Repair finding {not-declared} only."
+                if consumed:
+                    turn["consumesBindings"] = ["not-declared"]
+                else:
+                    del turn["consumesBindings"]
+                self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                self.assert_contract_error(self.run_validator(), "undeclared binding placeholder")
+
+    def test_handoff_preserves_unrelated_code_braces(self) -> None:
+        document = self._valid_handoff_index()
+        turn = document["scenarios"][0]["turns"][1]
+        turn["userMessage"] += ' Preserve {"status": "ready"}, {}, and the example function { return value; }.'
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        result = self.run_validator()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_handoff_paths_and_read_only_authority(self) -> None:
+        paths = ("../outside", ".git/config", "nested/.GIT/config", "/absolute", "C:\\outside", "\\\\host\\share", "a/./b", "a//b", "*.txt", "file:stream", "NUL.txt", "trailing.", "tab\tfile")
+        for value in paths:
+            for field in ("event", "permitted"):
+                with self.subTest(value=value, field=field):
+                    document = self._valid_handoff_index()
+                    scenario = document["scenarios"][0]
+                    if field == "event":
+                        scenario["events"][0]["path"] = value
+                    else:
+                        scenario["turns"][1]["permittedPaths"] = [value]
+                    self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                    self.assert_contract_error(self.run_validator(), "safe repository-relative path")
+        document = self._valid_handoff_index()
+        document["scenarios"][0]["turns"][0]["permittedPaths"] = ["input.txt"]
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assert_contract_error(self.run_validator(), "read-only")
+
+    def test_handoff_signal_normalization_and_overlap(self) -> None:
+        for field in ("preservationControls", "requiredEvidence", "requiredSignals", "prohibitedSignals"):
+            with self.subTest(field=field):
+                document = self._valid_handoff_index()
+                scenario = document["scenarios"][0]
+                target = scenario if field == "preservationControls" else scenario["turns"][0]
+                if field.endswith("Signals"):
+                    target = target["expected"]
+                target[field] = ["Preserve   the evidence", "preserve the EVIDENCE"]
+                self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+                self.assert_contract_error(self.run_validator(), "normalization")
+        document = self._valid_handoff_index()
+        document["scenarios"][0]["turns"][0]["expected"].update(requiredSignals=["Preserve   evidence"], prohibitedSignals=["preserve EVIDENCE"])
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assert_contract_error(self.run_validator(), "overlap")
+
+    def test_handoff_events_are_literal_data_and_never_executed(self) -> None:
+        document = self._valid_handoff_index()
+        scenario = document["scenarios"][0]
+        payload = "__import__('os').system('codex exec --model launch-canary')"
+        scenario["events"][0]["content"] = payload
+        scenario["turns"][0]["userMessage"] = payload
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        before = self._snapshot(self.root)
+        with mock.patch("subprocess.Popen", side_effect=AssertionError("Model launch attempted")), mock.patch("os.system", side_effect=AssertionError("Shell execution attempted")):
+            result = VALIDATOR_MODULE.validate_repository(self.root)
+        self.assertTrue(result.ok, result.errors)
+        self.assertEqual(before, self._snapshot(self.root))
+        scenario["events"][0]["operation"] = "shell"
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assert_contract_error(self.run_validator(), "only literal write or delete")
+        scenario["events"][0]["operation"] = "delete"
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assert_contract_error(self.run_validator(), "unsupported field")
+        del scenario["events"][0]["content"]
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        self.assertEqual(self.run_validator().returncode, 0)
+        self.assertTrue((self.root / "evals" / "alpha" / "fixtures" / "basic" / "input.txt").is_file())
+
+    def test_handoff_link_and_inspection_gaps_are_rejected(self) -> None:
+        inspect = VALIDATOR_MODULE._is_link_or_reparse
+        for target in (self.root / "evals" / "handoff-scenarios.json", self.root / "evals" / "alpha" / "fixtures" / "basic" / "input.txt"):
+            for unavailable in (False, True):
+                with self.subTest(target=target.name, unavailable=unavailable):
+                    def fake_inspection(path: Path) -> bool:
+                        if path == target:
+                            if unavailable:
+                                raise VALIDATOR_MODULE.PathInspectionError("PermissionError")
+                            return True
+                        return inspect(path)
+                    with mock.patch.object(VALIDATOR_MODULE, "_is_link_or_reparse", side_effect=fake_inspection):
+                        result = VALIDATOR_MODULE.validate_repository(self.root)
+                    self.assertFalse(result.ok)
+                    diagnostics = result.errors + result.fatal_errors
+                    self.assertTrue(any("could not be inspected" in error if unavailable else "link or reparse" in error for error in diagnostics))
+
+    def test_handoff_diagnostics_are_redacted_and_failed_validation_is_read_only(self) -> None:
+        canary = "PRIVATE_" + secrets.token_hex(12)
+        document = self._valid_handoff_index()
+        document["scenarios"][0]["turns"][0]["expected"][canary] = canary
+        document["scenarios"][0]["events"][0]["path"] = f"C:/Users/{canary}/input.txt"
+        self._write_json(self.root / "evals" / "handoff-scenarios.json", document)
+        before = self._snapshot(self.root)
+        result = self.run_validator()
+        self.assert_contract_error(result, "handoff-scenarios.json", "personal-home")
+        self.assertNotIn(canary, result.stdout + result.stderr)
+        self.assertEqual(before, self._snapshot(self.root))
+
+    def test_handoff_malformed_json_reports_only_location(self) -> None:
+        canary = "JSON_" + secrets.token_hex(12)
+        (self.root / "evals" / "handoff-scenarios.json").write_text('{"' + canary + '": ', encoding="utf-8")
+        result = self.run_validator()
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("invalid JSON", result.stdout)
+        self.assertNotIn(canary, result.stdout + result.stderr)
+
     def _new_repository(self, name: str, slugs: tuple[str, ...]) -> Path:
         root = self.temporary_root / name
         if root.exists():
@@ -1300,7 +1528,51 @@ class EvalManifestValidatorTests(unittest.TestCase):
             self._write_skill(root, slug)
             self._write_suite(root, slug, self._valid_manifest(slug))
         self._write_routing_matrix(root, slugs)
+        self._write_json(root / "evals" / "handoff-scenarios.json", self._valid_handoff_index(sorted(slugs)[0]))
         return root
+
+    @staticmethod
+    def _valid_handoff_index(slug: str = "alpha") -> dict[str, object]:
+        return {
+            "schemaVersion": 1,
+            "scenarios": [{
+                "id": "review-then-authorized-edit",
+                "seed": {"suite": slug, "caseId": "shared-behavior"},
+                "participants": [slug],
+                "heldOut": False,
+                "preservationControls": ["Preserve unrelated staged and untracked work."],
+                "bindings": [{
+                    "name": "finding-id", "fromTurn": "review",
+                    "selectionRule": "Select the actual finding matching the input contract.",
+                    "missing": "BLOCKED",
+                }],
+                "events": [{
+                    "id": "user-edits-input", "afterTurn": "review", "operation": "write",
+                    "path": "input.txt", "content": "User-supplied current input.\n",
+                    "reason": "Recheck evidence after a user edit.",
+                }],
+                "turns": [{
+                    "id": "review", "userMessage": "Review the input and report a finding.",
+                    "authority": "read-only", "permittedPaths": [],
+                    "requiredEvidence": ["Record actual source inspection and unchanged bytes."],
+                    "expected": {
+                        "requiredSignals": ["Report an evidenced finding."],
+                        "prohibitedSignals": ["Edit the input."],
+                        "repositoryState": "Unchanged.",
+                    },
+                }, {
+                    "id": "repair", "userMessage": "Repair only finding {finding-id} in input.txt.",
+                    "authority": "authorized-edit", "permittedPaths": ["input.txt"],
+                    "consumesBindings": ["finding-id"],
+                    "requiredEvidence": ["Record revalidation and the resulting bytes."],
+                    "expected": {
+                        "requiredSignals": ["Revalidate the finding before editing."],
+                        "prohibitedSignals": ["Invent a replacement finding."],
+                        "repositoryState": "Only input.txt may change.",
+                    },
+                }],
+            }],
+        }
 
     @staticmethod
     def _valid_manifest(slug: str) -> dict[str, object]:

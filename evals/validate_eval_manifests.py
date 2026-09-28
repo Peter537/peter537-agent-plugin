@@ -53,6 +53,7 @@ except Exception:
 SCHEMA_VERSION = 1
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 ROUTING_ID = re.compile(r"^[a-z0-9]+(?:-+[a-z0-9]+)*$")
+HANDOFF_BINDING_PLACEHOLDER = re.compile(r"\{([a-z0-9]+(?:-[a-z0-9]+)*)\}")
 ALLOWED_TOP_LEVEL_FIELDS = {
     "schemaVersion",
     "suite",
@@ -177,6 +178,28 @@ DIAGNOSTIC_FIELD_NAMES = ALLOWED_TOP_LEVEL_FIELDS | PATH_FIELDS | {
     "skills",
     "to",
     "triggers",
+    "scenarios",
+    "seed",
+    "caseId",
+    "participants",
+    "heldOut",
+    "preservationControls",
+    "bindings",
+    "name",
+    "fromTurn",
+    "selectionRule",
+    "missing",
+    "events",
+    "afterTurn",
+    "operation",
+    "content",
+    "reason",
+    "turns",
+    "userMessage",
+    "authority",
+    "permittedPaths",
+    "requiredEvidence",
+    "consumesBindings",
 }
 WINDOWS_RESERVED_PATH_NAMES = {
     "aux",
@@ -1647,6 +1670,260 @@ def _validate_routing_matrix(
             result.errors.append(f"{label}:{location}: contains a personal-home absolute path")
 
 
+def _handoff_id(
+    value: object,
+    seen: set[str],
+    *,
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> str | None:
+    if not isinstance(value, str) or not SLUG.fullmatch(value):
+        result.errors.append(f"{label}:{location}: must be a lowercase slug")
+        return None
+    if value in seen:
+        result.errors.append(f"{label}:{location}: identifier must be unique")
+        return None
+    seen.add(value)
+    return value
+
+
+def _handoff_path(
+    value: object,
+    *,
+    fixture_root: Path | None,
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> None:
+    parts = _relative_path_parts(value) if isinstance(value, str) else None
+    # Reject aliases that PurePath would normalize, rather than guessing which
+    # file an independently implemented event reader would select.
+    if parts is None or any(part in {"", ".", ".."} for part in value.replace("\\", "/").split("/")):
+        result.errors.append(f"{label}:{location}: must be a safe repository-relative path")
+        return
+    if fixture_root is not None:
+        current = fixture_root
+        for part in (None, *parts):
+            if part is not None:
+                current = current / part
+            if _reject_link_or_inspection_gap(
+                current, label=label, location=location, result=result
+            ):
+                return
+
+
+def _validate_handoff_scenario(
+    scenario: dict[str, object],
+    *,
+    root: Path,
+    skill_slugs: set[str],
+    case_index: dict[str, dict[str, dict[str, dict[str, object]]]],
+    label: str,
+    location: str,
+    result: ValidationResult,
+) -> None:
+    _validate_exact_fields(
+        scenario,
+        required={"id", "seed", "participants", "heldOut", "preservationControls", "bindings", "events", "turns"},
+        label=label, location=location, result=result,
+    )
+    seed = scenario.get("seed")
+    seed_suite = None
+    fixture_root = None
+    if not isinstance(seed, dict):
+        result.errors.append(f"{label}:{location}.seed: must be an object")
+    else:
+        _validate_exact_fields(seed, required={"suite", "caseId"}, label=label, location=f"{location}.seed", result=result)
+        suite, case_id = seed.get("suite"), seed.get("caseId")
+        if not isinstance(suite, str) or suite not in skill_slugs:
+            result.errors.append(f"{label}:{location}.seed.suite: suite is not discovered")
+        else:
+            seed_suite = suite
+            case = case_index.get(suite, {}).get("cases", {}).get(case_id) if isinstance(case_id, str) else None
+            if case is None:
+                result.errors.append(f"{label}:{location}.seed.caseId: must reference an existing behavioral case")
+            else:
+                parts = _fixture_parts(case.get("fixture"))
+                if parts:
+                    fixture_root = root / "evals" / suite / "fixtures"
+                    for part in parts:
+                        fixture_root /= part
+                    if not fixture_root.is_dir():
+                        fixture_root = None
+    participants = scenario.get("participants")
+    if not _string_list(participants) or any(item not in skill_slugs for item in participants):
+        result.errors.append(f"{label}:{location}.participants: must name discovered skills")
+    else:
+        if len(set(participants)) != len(participants):
+            result.errors.append(f"{label}:{location}.participants: skills must be unique")
+        if seed_suite is not None and seed_suite not in participants:
+            result.errors.append(f"{label}:{location}.participants: must include the seed owner")
+    if type(scenario.get("heldOut")) is not bool:
+        result.errors.append(f"{label}:{location}.heldOut: must be a boolean")
+    _validate_signal_list(scenario.get("preservationControls"), label=label, location=f"{location}.preservationControls", result=result)
+
+    turns = scenario.get("turns")
+    if not isinstance(turns, list) or len(turns) < 2:
+        result.errors.append(f"{label}:{location}.turns: must contain at least two ordered turns")
+        turns = []
+    turn_positions: dict[str, int] = {}
+    turn_ids: set[str] = set()
+    for number, turn in enumerate(turns):
+        turn_location = f"{location}.turns[{number}]"
+        if not isinstance(turn, dict):
+            result.errors.append(f"{label}:{turn_location}: must be an object")
+            continue
+        _validate_exact_fields(
+            turn, required={"id", "userMessage", "authority", "permittedPaths", "requiredEvidence", "expected"},
+            optional={"consumesBindings"}, label=label, location=turn_location, result=result,
+        )
+        turn_id = _handoff_id(turn.get("id"), turn_ids, label=label, location=f"{turn_location}.id", result=result)
+        if turn_id is not None:
+            turn_positions[turn_id] = number
+        if not _nonempty_string(turn.get("userMessage")):
+            result.errors.append(f"{label}:{turn_location}.userMessage: must be a non-empty string")
+        authority = turn.get("authority")
+        if authority not in ("read-only", "authorized-edit"):
+            result.errors.append(f"{label}:{turn_location}.authority: must declare read-only or authorized-edit")
+        paths = turn.get("permittedPaths")
+        if not _string_list(paths, nonempty=False):
+            result.errors.append(f"{label}:{turn_location}.permittedPaths: must be a path array")
+        else:
+            if authority == "read-only" and paths:
+                result.errors.append(f"{label}:{turn_location}.permittedPaths: read-only turns cannot permit edits")
+            if authority == "authorized-edit" and not paths:
+                result.errors.append(f"{label}:{turn_location}.permittedPaths: authorized edits require explicit paths")
+            normalized_paths = [value.replace("\\", "/").casefold() for value in paths]
+            if len(normalized_paths) != len(set(normalized_paths)):
+                result.errors.append(f"{label}:{turn_location}.permittedPaths: paths must be unique")
+            for index, path in enumerate(paths):
+                _handoff_path(path, fixture_root=fixture_root, label=label, location=f"{turn_location}.permittedPaths[{index}]", result=result)
+        _validate_signal_list(turn.get("requiredEvidence"), label=label, location=f"{turn_location}.requiredEvidence", result=result)
+        expected = turn.get("expected")
+        _validate_evidence_object(expected, label=label, location=f"{turn_location}.expected", result=result)
+        if isinstance(expected, dict) and "outcome" in expected:
+            result.errors.append(f"{label}:{turn_location}.expected.outcome: handoff turns use evidence signals rather than outcome labels")
+
+    bindings = scenario.get("bindings")
+    if not isinstance(bindings, list):
+        result.errors.append(f"{label}:{location}.bindings: must be an array")
+        bindings = []
+    binding_positions: dict[str, int] = {}
+    binding_names: set[str] = set()
+    for number, binding in enumerate(bindings):
+        binding_location = f"{location}.bindings[{number}]"
+        if not isinstance(binding, dict):
+            result.errors.append(f"{label}:{binding_location}: must be an object")
+            continue
+        _validate_exact_fields(binding, required={"name", "fromTurn", "selectionRule", "missing"}, label=label, location=binding_location, result=result)
+        name = _handoff_id(binding.get("name"), binding_names, label=label, location=f"{binding_location}.name", result=result)
+        source = binding.get("fromTurn")
+        position = turn_positions.get(source) if isinstance(source, str) else None
+        if position is None:
+            result.errors.append(f"{label}:{binding_location}.fromTurn: must reference a declared turn")
+        elif name is not None:
+            binding_positions[name] = position
+        if not _nonempty_string(binding.get("selectionRule")):
+            result.errors.append(f"{label}:{binding_location}.selectionRule: must be a non-empty string")
+        if binding.get("missing") != "BLOCKED":
+            result.errors.append(f"{label}:{binding_location}.missing: missing actual output must remain BLOCKED")
+    for number, turn in enumerate(turns):
+        if not isinstance(turn, dict):
+            continue
+        consumed = turn.get("consumesBindings", [])
+        consumed_location = f"{location}.turns[{number}].consumesBindings"
+        if not _string_list(consumed, nonempty="consumesBindings" in turn):
+            result.errors.append(f"{label}:{consumed_location}: must be a non-empty binding-name array")
+            continue
+        if len(set(consumed)) != len(consumed):
+            result.errors.append(f"{label}:{consumed_location}: binding names must be unique")
+        message = turn.get("userMessage")
+        if isinstance(message, str):
+            referenced = set(HANDOFF_BINDING_PLACEHOLDER.findall(message))
+            if referenced - binding_names:
+                result.errors.append(f"{label}:{location}.turns[{number}].userMessage: contains an undeclared binding placeholder")
+            if referenced != set(consumed):
+                result.errors.append(f"{label}:{consumed_location}: must match the declared binding placeholders in userMessage")
+        for index, name in enumerate(consumed):
+            if name not in binding_positions or binding_positions[name] >= number:
+                result.errors.append(f"{label}:{consumed_location}[{index}]: must reference a binding from an earlier turn")
+
+    events = scenario.get("events")
+    if not isinstance(events, list):
+        result.errors.append(f"{label}:{location}.events: must be an array")
+        events = []
+    event_ids: set[str] = set()
+    for number, event in enumerate(events):
+        event_location = f"{location}.events[{number}]"
+        if not isinstance(event, dict):
+            result.errors.append(f"{label}:{event_location}: must be an object")
+            continue
+        operation = event.get("operation")
+        fields = {"id", "afterTurn", "operation", "path", "reason"}
+        if operation == "write":
+            fields.add("content")
+        _validate_exact_fields(event, required=fields, label=label, location=event_location, result=result)
+        _handoff_id(event.get("id"), event_ids, label=label, location=f"{event_location}.id", result=result)
+        after = event.get("afterTurn")
+        position = turn_positions.get(after) if isinstance(after, str) else None
+        if position is None or position >= len(turns) - 1:
+            result.errors.append(f"{label}:{event_location}.afterTurn: must reference a turn before the final turn")
+        if operation not in ("write", "delete"):
+            result.errors.append(f"{label}:{event_location}.operation: only literal write or delete events are supported")
+        if operation == "write" and not isinstance(event.get("content"), str):
+            result.errors.append(f"{label}:{event_location}.content: writes require literal string content")
+        if not _nonempty_string(event.get("reason")):
+            result.errors.append(f"{label}:{event_location}.reason: must be a non-empty string")
+        _handoff_path(event.get("path"), fixture_root=fixture_root, label=label, location=f"{event_location}.path", result=result)
+
+
+def _validate_handoff_index(
+    root: Path,
+    *,
+    skill_slugs: set[str],
+    manifests: dict[str, dict[str, object]],
+    result: ValidationResult,
+) -> None:
+    label = "evals/handoff-scenarios.json"
+    path = root / label
+    if _reject_link_or_inspection_gap(path, label=label, location="$", result=result):
+        return
+    if not path.is_file():
+        result.errors.append(f"{label}:$: handoff scenario index is missing")
+        return
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        result.fatal_errors.append(f"{label}:$: invalid JSON at line {error.lineno}, column {error.colno}")
+        return
+    except (OSError, UnicodeError) as error:
+        result.fatal_errors.append(f"{label}:$: could not read UTF-8 JSON ({error.__class__.__name__})")
+        return
+    if not isinstance(document, dict):
+        result.errors.append(f"{label}:$: must contain a JSON object")
+        return
+    _validate_exact_fields(document, required={"schemaVersion", "scenarios"}, label=label, location="$", result=result)
+    if type(document.get("schemaVersion")) is not int or document.get("schemaVersion") != SCHEMA_VERSION:
+        result.errors.append(f"{label}:$.schemaVersion: must be integer 1")
+    scenarios = document.get("scenarios")
+    if not isinstance(scenarios, list) or not scenarios:
+        result.errors.append(f"{label}:$.scenarios: must be a non-empty array")
+        scenarios = []
+    seen_ids: set[str] = set()
+    case_index = _manifest_case_index(manifests)
+    for number, scenario in enumerate(scenarios):
+        location = f"$.scenarios[{number}]"
+        if not isinstance(scenario, dict):
+            result.errors.append(f"{label}:{location}: must be an object")
+            continue
+        _handoff_id(scenario.get("id"), seen_ids, label=label, location=f"{location}.id", result=result)
+        _validate_handoff_scenario(scenario, root=root, skill_slugs=skill_slugs, case_index=case_index, label=label, location=location, result=result)
+    for location, text in _walk_strings(document):
+        if _contains_personal_home(text):
+            result.errors.append(f"{label}:{location}: contains a personal-home absolute path")
+
+
 def validate_repository(root: Path) -> ValidationResult:
     """Validate every immediate evaluation manifest beneath *root*."""
 
@@ -1733,6 +2010,8 @@ def validate_repository(root: Path) -> ValidationResult:
 
     if not suite_directories:
         result.fatal_errors.append("evals/ contains no evaluation suites")
+
+    _validate_handoff_index(root, skill_slugs=skill_slugs, manifests=manifests, result=result)
 
     matrix_path = evals_root / "routing-matrix.json"
     matrix_label = "evals/routing-matrix.json"

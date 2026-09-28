@@ -44,7 +44,7 @@ python -B evals/validate_eval_manifests.py
 python -B evals/validate_eval_manifests.py --root <repository>
 ```
 
-Exit `0` means every discovered manifest and the cross-skill routing matrix satisfy the shared structural contract. Exit `1` means parsed metadata contains validation errors. Exit `2` means root discovery, file reading, or JSON parsing failed. Diagnostics are deterministic and repository-relative; privacy findings identify only the field location, never the offending value.
+Exit `0` means every discovered manifest, the cross-skill routing matrix, and the handoff scenario index satisfy their structural contracts. Exit `1` means parsed metadata contains validation errors. Exit `2` means root discovery, file reading, or JSON parsing failed. Diagnostics are deterministic and repository-relative; privacy findings identify only the field location, never the offending value.
 
 The shared contract requires `schemaVersion: 1`, `suiteExpectations`, nonempty `cases`, and nonempty `triggerCases`. The only optional top-level fields are `suite` and `liveCases`; when present, `suite` must match its directory. `suiteExpectations.falsePositiveControls` is a nonempty, unique list of IDs that resolve only to behavioral cases in the same suite.
 
@@ -73,6 +73,12 @@ Run the validator's synthetic-repository tests with:
 ```text
 python -B -m unittest evals/test_eval_manifests.py -v
 ```
+
+## Stateful handoff evaluations
+
+The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the fifteen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation and resumption belong to the future `task-handoff` skill's evaluations.
+
+The single-turn comparison runner does not execute the index. Structural validation never launches a model or proves authority handling. The manual protocol permits explicitly attributed independent-agent semantic review for these handoff trials only; the existing runner's human-review interface remains unchanged. Synthetic source records establish bounded evidence-handling behavior, not live-browser protection.
 
 ## Materializers
 

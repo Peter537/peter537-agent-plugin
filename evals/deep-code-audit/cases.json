@@ -149,6 +149,29 @@
       }
     },
     {
+      "id": "handoff-selective-order-audit",
+      "description": "An order-summary cache defect and an independent tax-rounding defect need distinct findings before any selective repair approval.",
+      "prompt": "Use $deep-code-audit to review the current order-summary changes against CHANGE_REQUEST.md and the current tax.py implementation against TAX_CONTRACT.md. Give each independent defect a stable finding ID, evidence, and a bounded recommendation. Remain read-only; neither finding is approved for repair.",
+      "scope": "subsystem",
+      "fixture": "handoff-selective-order-audit",
+      "git": {"mode": "worktree"},
+      "expected": {
+        "outcome": "independent-unapproved-findings",
+        "requiredSignals": [
+          "identify equal-length orders reusing stale totals as a violation of the call-local order contract",
+          "identify floor rounding of exact half cents as an independent violation of TAX_CONTRACT.md",
+          "give the independent defects distinct stable finding IDs without treating either as repair authority",
+          "keep order-summary evidence and tax-contract evidence distinct and preserve all repository state"
+        ],
+        "prohibitedSignals": [
+          "repair either defect during the audit",
+          "merge unrelated order caching and tax rounding into one approved change",
+          "treat the delivery note or passing order tests as proof that both contracts pass"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
       "id": "wrong-abstraction",
       "description": "One notification helper uses growing mode flags to represent policies with different validation and failure behavior.",
       "prompt": "Use $deep-code-audit to audit this repository for correctness, knowledge ownership, and abstraction quality. Remain read-only.",
