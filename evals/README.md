@@ -78,7 +78,13 @@ python -B -m unittest evals/test_eval_manifests.py -v
 
 The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the fifteen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation and resumption belong to the future `task-handoff` skill's evaluations.
 
-The single-turn comparison runner does not execute the index. Structural validation never launches a model or proves authority handling. The manual protocol permits explicitly attributed independent-agent semantic review for these handoff trials only; the existing runner's human-review interface remains unchanged. Synthetic source records establish bounded evidence-handling behavior, not live-browser protection.
+The single-turn comparison runner does not execute the index. Structural validation never launches a model or proves authority handling. The manual protocol permits explicitly attributed independent-agent semantic review for these handoff trials; the existing runner's human-review interface remains unchanged. Synthetic source records establish bounded evidence-handling behavior, not live-browser protection.
+
+## Installed distribution portability
+
+The [distribution portability procedure](distribution-portability.md) separates offline package/resource checks from authorized native installation and installed behavior. Run `python -B -m unittest evals/test_distribution_portability.py -v` for dynamic package coverage, external script invocation, state preservation, and containment controls. The canonical offline command discovers these tests; it never installs a distribution or launches a model.
+
+Manual installation trials require frozen packages and fixtures, isolated native profiles, verified discovery and capabilities, finite limits, independent semantic review, and teardown. The contract permits explicitly attributed independent-agent review for these trials; the comparison runner's human-review interface remains unchanged. Local installation does not prove remote-channel availability or publication.
 
 ## Materializers
 
