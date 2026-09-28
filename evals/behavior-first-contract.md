@@ -1,6 +1,6 @@
 # Behavior-First Evaluation Contract
 
-This contract defines how maintainers design and grade evaluations for the skills in this repository. It is platform-neutral: a trial may run through any suitable model or agent harness, but its verdicts, evidence, and repository-state checks must follow this policy. The contract does not depend on the OpenAI Evals API and does not add a generic model runner.
+This contract defines how maintainers design and grade evaluations for the skills in this repository. It is platform-neutral: a trial may run through any suitable model or agent harness, but its verdicts, evidence, and repository-state checks must follow this policy. The contract does not depend on the OpenAI Evals API. The separate [opt-in comparison workflow](comparison-workflow.md) implements behavioral trial preparation and records without changing these grading rules.
 
 The goal is to measure whether an agent produced the intended behavior safely, not whether it reproduced a preferred answer or implementation. Suite-specific metadata may describe different tasks and evidence paths, while the shared grading rules remain stable.
 
@@ -135,7 +135,9 @@ When a recurring observation might justify an eval, deterministic rule, skill ch
 
 Do not collapse the dimensions into an aggregate quality score. Report material regressions, improvements, blocks, and false-positive-control results directly. A change is acceptable only when it corrects the targeted behavior or demonstrates the declared simplification benefit without weakening safety, evidence quality, preserved behavior, or final-state integrity.
 
-The repository has no generic model-behavior runner. Future harness work may automate trials and records, but it must preserve this contract and remain independent of any one provider's evaluation API.
+The [opt-in comparison workflow](comparison-workflow.md) prepares no-skill, current-skill, and candidate-skill behavioral trials from frozen inputs. Its records remain provider-neutral; the initial adapter targets Codex CLI and has bounded native execution coverage. Each run must establish its own configuration and isolation evidence. Routing remains a separate manual workflow. Offline tests use simulated adapters and cannot establish model behavior.
+
+For these comparisons, no-skill means without the evaluated package and its discovery entry, with all other declared context fixed. Freeze any task-only prompt override and its rationale before execution and use it identically across variants. Preserve the original expectations and distinguish skill-specific mechanisms from the underlying task outcome. Freeze held-out membership before execution, require human review for consequential semantic judgments, and identify simulated review records as simulated. Process completion alone is not a passing assessment; unavailable evidence remains blocked or unrun. Never infer observed reads, redundant checks, approval pauses, token usage, latency, or monetary cost from source size or agent self-report.
 
 ## Sources
 

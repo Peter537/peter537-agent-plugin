@@ -4,8 +4,9 @@
 The runner is deliberately conservative. It validates repository-owned text,
 calls only fixed maintenance commands, suppresses child output, and verifies
 that the Git-visible repository state is byte-identical when it finishes. It
-does not execute commands declared by eval manifests, materialize fixtures, or
-perform model, network, runtime, installation, MCP, or release checks.
+does not dispatch commands from eval manifests or perform model, network,
+installation, MCP, or release checks. Reviewed maintenance tests may create
+and exercise disposable local fixtures.
 """
 
 from __future__ import annotations

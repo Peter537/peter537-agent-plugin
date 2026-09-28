@@ -578,6 +578,46 @@ The escaped token \[label\]\(missing-escaped.md\) is also prose.
         self.assertNotIn("tools/forbidden.py", invoked)
         self.assertNotIn("import tools.forbidden", invoked)
 
+    def test_comparison_workflows_and_model_adapters_are_never_invoked(self) -> None:
+        marker = self.root / "comparison-model-was-launched.txt"
+        canary_source = (
+            "from pathlib import Path\n"
+            "Path('comparison-model-was-launched.txt').write_text(\n"
+            "    'synthetic launch only', encoding='utf-8'\n"
+            ")\n"
+        )
+        for relative in (
+            "evals/run_comparisons.py",
+            "evals/comparison_adapter.py",
+            "tools/model-launch-canary.py",
+        ):
+            self._write(self.root / relative, canary_source)
+        self._write_json(
+            self.root / "evals" / "comparison-spec.json",
+            {
+                "schemaVersion": 1,
+                "authorization": "Synthetic declaration; never execute offline.",
+                "execute": True,
+                "adapter": {
+                    "executable": "tools/model-launch-canary.py",
+                    "module": "evals.comparison_adapter",
+                },
+                "argv": [
+                    "python",
+                    "evals/run_comparisons.py",
+                    "run",
+                    "--execute",
+                ],
+            },
+        )
+        before = self._repository_state(self.root)
+
+        result = self.run_runner(execute_children=True)
+
+        self.assert_passed(result)
+        self.assertFalse(marker.exists())
+        self.assertEqual(self._repository_state(self.root), before)
+
     def test_materializer_list_failure_is_aggregated_without_child_output(self) -> None:
         canary = "CHILD_" + secrets.token_hex(16)
         materializer = self.root / "evals" / "alpha" / "materialize_fixtures.py"
