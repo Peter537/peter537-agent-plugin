@@ -99,6 +99,11 @@
       "naturalLanguageTrigger": "trigger-python-simplify"
     },
     {
+      "skill": "retrospective",
+      "explicitTrigger": "explicit-retrospective",
+      "naturalLanguageTrigger": "implicit-same-request"
+    },
+    {
       "skill": "ui-design-and-polish",
       "explicitTrigger": "trigger-explicit-invocation",
       "naturalLanguageTrigger": "trigger-product-ui-audit"
@@ -289,6 +294,29 @@
       ]
     },
     {
+      "id": "deep-code-audit--retrospective",
+      "skills": [
+        "deep-code-audit",
+        "retrospective"
+      ],
+      "directions": [
+        {
+          "from": "deep-code-audit",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        },
+        {
+          "from": "retrospective",
+          "to": "deep-code-audit",
+          "triggers": [
+            "near-miss-deep-code-audit"
+          ]
+        }
+      ]
+    },
+    {
       "id": "deep-code-audit--verify-change",
       "skills": ["deep-code-audit", "verify-change"],
       "directions": [
@@ -302,6 +330,29 @@
       "directions": [
         {"from": "deep-planning", "to": "prune-codebase", "triggers": ["near-miss-pruning"]},
         {"from": "prune-codebase", "to": "deep-planning", "triggers": ["near-miss-architecture"]}
+      ]
+    },
+    {
+      "id": "deep-planning--retrospective",
+      "skills": [
+        "deep-planning",
+        "retrospective"
+      ],
+      "directions": [
+        {
+          "from": "deep-planning",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        },
+        {
+          "from": "retrospective",
+          "to": "deep-planning",
+          "triggers": [
+            "near-miss-deep-planning"
+          ]
+        }
       ]
     },
     {
@@ -345,11 +396,57 @@
       ]
     },
     {
+      "id": "diagnose-bugs--retrospective",
+      "skills": [
+        "diagnose-bugs",
+        "retrospective"
+      ],
+      "directions": [
+        {
+          "from": "diagnose-bugs",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        },
+        {
+          "from": "retrospective",
+          "to": "diagnose-bugs",
+          "triggers": [
+            "near-miss-diagnose-bugs"
+          ]
+        }
+      ]
+    },
+    {
       "id": "diagnose-bugs--verify-change",
       "skills": ["diagnose-bugs", "verify-change"],
       "directions": [
         {"from": "diagnose-bugs", "to": "verify-change", "triggers": ["near-miss-change-verification"]},
         {"from": "verify-change", "to": "diagnose-bugs", "triggers": ["near-miss-bug-diagnosis"]}
+      ]
+    },
+    {
+      "id": "docs-audit--retrospective",
+      "skills": [
+        "docs-audit",
+        "retrospective"
+      ],
+      "directions": [
+        {
+          "from": "docs-audit",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        },
+        {
+          "from": "retrospective",
+          "to": "docs-audit",
+          "triggers": [
+            "near-miss-docs-audit"
+          ]
+        }
       ]
     },
     {
@@ -406,6 +503,29 @@
       "directions": [
         {"from": "reduce-code-slop", "to": "ui-design-and-polish", "triggers": ["near-miss-ui"]},
         {"from": "ui-design-and-polish", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]}
+      ]
+    },
+    {
+      "id": "retrospective--verification-context",
+      "skills": [
+        "retrospective",
+        "verification-context"
+      ],
+      "directions": [
+        {
+          "from": "retrospective",
+          "to": "verification-context",
+          "triggers": [
+            "near-miss-verification-context"
+          ]
+        },
+        {
+          "from": "verification-context",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        }
       ]
     },
     {

@@ -22,6 +22,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 | [`comment-health`](../../skills/comment-health/SKILL.md) | Audit and safely improve source comments without losing contracts, rationale, documentation, or tool semantics. | [`cases.json`](../../evals/comment-health/cases.json) |
 | [`prune-codebase`](../../skills/prune-codebase/SKILL.md) | Prove and retire dead or obsolete repository surface without guessing about consumers or compatibility. | [`cases.json`](../../evals/prune-codebase/cases.json) |
 | [`reduce-code-slop`](../../skills/reduce-code-slop/SKILL.md) | Review and simplify scoped C# and Python code without changing established behavior. | [`cases.json`](../../evals/reduce-code-slop/cases.json) |
+| [`retrospective`](../../skills/retrospective/SKILL.md) | Assess observations on explicit invocation and recommend one sanitized disposition without implementing it. | [`cases.json`](../../evals/retrospective/cases.json) |
 
 ## Security & supply chain
 

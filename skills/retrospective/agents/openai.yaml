@@ -1,0 +1,7 @@
+interface:
+  display_name: "Retrospective"
+  short_description: "Review failures and propose bounded preventive changes"
+  default_prompt: "Use $retrospective to assess this observation and recommend the narrowest supported disposition without implementing it."
+
+policy:
+  allow_implicit_invocation: false

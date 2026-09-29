@@ -20,7 +20,8 @@
         "verify-change",
         "comment-health",
         "prune-codebase",
-        "reduce-code-slop"
+        "reduce-code-slop",
+        "retrospective"
       ]
     },
     {

@@ -266,6 +266,12 @@
     {"id": "near-miss-single-check", "prompt": "Run python -B verify_contract.py and tell me its exit status.", "expectActivation": false, "expectedOwner": "no-skill"},
     {"id": "near-miss-release", "prompt": "Prepare the release commit, annotated tag, skills-only archive, and publication handoff.", "expectActivation": false, "expectedOwner": "release-workflow"},
     {"id": "near-miss-wording-only", "prompt": "Use $write-clearly to improve only the wording and readability of this already-authoritative verification context without changing its technical meaning.", "expectActivation": false, "expectedOwner": "write-clearly"},
-    {"id": "near-miss-design-context-authoring", "prompt": "Create or maintain this repository's persistent product design context at the approved path from current repository evidence and explicit human decisions, preserving unresolved choices without editing the UI.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"}
+    {"id": "near-miss-design-context-authoring", "prompt": "Create or maintain this repository's persistent product design context at the approved path from current repository evidence and explicit human decisions, preserving unresolved choices without editing the UI.", "expectActivation": false, "expectedOwner": "ui-design-and-polish"},
+    {
+      "id": "near-miss-retrospective",
+      "prompt": "Use $retrospective to assess this repeated workflow failure and recommend the narrowest supported disposition without implementing it.",
+      "expectActivation": false,
+      "expectedOwner": "retrospective"
+    }
   ]
 }

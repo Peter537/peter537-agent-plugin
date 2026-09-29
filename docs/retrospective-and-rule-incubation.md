@@ -4,6 +4,8 @@ Use this manual process when an observed failure, near miss, or proposed rule mi
 
 This is not an incident log, transcript archive, model-evaluation runner, or authorization to implement a proposed change. The [behavior-first evaluation contract](../evals/behavior-first-contract.md) remains authoritative for verdict dimensions and claim states, the [evaluation guide](../evals/README.md) remains authoritative for eval mechanics, and the [verification map](verification.md) remains authoritative for selecting evidence.
 
+The explicitly invoked [`retrospective` skill](../skills/retrospective/SKILL.md) packages this lifecycle for standalone use. This document remains the policy authority for this repository; the portable package does not replace it or authorize a destination change.
+
 ## When to open a retrospective
 
 Use a retrospective when at least one of these conditions applies:

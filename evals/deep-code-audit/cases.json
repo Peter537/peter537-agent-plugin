@@ -608,6 +608,12 @@
       "prompt": "Implement the approved fix: replace this concatenated SQL query with bound parameters and update its regression test.",
       "expectActivation": false,
       "expectedOwner": "ordinary-implementation"
+    },
+    {
+      "id": "near-miss-retrospective",
+      "prompt": "Use $retrospective to assess this repeated workflow failure and recommend the narrowest supported disposition without implementing it.",
+      "expectActivation": false,
+      "expectedOwner": "retrospective"
     }
   ]
 }

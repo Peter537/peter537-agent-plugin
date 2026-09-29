@@ -31,7 +31,7 @@ Python 3, local Git, and writable operating-system temporary storage are prerequ
 
 ## Suite contract
 
-Each of the fifteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
+Each of the sixteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
 
 The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
 
@@ -58,7 +58,7 @@ Fixture references, including aliases, must resolve beneath the suite's `fixture
 
 ## Cross-skill routing matrix
 
-[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the fifteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
+[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the sixteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
 
 The common validator derives effective implicit-invocation policy from `skills/<slug>/agents/openai.yaml`; omission means the documented default `true`. Each explicit case must contain the exact `$slug` token and activate its skill. A natural-language case must contain no explicit skill mention and must follow that skill's effective policy. Boundary rows contain two sorted skill slugs and both negative routing directions, with every referenced trigger owned by the opposite skill.
 
@@ -76,7 +76,7 @@ python -B -m unittest evals/test_eval_manifests.py -v
 
 ## Stateful handoff evaluations
 
-The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the fifteen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation and resumption belong to the future `task-handoff` skill's evaluations.
+The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the sixteen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation and resumption belong to the future `task-handoff` skill's evaluations.
 
 The single-turn comparison runner does not execute the index. Structural validation never launches a model or proves authority handling. The manual protocol permits explicitly attributed independent-agent semantic review for these handoff trials; the existing runner's human-review interface remains unchanged. Synthetic source records establish bounded evidence-handling behavior, not live-browser protection.
 
@@ -102,9 +102,25 @@ The [contract](behavior-first-contract.md#comparisons-and-records) narrowly perm
 
 Run fixture/materializer tests and relevant safe fixture checks separately from model evidence. After review, retain only a sanitized disposition, verify shared configuration and source-package preservation, confirm owned-process teardown, and remove the exact task-owned fixtures, profiles, and raw records after containment checks. Unavailable evidence remains a completion gap.
 
+## Manual retrospective comparisons
+
+The explicitly invoked `retrospective` package carries the existing repository lifecycle into a standalone skill. Its suite grades bounded disposition, private evidence handling, human decisions, separate implementation authority, and verified cleanup. A completed analysis may recommend no change or report unresolved evidence; it does not approve or implement a destination change.
+
+Freeze the existing workflow and referenced authorities before editing the portable guidance. Freeze prompts, expectations, fixture bytes/Git state, held-out cases, tools, capabilities, model/settings, authorization, and finite limits before execution. The materializer creates separate `repository`, `supplied-evidence`, and `task-temporary` areas beneath each case; supplied evidence is synthetic input, not an actual past model result. Generate disclosure canaries only in disposable materialized input. Keep grading metadata and raw records outside evaluated context.
+
+For behavioral parity, use identical task-only prompts with either the frozen existing workflow or the portable package supplied as declared experimental context. Record that treatment explicitly; this does not establish native skill selection. The initial inventory is 44 paired trials: three repetitions each for recurring semantic failure, deterministic incubation, private evidence, and prior human decision, and one pair for each of the other ten cases. Keep no-change and false-positive controls. Native explicit invocation is separate: exercise ordinary disposition, conditional incubation-reference loading, and private-evidence cleanup from an isolated package outside a target repository. No source-checkout or sibling-skill dependency is permitted.
+
+Use a task-local controller and the existing native inventory, effective-configuration, snapshot, containment, and owned-process safeguards; keep the single-turn runner unchanged. Run sequentially with declared per-trial and batch limits, no automatic retries, and no implicit installation or live-service permission. Capture actual actions, resource reads, response evidence, protected file bytes, staged semantics, supplied-original integrity, and cleanup. Keep routing separate, using the full catalog and three independent passes per catalog version.
+
+Check trace completeness before relying on it: summarized CLI file-change events can omit worksheet contents, and policy-rejection messages can truncate command arguments. Preserve complete native tool calls and results privately when those details are needed for assessment, outside the evaluated agent's readable context. Missing payloads remain evidence gaps; do not reconstruct them from the final response or a successful cleanup.
+
+The [behavior-first contract](behavior-first-contract.md#comparisons-and-records) permits attributed independent-agent semantic review for these manual retrospective trials. Hide treatment labels and proposed verdicts from reviewers; preserve reviewer identity, settings, independence, consequential judgments, limitations, and evidence references. This evaluation exception is not human approval within the retrospective and does not alter the runner's human-review interface. Observed violations override favorable review. Do not invent a baseline failure to justify packaging: demonstrate parity and standalone package-local resource resolution, and claim judgment improvement only for reproduced corrections. Record unrelated existing failures separately and reject new regressions.
+
+After review, retain only a sanitized completion disposition. Verify source/package and shared-state preservation; stop owned processes and remove verified task-created worksheets, evidence copies, fixtures, profiles, and raw records. Preserve supplied originals and all unrelated work. Model results, structural validation, and local package copies do not establish marketplace installation, universal sanitization, or correctness beyond the exercised cases.
+
 ## Materializers
 
-Fourteen suites expose one materializer: thirteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
+Fifteen suites expose one materializer: fourteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
 
 Non-repository suites may provide a standard-library packet materializer, such as `materialize_packets.py`, with the same selection and external-output safety contract.
 
