@@ -17,6 +17,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 | Skill | Purpose | Evaluation |
 | --- | --- | --- |
 | [`deep-code-audit`](../../skills/deep-code-audit/SKILL.md) | Audit correctness, security, architecture, maintainability, and change quality across a codebase or scoped change. | [`cases.json`](../../evals/deep-code-audit/cases.json) |
+| [`audit-tests`](../../skills/audit-tests/SKILL.md) | Review test value and, when authorized, consolidate or remove redundancy while preserving useful failure detection. | [`cases.json`](../../evals/audit-tests/cases.json) |
 | [`diagnose-bugs`](../../skills/diagnose-bugs/SKILL.md) | Reproduce, localize, diagnose, and repair concrete local or CI defects with regression evidence. | [`cases.json`](../../evals/diagnose-bugs/cases.json) |
 | [`verification-context`](../../skills/verification-context/SKILL.md) | Create or maintain approved repository verification guidance from existing local evidence without treating that context as execution proof. | [`cases.json`](../../evals/verification-context/cases.json) |
 | [`verify-change`](../../skills/verify-change/SKILL.md) | Prove that a completed local or CI change meets its acceptance criteria through layered evidence and complete cleanup. | [`cases.json`](../../evals/verify-change/cases.json) |

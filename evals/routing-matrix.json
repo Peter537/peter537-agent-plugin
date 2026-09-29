@@ -53,6 +53,7 @@
       "explicitTrigger": "trigger-explicit-review",
       "naturalLanguageTrigger": "trigger-before-add"
     },
+    {"skill": "audit-tests", "explicitTrigger": "explicit-audit", "naturalLanguageTrigger": "natural-test-value"},
     {
       "skill": "chatgpt-research",
       "explicitTrigger": "trigger-explicit-deep-research",
@@ -210,6 +211,10 @@
         {"from": "verify-change", "to": "audit-dependencies", "triggers": ["near-miss-dependency-tool"]}
       ]
     },
+    {"id": "audit-tests--deep-code-audit", "skills": ["audit-tests", "deep-code-audit"], "directions": [{"from": "audit-tests", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}, {"from": "deep-code-audit", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
+    {"id": "audit-tests--diagnose-bugs", "skills": ["audit-tests", "diagnose-bugs"], "directions": [{"from": "audit-tests", "to": "diagnose-bugs", "triggers": ["near-miss-flake"]}, {"from": "diagnose-bugs", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
+    {"id": "audit-tests--prune-codebase", "skills": ["audit-tests", "prune-codebase"], "directions": [{"from": "audit-tests", "to": "prune-codebase", "triggers": ["near-miss-retirement"]}, {"from": "prune-codebase", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
+    {"id": "audit-tests--verify-change", "skills": ["audit-tests", "verify-change"], "directions": [{"from": "audit-tests", "to": "verify-change", "triggers": ["near-miss-acceptance"]}, {"from": "verify-change", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
     {
       "id": "chatgpt-research--deep-planning",
       "skills": ["chatgpt-research", "deep-planning"],

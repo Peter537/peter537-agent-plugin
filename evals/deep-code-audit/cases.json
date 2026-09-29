@@ -495,6 +495,7 @@
     }
   ],
   "triggerCases": [
+    {"id": "near-miss-test-value", "prompt": "Review tests for still-supported behavior to identify redundancy and worthwhile failure detection, without a broad audit or production retirement.", "expectActivation": false, "expectedOwner": "audit-tests"},
     {
       "id": "trigger-explicit-invocation",
       "prompt": "Use $deep-code-audit to perform a deep, evidence-backed audit of this repository and report prioritized findings.",

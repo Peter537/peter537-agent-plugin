@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit Tests"
+  short_description: "Assess test value and safely reduce redundancy"
+  default_prompt: "Use $audit-tests to review this test suite for useful protection and unnecessary maintenance, without editing files."

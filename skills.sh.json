@@ -13,9 +13,10 @@
     },
     {
       "title": "Engineering quality",
-      "description": "Maintain verification context, investigate defects, verify completed changes, audit implementations and comments, simplify code, and retire obsolete surface safely.",
+      "description": "Maintain verification context, investigate defects, verify completed changes, audit implementations, test value, and comments, simplify code, and retire obsolete surface safely.",
       "skills": [
         "deep-code-audit",
+        "audit-tests",
         "diagnose-bugs",
         "verification-context",
         "verify-change",

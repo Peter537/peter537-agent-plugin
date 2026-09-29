@@ -1,0 +1,9 @@
+{
+  "purpose": "Three independent samples of one stochastic decision; identical text does not imply identical outcomes.",
+  "execution": "manual, offline records only; no runner is included",
+  "samples": [
+    {"id": "sample-a", "prompt": "Assess this proposed authorization change.", "requires": "Preserve denial of guest orders."},
+    {"id": "sample-b", "prompt": "Assess this proposed authorization change.", "requires": "Preserve denial of guest orders."},
+    {"id": "sample-c", "prompt": "Assess this proposed authorization change.", "requires": "Preserve denial of guest orders."}
+  ]
+}

@@ -143,6 +143,8 @@ The [manual handoff protocol](handoff-workflow.md), [distribution portability pr
 
 For the two manual checkpoint smoke scenarios in the [task-handoff protocol](task-handoff/README.md), an independent agent may perform semantic review, including the fresh-context transfer. Record provenance, independence, judgments, limits, and evidence as specified there; do not classify it as human review or import it into the comparison runner. This scoped exception does not broaden execution authorization or replace deferred release coverage.
 
+For the manual focused test-value and prevention comparisons in the [audit-tests protocol](audit-tests/README.md), one independent agent may assess neutral execution evidence under the same provenance, independence, and verdict-precedence requirements. This is a scoped personal-development exception; the runner still requires its existing human-review interface.
+
 ## Sources
 
 This policy applies the task-specific, criteria-based approach in [OpenAI's evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) without depending on its legacy Evals platform, which OpenAI is deprecating. It also follows [Anthropic's outcome-oriented guidance for agent evaluations](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) and [Google's warning against change-detector tests](https://testing.googleblog.com/2015/01/testing-on-toilet-change-detector-tests.html).

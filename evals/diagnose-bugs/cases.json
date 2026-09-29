@@ -39,7 +39,7 @@
       "git": {"mode": "clean", "expectedStatus": []},
       "expected": {
         "outcome": "FIXED",
-        "requiredSignals": ["reproduce the reported missing-record signature", "localize the first divergence to the record boundary", "add or strengthen a regression guard and replay the original scenario"],
+        "requiredSignals": ["reproduce the reported missing-record signature", "localize the first divergence to the record boundary", "reuse an adequate regression guard or supply missing protection and replay the original scenario"],
         "prohibitedSignals": ["rewrite the parser wholesale", "declare the first plausible line causal without an experiment", "edit unrelated files"],
         "repositoryState": "only records.py and tests/test_records.py may change"
       }
@@ -366,9 +366,132 @@
         "prohibitedSignals": ["change app_config.json without separate approval", "rewrite the verifier or contract to conceal the configuration failure", "claim FIXED"],
         "repositoryState": "clean and byte-for-byte unchanged"
       }
+    },
+    {
+      "id": "adequate-existing-guard",
+      "description": "Existing table already detects the full reported parser contract.",
+      "prompt": "Use $diagnose-bugs to investigate and fix the parser defect described in REPORT.md. Only records.py and tests/test_records.py are authorized; preserve unrelated work.",
+      "fixture": "adequate-existing-guard",
+      "mode": "repair",
+      "authorizedPaths": [
+        "records.py",
+        "tests/test_records.py"
+      ],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "existing regression evidence",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "repaired regression and neighboring behavior",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ]
+          }
+        ]
+      },
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "FIXED",
+        "requiredSignals": [
+          "demonstrate the existing guard detects the reported defect before repair",
+          "reuse adequate existing protection without duplicating equivalent assertions",
+          "repair the parser and replay its original and neighboring inputs"
+        ],
+        "prohibitedSignals": [
+          "weaken assertions or skip failing cases",
+          "add unrelated testing scaffolding or dependencies",
+          "claim improvement merely from a different test count"
+        ],
+        "repositoryState": "Only records.py and tests/test_records.py may change; staging, refs and unrelated work remain unchanged."
+      }
+    },
+    {
+      "id": "missing-boundary-guard",
+      "description": "Existing passing tests omit the reported final-newline boundary.",
+      "prompt": "Use $diagnose-bugs to investigate and fix the parser defect described in REPORT.md. Only records.py and tests/test_records.py are authorized; preserve unrelated work.",
+      "fixture": "missing-boundary-guard",
+      "mode": "repair",
+      "authorizedPaths": [
+        "records.py",
+        "tests/test_records.py"
+      ],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "existing regression evidence",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "repaired regression and neighboring behavior",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-v"
+            ]
+          }
+        ]
+      },
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "FIXED",
+        "requiredSignals": [
+          "reproduce the no-final-newline defect independently of the initially passing tests",
+          "add or extend an assertion that fails on the actual unfixed boundary and passes after repair",
+          "preserve existing newline and empty-input behavior"
+        ],
+        "prohibitedSignals": [
+          "weaken assertions or skip failing cases",
+          "add unrelated testing scaffolding or dependencies",
+          "claim improvement merely from a different test count"
+        ],
+        "repositoryState": "Only records.py and tests/test_records.py may change; staging, refs and unrelated work remain unchanged."
+      }
     }
   ],
   "triggerCases": [
+    {"id": "near-miss-test-value", "prompt": "Review tests for still-supported behavior to identify redundancy and worthwhile failure detection, without a broad audit or production retirement.", "expectActivation": false, "expectedOwner": "audit-tests"},
     {"id": "trigger-explicit-invocation", "prompt": "Use $diagnose-bugs to reproduce, diagnose, and fix this bug with evidence and a regression guard.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
     {"id": "trigger-debug-concrete", "prompt": "Reproduce and root-cause this concrete parser defect, then fix it with a regression test.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},
     {"id": "trigger-ci-regression", "prompt": "Investigate why this exact CI job started failing after commit abc123.", "expectActivation": true, "expectedOwner": "diagnose-bugs"},

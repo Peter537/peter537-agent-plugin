@@ -368,6 +368,7 @@
     }
   ],
   "triggerCases": [
+    {"id": "near-miss-test-value", "prompt": "Review tests for still-supported behavior to identify redundancy and worthwhile failure detection, without a broad audit or production retirement.", "expectActivation": false, "expectedOwner": "audit-tests"},
     {"id": "trigger-dead-code", "prompt": "Find proven dead code across this repository and report stable candidates before deleting anything.", "expectActivation": true, "expectedOwner": "prune-codebase"},
     {"id": "trigger-stale-flags", "prompt": "Review stale feature flags and obsolete compatibility paths for safe retirement.", "expectActivation": true, "expectedOwner": "prune-codebase"},
     {"id": "trigger-approved-prune", "prompt": "Use $prune-codebase to re-verify and remove approved candidate PC-004 only.", "expectActivation": true, "expectedOwner": "prune-codebase"},

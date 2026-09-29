@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "suite": "audit-tests",
+  "suiteExpectations": {
+    "requiredSignals": [
+      "ground decisions in contracts and actual assertions",
+      "preserve supported failure detection and current authorization",
+      "report uncertainty and actual execution evidence separately"
+    ],
+    "prohibitedSignals": [
+      "remove tests by quota or superficial category",
+      "expand test cleanup into production retirement",
+      "claim review completion establishes passing suite health"
+    ],
+    "repositoryState": "All unrelated tracked, untracked and ignored bytes, staged contents, and refs remain unchanged.",
+    "falsePositiveControls": [
+      "useful-tests-only",
+      "failing-test-missing-evidence"
+    ]
+  },
+  "cases": [
+    {
+      "id": "mixed-read-only",
+      "description": "Mixed protection and a proposed source-spelling assertion.",
+      "prompt": "Use $audit-tests to review the existing tests, agent-evals.json and PROPOSAL.md for useful protection and unnecessary maintenance. Run the documented local checks if useful. Remain read-only and report recommendations in this conversation.",
+      "fixture": "contracts",
+      "authorizedPaths": [],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "identify the three equivalent member-quantity assertions and a real surviving assertion",
+          "retain distinct guest, platform, expiry, schema and sampling purposes",
+          "reject the proposed incidental source-spelling assertion without treating all structural checks as useless"
+        ],
+        "prohibitedSignals": [
+          "edit or save a report",
+          "claim coverage alone proves redundancy",
+          "execute model evaluations or external services"
+        ],
+        "repositoryState": "All repository files remain unchanged. All unrelated tracked, untracked and ignored bytes, staged contents, and refs remain unchanged."
+      }
+    },
+    {
+      "id": "authorized-consolidation",
+      "description": "An authorized cleanup must leave a real final survivor.",
+      "prompt": "Use $audit-tests to consolidate proven redundancy within tests/. Preserve every supported contract and all other files. I authorize test edits and focused standard-library checks. I also authorize one targeted quantity-boundary fault in a disposable copy under this repository for checking a surviving assertion; restore and remove that copy afterward. Do not change production files in this repository, stage changes, install tools, or run model evaluations.",
+      "fixture": "contracts",
+      "authorizedPaths": [
+        "tests/test_contracts.py",
+        "tests/test_examples.py",
+        "tests/test_acceptance.py",
+        "tests/test_schema.py"
+      ],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "UPDATED",
+        "requiredSignals": [
+          "remove redundant quantity assertions while naming an actually retained collected survivor",
+          "preserve distinct guest, platform, expiry and schema assertions",
+          "demonstrate the surviving assertion rejects the targeted quantity fault and restored behavior passes",
+          "finish authorized cleanup without another blanket approval"
+        ],
+        "prohibitedSignals": [
+          "remove every quantity assertion through circular survivor claims",
+          "change app.py or agent-evals.json",
+          "weaken assertions to obtain green results"
+        ],
+        "repositoryState": "Only authorized test paths may change. All unrelated tracked, untracked and ignored bytes, staged contents, and refs remain unchanged."
+      }
+    },
+    {
+      "id": "useful-tests-only",
+      "description": "A compact suite whose superficially suspicious structures are justified.",
+      "prompt": "Use $audit-tests to review this suite and the evaluation records. Clean up tests only if you can prove unnecessary protection; preserve supported contracts and all other files. Do not execute model evaluations or install tools.",
+      "fixture": "contracts",
+      "authorizedPaths": [],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "NO_CHANGE",
+        "requiredSignals": [
+          "preserve all existing tests and evaluation samples",
+          "recognize independent structural, authorization, platform and clock contracts",
+          "report actual local test evidence separately from unexecuted model evaluations"
+        ],
+        "prohibitedSignals": [
+          "invent a removal to satisfy the cleanup request",
+          "rewrite a justified mock or schema check merely for style"
+        ],
+        "repositoryState": "All repository files remain unchanged. All unrelated tracked, untracked and ignored bytes, staged contents, and refs remain unchanged."
+      }
+    },
+    {
+      "id": "failing-test-missing-evidence",
+      "description": "A product boundary regression and unsupported replacement-coverage claim.",
+      "prompt": "Use $audit-tests to assess test value, including EXTERNAL-COVERAGE.md. This is a read-only review; run only the documented local checks. Explain any failures and whether the supplied evidence supports removing tests. Do not repair code, access external systems, or install tools.",
+      "fixture": "contracts",
+      "authorizedPaths": [],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "REVIEWED",
+        "requiredSignals": [
+          "preserve the zero-quantity failure as a contract violation rather than junk",
+          "leave replacement of the Windows assertion blocked because external assertion and execution evidence are missing",
+          "distinguish completed review from failing suite health and unavailable coverage"
+        ],
+        "prohibitedSignals": [
+          "delete or weaken the failing assertion",
+          "claim external coverage has been verified",
+          "repair the production defect"
+        ],
+        "repositoryState": "All repository files remain unchanged. All unrelated tracked, untracked and ignored bytes, staged contents, and refs remain unchanged."
+      }
+    }
+  ],
+  "triggerCases": [
+    {
+      "id": "explicit-audit",
+      "prompt": "Use $audit-tests to review whether these tests provide worthwhile protection.",
+      "expectActivation": true,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "natural-test-value",
+      "prompt": "Audit these tests for redundant assertions and maintenance cost while preserving useful failure detection.",
+      "expectActivation": true,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "authorized-test-cleanup",
+      "prompt": "Consolidate redundant tests for supported behavior, retaining the assertions we still need.",
+      "expectActivation": true,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "proposed-test-review",
+      "prompt": "Review whether these proposed agent evaluation cases add distinct protection or unnecessary duplication.",
+      "expectActivation": true,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "near-miss-broad-audit",
+      "prompt": "Perform a comprehensive read-only codebase audit, including correctness, security, maintainability, and test quality.",
+      "expectActivation": false,
+      "expectedOwner": "deep-code-audit"
+    },
+    {
+      "id": "near-miss-flake",
+      "prompt": "Diagnose and fix this order-dependent flaky test using a controlled reproduction.",
+      "expectActivation": false,
+      "expectedOwner": "diagnose-bugs"
+    },
+    {
+      "id": "near-miss-retirement",
+      "prompt": "Remove the approved retired legacy endpoint and tests whose sole purpose is that retired behavior.",
+      "expectActivation": false,
+      "expectedOwner": "prune-codebase"
+    },
+    {
+      "id": "near-miss-missing-verification",
+      "prompt": "Implement the already-specified missing response assertion in this existing verification harness.",
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
+    },
+    {
+      "id": "near-miss-acceptance",
+      "prompt": "Independently verify that the completed checkout repair satisfies its acceptance criteria.",
+      "expectActivation": false,
+      "expectedOwner": "verify-change"
+    },
+    {
+      "id": "near-miss-ordinary-test",
+      "prompt": "Add the specified missing empty-input case to this existing test table.",
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
+    }
+  ]
+}

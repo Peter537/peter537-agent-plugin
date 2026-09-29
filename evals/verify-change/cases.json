@@ -329,6 +329,7 @@
     }
   ],
   "triggerCases": [
+    {"id": "near-miss-test-value", "prompt": "Review tests for still-supported behavior to identify redundancy and worthwhile failure detection, without a broad audit or production retirement.", "expectActivation": false, "expectedOwner": "audit-tests"},
     {"id": "trigger-explicit-invocation", "prompt": "Use $verify-change to prove this completed change meets its acceptance criteria with repository-native evidence and complete cleanup.", "expectActivation": true, "expectedOwner": "verify-change"},
     {"id": "trigger-completed-change", "prompt": "The implementation is finished. Prove that every acceptance criterion works through the real local workflow and clean up afterward.", "expectActivation": true, "expectedOwner": "verify-change"},
     {"id": "trigger-persistence-proof", "prompt": "Verify that this completed account change survives a process restart and is actually persisted, not merely returned from memory.", "expectActivation": true, "expectedOwner": "verify-change"},
