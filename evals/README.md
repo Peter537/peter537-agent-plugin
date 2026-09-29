@@ -31,7 +31,7 @@ Python 3, local Git, and writable operating-system temporary storage are prerequ
 
 ## Suite contract
 
-Each of the sixteen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
+Each of the seventeen suites uses a versioned `cases.json` manifest with task-specific required signals, prohibited behavior, false-positive controls, trigger cases, and repository-state invariants. Repository-oriented suites also provide compact fixture templates and a standard-library `materialize_fixtures.py` command. The [behavior-first evaluation contract](behavior-first-contract.md) is the canonical, platform-neutral grading policy across all suites.
 
 The evaluation tree intentionally mirrors the flat plugin layout: every immediate `skills/<slug>/` package has one immediate `evals/<slug>/cases.json` suite. Category directories must not be introduced under either tree because Agent Plugin skill discovery requires each package to be an immediate child of `skills/`. Human-facing categories live in `docs/skills/README.md`, while `skills.sh.json` is the machine-readable grouping source.
 
@@ -58,7 +58,7 @@ Fixture references, including aliases, must resolve beneath the suite's `fixture
 
 ## Cross-skill routing matrix
 
-[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the sixteen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
+[`routing-matrix.json`](routing-matrix.json) indexes the prompts owned by the seventeen suite manifests instead of copying them. It declares the non-skill owner vocabulary, pairs one explicit and one natural-language invocation case for every skill, records each material reciprocal boundary once, and points to behavioral coverage for specialist handoffs, progressive disclosure, and full-catalog collisions.
 
 The common validator derives effective implicit-invocation policy from `skills/<slug>/agents/openai.yaml`; omission means the documented default `true`. Each explicit case must contain the exact `$slug` token and activate its skill. A natural-language case must contain no explicit skill mention and must follow that skill's effective policy. Boundary rows contain two sorted skill slugs and both negative routing directions, with every referenced trigger owned by the opposite skill.
 
@@ -76,7 +76,7 @@ python -B -m unittest evals/test_eval_manifests.py -v
 
 ## Stateful handoff evaluations
 
-The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the sixteen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation and resumption belong to the future `task-handoff` skill's evaluations.
+The root [handoff scenario index](handoff-scenarios.json) records ordered user turns, existing behavioral seeds, participants, authority, dynamic finding approvals, reviewed operator edits, evidence requirements, and preservation controls. Its versioned contract is separate from the seventeen suite manifests. The [manual execution protocol](handoff-workflow.md) requires successive turns in one ephemeral conversation and workspace, frozen inputs, per-turn snapshots, finite deadlines, and independent semantic review. Checkpoint creation, fresh-context transfer, and same-conversation resumption are covered separately by the [task-handoff suite protocol](task-handoff/README.md). Its focused personal-development inventory does not establish broader routing or distribution coverage.
 
 The single-turn comparison runner does not execute the index. Structural validation never launches a model or proves authority handling. The manual protocol permits explicitly attributed independent-agent semantic review for these handoff trials; the existing runner's human-review interface remains unchanged. Synthetic source records establish bounded evidence-handling behavior, not live-browser protection.
 

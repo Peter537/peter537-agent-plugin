@@ -377,7 +377,7 @@
       "id": "near-miss-session-summary",
       "prompt": "Summarize our session and preserve a checkpoint for tomorrow.",
       "expectActivation": false,
-      "expectedOwner": "no-skill"
+      "expectedOwner": "task-handoff"
     },
     {
       "id": "near-miss-active-incident",

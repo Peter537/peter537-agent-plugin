@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Handoff"
+  short_description: "Capture and resume explicitly requested task checkpoints"
+  default_prompt: "Use $task-handoff to capture a concise checkpoint in this conversation, preserving scope, decisions, evidence limits, and the next action without writing files."

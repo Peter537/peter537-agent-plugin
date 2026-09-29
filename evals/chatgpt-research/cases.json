@@ -134,7 +134,13 @@
     {"id": "near-miss-repository-only", "prompt": "Find where this repository registers its services.", "expectActivation": false, "expectedOwner": "repository-analysis"},
     {"id": "near-miss-direct-capture", "prompt": "Open this one page and copy the visible table exactly.", "expectActivation": false, "expectedOwner": "browser-workflow"},
     {"id": "near-miss-ordinary-search", "prompt": "Look up the latest stable version of this library.", "expectActivation": false, "expectedOwner": "browser-workflow"},
-    {"id": "near-miss-implementation-plan", "prompt": "Inspect this repository and prepare a decision-complete plan for splitting the service while preserving its contracts.", "expectActivation": false, "expectedOwner": "deep-planning"}
+    {"id": "near-miss-implementation-plan", "prompt": "Inspect this repository and prepare a decision-complete plan for splitting the service while preserving its contracts.", "expectActivation": false, "expectedOwner": "deep-planning"},
+    {
+      "id": "near-miss-task-handoff",
+      "prompt": "Save a handoff at notes/current-task.md with the current scope, decisions, evidence limits, and next action.",
+      "expectActivation": false,
+      "expectedOwner": "task-handoff"
+    }
   ],
   "liveCases": [
     {

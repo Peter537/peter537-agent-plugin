@@ -104,6 +104,11 @@
       "naturalLanguageTrigger": "implicit-same-request"
     },
     {
+      "skill": "task-handoff",
+      "explicitTrigger": "explicit-handoff",
+      "naturalLanguageTrigger": "natural-handoff"
+    },
+    {
       "skill": "ui-design-and-polish",
       "explicitTrigger": "trigger-explicit-invocation",
       "naturalLanguageTrigger": "trigger-product-ui-audit"
@@ -211,6 +216,29 @@
       "directions": [
         {"from": "chatgpt-research", "to": "deep-planning", "triggers": ["near-miss-implementation-plan"]},
         {"from": "deep-planning", "to": "chatgpt-research", "triggers": ["near-miss-deep-research"]}
+      ]
+    },
+    {
+      "id": "chatgpt-research--task-handoff",
+      "skills": [
+        "chatgpt-research",
+        "task-handoff"
+      ],
+      "directions": [
+        {
+          "from": "chatgpt-research",
+          "to": "task-handoff",
+          "triggers": [
+            "near-miss-task-handoff"
+          ]
+        },
+        {
+          "from": "task-handoff",
+          "to": "chatgpt-research",
+          "triggers": [
+            "near-miss-research"
+          ]
+        }
       ]
     },
     {
@@ -356,6 +384,29 @@
       ]
     },
     {
+      "id": "deep-planning--task-handoff",
+      "skills": [
+        "deep-planning",
+        "task-handoff"
+      ],
+      "directions": [
+        {
+          "from": "deep-planning",
+          "to": "task-handoff",
+          "triggers": [
+            "near-miss-task-handoff"
+          ]
+        },
+        {
+          "from": "task-handoff",
+          "to": "deep-planning",
+          "triggers": [
+            "near-miss-planning"
+          ]
+        }
+      ]
+    },
+    {
       "id": "deep-planning--ui-design-and-polish",
       "skills": ["deep-planning", "ui-design-and-polish"],
       "directions": [
@@ -450,6 +501,29 @@
       ]
     },
     {
+      "id": "docs-audit--task-handoff",
+      "skills": [
+        "docs-audit",
+        "task-handoff"
+      ],
+      "directions": [
+        {
+          "from": "docs-audit",
+          "to": "task-handoff",
+          "triggers": [
+            "near-miss-task-handoff"
+          ]
+        },
+        {
+          "from": "task-handoff",
+          "to": "docs-audit",
+          "triggers": [
+            "near-miss-docs-audit"
+          ]
+        }
+      ]
+    },
+    {
       "id": "docs-audit--ui-design-and-polish",
       "skills": ["docs-audit", "ui-design-and-polish"],
       "directions": [
@@ -506,6 +580,29 @@
       ]
     },
     {
+      "id": "retrospective--task-handoff",
+      "skills": [
+        "retrospective",
+        "task-handoff"
+      ],
+      "directions": [
+        {
+          "from": "retrospective",
+          "to": "task-handoff",
+          "triggers": [
+            "near-miss-session-summary"
+          ]
+        },
+        {
+          "from": "task-handoff",
+          "to": "retrospective",
+          "triggers": [
+            "near-miss-retrospective"
+          ]
+        }
+      ]
+    },
+    {
       "id": "retrospective--verification-context",
       "skills": [
         "retrospective",
@@ -524,6 +621,29 @@
           "to": "retrospective",
           "triggers": [
             "near-miss-retrospective"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "task-handoff--verification-context",
+      "skills": [
+        "task-handoff",
+        "verification-context"
+      ],
+      "directions": [
+        {
+          "from": "task-handoff",
+          "to": "verification-context",
+          "triggers": [
+            "near-miss-verification-context"
+          ]
+        },
+        {
+          "from": "verification-context",
+          "to": "task-handoff",
+          "triggers": [
+            "near-miss-task-handoff"
           ]
         }
       ]

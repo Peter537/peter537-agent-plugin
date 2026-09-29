@@ -4,10 +4,11 @@
   "groupings": [
     {
       "title": "Planning & research",
-      "description": "Research and plan complex software and product decisions.",
+      "description": "Research and plan complex decisions, and capture or resume explicitly requested task checkpoints.",
       "skills": [
         "deep-planning",
-        "chatgpt-research"
+        "chatgpt-research",
+        "task-handoff"
       ]
     },
     {

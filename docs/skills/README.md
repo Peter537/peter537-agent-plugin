@@ -10,6 +10,7 @@ This catalog organizes the plugin's skills for readers without changing their in
 | --- | --- | --- |
 | [`deep-planning`](../../skills/deep-planning/SKILL.md) | Research and clarify complex software changes before implementation. | [`cases.json`](../../evals/deep-planning/cases.json) |
 | [`chatgpt-research`](../../skills/chatgpt-research/SKILL.md) | Orchestrate and verify multi-source ChatGPT Deep Research. | [`cases.json`](../../evals/chatgpt-research/cases.json) |
+| [`task-handoff`](../../skills/task-handoff/SKILL.md) | Capture, update, and resume explicitly requested task checkpoints while preserving scope and current state. | [`cases.json`](../../evals/task-handoff/cases.json) |
 
 ## Engineering quality
 

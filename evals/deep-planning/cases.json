@@ -243,6 +243,12 @@
       "prompt": "Use $retrospective to assess this repeated workflow failure and recommend the narrowest supported disposition without implementing it.",
       "expectActivation": false,
       "expectedOwner": "retrospective"
+    },
+    {
+      "id": "near-miss-task-handoff",
+      "prompt": "Save a handoff at notes/current-task.md with the current scope, decisions, evidence limits, and next action.",
+      "expectActivation": false,
+      "expectedOwner": "task-handoff"
     }
   ]
 }
