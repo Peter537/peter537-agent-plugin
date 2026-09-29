@@ -48,7 +48,7 @@ Strong synthetic evidence includes reserved example domains, documentation IP ra
 
 ## Disposable migration signals
 
-Flag apparently single-use artifacts regardless of whether they embed private values:
+Use these signals to investigate whether an artifact is single-use, regardless of whether it embeds private values:
 
 - names or comments such as `one-off`, `run once`, `temporary`, `delete after`, `backfill`, `repair`, `convert my data`, or `manual migration`;
 - hard-coded source/destination paths, concrete record IDs, literal identity maps, local usernames, personal directories, tenant IDs, or date-bounded special cases;
@@ -58,10 +58,12 @@ Flag apparently single-use artifacts regardless of whether they embed private va
 
 Do not flag solely because an artifact transforms data when it is a maintained repeatable schema migration, supported upgrade path, reusable import/export tool, fixture generator, or product-owned operational job. Verify its lifecycle rather than trusting its directory name.
 
+A filename or absent ownership documentation alone does not verify disposable intent. Retain an unresolved weak signal as a candidate; distinguish a non-critical lifecycle question from a critical inability to inspect the requested scope. Explicit one-time intent or corroborating lifecycle evidence can establish a policy finding. This is independent of exposure: validate any private data or credential evidence separately, including in maintained tools. Do not call a harmless converter a demonstrated leak because it violates retirement policy.
+
 ## Confidence discipline
 
-- `high`: direct repository evidence establishes real or private data, an active credential, re-identification, or explicit one-time intent.
-- `medium`: multiple contextual signals support exposure but identity, authenticity, or lifecycle is not fully established.
+- `high`: direct repository evidence establishes real or private data, confidential credential material, re-identification, or explicit one-time intent. Credential usability can remain untested when confidentiality and unauthorized inclusion are already established.
+- `medium`: multiple contextual signals support possible exposure or disposable intent, but identity, authenticity, or lifecycle is not fully established.
 - `low`: pattern or filename signal needs local contextual review.
 
 Never downgrade direct evidence merely because exploitation or re-identification was not attempted. Never upgrade a detector match without validating its context.

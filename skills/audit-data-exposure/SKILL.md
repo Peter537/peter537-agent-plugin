@@ -60,30 +60,38 @@ Use already-installed secret, PII, metadata, archive, OCR, or database inspectio
 1. Inspect each candidate at its local source without copying its value into notes, commands, prompts, or the final report.
 2. Distinguish intentionally public attribution, clearly reserved synthetic examples, and product-supported generic migrations from actual exposure.
 3. Evaluate combinations of quasi-identifiers and external linkage. Pseudonyms, hashes, tokens, truncated values, or removed direct identifiers do not establish irreversible anonymization.
-4. Treat every apparently disposable one-time migration or conversion as a finding even if no literal private value is embedded. Do not classify a maintained repeatable schema migration, supported upgrade path, reusable import/export tool, or fixture generator as disposable solely because it transforms data.
+4. Validate lifecycle signals before confirming a disposable one-time migration or conversion. Every verified disposable artifact is a policy finding, even without private values; its lifecycle alone does not demonstrate exposure. Do not classify a maintained repeatable schema migration, supported upgrade path, reusable import/export tool, or fixture generator as disposable solely because it transforms data. Maintained lifecycle does not excuse independently verified exposure.
 5. Determine whether a finding exists only in current uncommitted content, in the index, in `HEAD`, or in reachable history and which refs preserve it.
 6. Classify unsupported binaries, images, PDFs, databases, encrypted archives, missing LFS objects, and unscanned submodules as gaps rather than silent passes.
 
 ## Decide the outcome
 
-- `PASS`: no verified exposure or disposable migration and no critical coverage gap.
-- `PASS_WITH_WARNINGS`: no confirmed finding, but lower-confidence candidates or non-critical gaps remain.
-- `FAIL`: confirmed unauthorized personal/private data, credential exposure, re-identifiable data presented as anonymous, or any disposable one-time migration.
-- `BLOCKED`: critical scope cannot be inspected safely or a high-confidence candidate cannot be resolved.
+Assess **exposure** and **disposable-migration policy** separately using the existing outcomes. Exposure fails for confirmed unauthorized personal/private data, credential exposure, or re-identifiable data presented as anonymous. Policy fails for every verified disposable one-time migration or conversion. The latter is this skill's strict retirement policy, not proof of a privacy leak or a legal requirement.
 
-A `PASS` remains limited to the reviewed scope and methods. Never turn it into a guarantee.
+Use local ownership and provenance evidence to establish confidentiality. When that evidence confirms confidential material is included without authorization, untested credential usability does not make the exposure unresolved. Report usability and impact limits separately; do not authenticate to resolve them. A pattern or confidentiality label without adequate provenance still requires validation.
+
+For each assessment, and then the overall result, apply this precedence:
+
+1. `FAIL` when a finding is verified. A known failure remains a failure even when other required evidence is blocked.
+2. Otherwise `BLOCKED` when critical scope cannot be inspected safely or a high-confidence candidate cannot be resolved.
+3. Otherwise `PASS_WITH_WARNINGS` when lower-confidence candidates or non-critical gaps remain.
+4. Otherwise `PASS` within the demonstrated scope and methods.
+
+Name the supported reason for the overall result and retain each assessment's gaps. For example, a harmless disposable converter can fail policy while no exposure is verified; an uninspectable required archive leaves exposure blocked without overriding that policy failure. Completing review actions does not mean the subject passed, coverage is complete, or release is approved. Never turn a bounded `PASS` into a guarantee.
 
 ## Report without leaking
 
-Lead with the coverage ledger, then the outcome and redacted findings. For each finding include:
+Lead with the coverage ledger, then the overall result and the two assessments. Separate exposure findings from disposable-migration policy findings; no fixed report syntax is required. For each finding include:
 
 - stable ID, category, severity, confidence, and disposition;
 - repository-relative path plus line, commit, ref, or archive-member location as applicable;
-- current, index, untracked, ignored, or historical exposure state;
-- why the item is not permitted public metadata or safe synthetic content;
+- current, index, untracked, ignored, or historical location state;
+- exposure evidence and why public/synthetic exceptions do not apply, or lifecycle evidence establishing the policy violation, as appropriate;
 - introduction/removal evidence and whether reachable history still contains it;
 - remediation direction and a verification method, without reproducing the value.
 
 Also report excluded and blocked surfaces, scanner/tool commands, unexpected mutations, and the final Git status comparison. If no finding survives validation, say so while preserving coverage limitations.
+
+Link findings when an artifact supports both reasons independently. Do not invent leaked records, compromised credentials, or disclosure impact for a policy-only artifact. Recommend retirement for the lifecycle finding; recommend exposure containment only when supported by exposure evidence. Neither recommendation authorizes edits.
 
 For committed exposure, recommend containment and coordinated cleanup but do not execute it. For credentials, recommend revocation or rotation before history cleanup. Explain that clones, forks, pull-request refs, cached commit views, LFS storage, release artifacts, and mirrors may retain data after current files change.

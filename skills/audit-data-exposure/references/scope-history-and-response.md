@@ -54,7 +54,7 @@ When exposure is committed:
 
 ## Findings and outcome
 
-Use stable finding IDs and include severity, confidence, repository-relative location, exposure state, affected refs, evidence rationale, remediation direction, and verification. Redact values and snippets.
+Separate exposure findings from disposable-migration policy findings. Use stable finding IDs and include severity, confidence, repository-relative location and state, affected refs, evidence rationale, remediation direction, and verification. Redact values and snippets. For a policy finding, substantiate disposable lifecycle rather than requiring a private value or explaining why harmless data is unsafe. Where both reasons are supported, link their evidence without suggesting that retiring code resolves committed exposure.
 
 Suggested severity:
 
@@ -63,7 +63,9 @@ Suggested severity:
 - `P2`: material personal/private record, re-identification risk, private infrastructure detail, or disposable migration with realistic disclosure/maintenance impact.
 - `P3`: contained private metadata or low-impact disposable artifact that still violates repository policy.
 
-Use the overall outcomes defined in `SKILL.md`. `PASS` means no verified finding within demonstrated coverage; it never means that automated tools proved the absence of personal data.
+Severity describes supported impact, not the strictness of the aggregate policy. A low-impact policy-only finding can be `P3` and still cause `FAIL`; do not manufacture disclosure impact to justify failure.
+
+Use the separate assessments and overall precedence defined in `SKILL.md`. Preserve a confirmed failure while disclosing critical gaps in the other assessment. Distinguish completed review work from a passing subject assessment. `PASS` means no verified finding within demonstrated coverage; it never means that automated tools proved the absence of personal data.
 
 ## Remediation directions
 
@@ -76,5 +78,7 @@ Recommend the least risky applicable direction without implementing it:
 - reduce quasi-identifiers or redesign datasets when re-identification remains plausible;
 - strengthen ignore rules, staging review, local pre-commit checks, CI scanning, fixture policy, and release inventories;
 - plan coordinated history/artifact cleanup when current-file removal is insufficient.
+
+Choose directions by the finding's evidence. A harmless disposable artifact needs a retirement recommendation, not credential rotation or sensitive-history cleanup. Credential exposure needs containment regardless of whether the surrounding tool is maintained or disposable. The existing GitHub source above supports credential/history response; it does not establish this skill's disposable-artifact policy.
 
 Do not prescribe a legal notification or regulatory conclusion. Identify when privacy, legal, security, or incident-response specialists may be needed.

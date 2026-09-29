@@ -207,7 +207,7 @@ Do not track account-specific browser state, conversation URLs, reports, screens
 
 The repository intentionally has no claim of complete automation. These gaps remain owned by later roadmap work or explicit external procedures:
 
-- Behavioral comparisons require semantic review and configuration-specific native execution evidence. The single-turn runner retains human review; the contract narrowly permits independent-agent review for manual handoff and installed-distribution trials. Bounded native coverage does not certify future runs or skill improvements. Routing comparisons remain manual.
+- Behavioral comparisons require semantic review and configuration-specific native execution evidence. The single-turn runner retains human review; the contract narrowly permits independent-agent review for manual handoff, installed-distribution, and [privacy-verdict comparisons](../evals/README.md#manual-privacy-verdict-comparisons). Bounded native coverage does not certify future runs or skill improvements. Routing comparisons remain manual.
 - `OFFLINE-01` provides bounded JSON, YAML/frontmatter, Python, and local Markdown-link checks, but no repository-owned command fully validates YAML semantics, every skill resource relationship, Agent Plugins manifests, MCP manifests, marketplace metadata, or the Skills.sh schema.
 - Installed distribution has reusable offline checks and a manual native procedure; there is no general installer runner. No repository-owned MCP `tools/list` harness, Skills.sh ingestion check, portal validator, or release/tag/archive verifier exists.
 - Asset-path validation does not replace dimension, format, full-size, and thumbnail inspection.

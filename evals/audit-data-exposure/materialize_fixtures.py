@@ -180,6 +180,11 @@ def load_manifest() -> dict[str, Any]:
             timing = require_text(git, "canaryTiming", f"case {case_id}.git")
             if timing not in {"before-base", "worktree"}:
                 raise FixtureError(f"Case {case_id} has an unsupported canary timing.")
+            kind = git.get("canaryKind", "private-record")
+            if not isinstance(kind, str) or kind not in {"private-record", "credential"}:
+                raise FixtureError(f"Case {case_id} has an unsupported canary kind.")
+        elif "canaryKind" in git:
+            raise FixtureError(f"Case {case_id} declares a canary kind without a path.")
 
         expected = case.get("expected")
         if not isinstance(expected, dict):
@@ -290,10 +295,19 @@ def copy_overlay(source: Path, destination: Path) -> None:
         shutil.copy2(item, target)
 
 
-def inject_private_canary(repository: Path, relative_path: str) -> None:
+def inject_private_canary(repository: Path, relative_path: str, kind: str = "private-record") -> None:
     requested = safe_relative_path(relative_path, "canaryPath")
+    if not isinstance(kind, str) or kind not in {"private-record", "credential"}:
+        raise FixtureError("Unsupported canary kind.")
     destination = repository / requested
     destination.parent.mkdir(parents=True, exist_ok=True)
+    if kind == "credential":
+        # Inert local evaluation material: never provision or authenticate it.
+        destination.write_text(
+            "# Confidential service configuration; not a public example.\n"
+            f'api_key="{secrets.token_hex(24)}"\n', encoding="utf-8"
+        )
+        return
     token = f"private-{secrets.token_hex(18)}@example.invalid"
     destination.write_text(
         "full_name,email,private_path\n"
@@ -354,7 +368,7 @@ def materialize_case(case: dict[str, Any], output_root: Path) -> Path:
     if scenario == "coverage-gaps":
         (destination / "binary.dat").write_bytes(b"\x00\x01\x02evaluation")
     if git.get("canaryTiming") == "before-base":
-        inject_private_canary(destination, git["canaryPath"])
+        inject_private_canary(destination, git["canaryPath"], git.get("canaryKind", "private-record"))
     initialize_repository(destination)
 
     if scenario == "changes":
@@ -362,7 +376,7 @@ def materialize_case(case: dict[str, Any], output_root: Path) -> Path:
         for value in git.get("stagePaths", []):
             run_git(destination, "add", "--", value)
         if git.get("canaryTiming") == "worktree":
-            inject_private_canary(destination, git["canaryPath"])
+            inject_private_canary(destination, git["canaryPath"], git.get("canaryKind", "private-record"))
     elif scenario == "renamed-history":
         (destination / "selected").mkdir(exist_ok=True)
         run_git(destination, "mv", "legacy/person@example.invalid.txt", "selected/current.txt")

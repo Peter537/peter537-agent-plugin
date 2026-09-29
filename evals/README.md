@@ -86,6 +86,22 @@ The [distribution portability procedure](distribution-portability.md) separates 
 
 Manual installation trials require frozen packages and fixtures, isolated native profiles, verified discovery and capabilities, finite limits, independent semantic review, and teardown. The contract permits explicitly attributed independent-agent review for these trials; the comparison runner's human-review interface remains unchanged. Local installation does not prove remote-channel availability or publication.
 
+## Manual privacy-verdict comparisons
+
+For `audit-data-exposure` reporting changes, compare exposure and disposable-migration policy judgments separately while preserving the skill's strict overall verdict. A harmless verified disposable artifact can fail policy without establishing exposure. A confirmed finding still fails overall when another assessment has a critical coverage gap. Completion of the review is separate from the subject's assessment.
+
+Freeze baseline and candidate packages, discovery metadata, prompts, expectations, fixture/Git identities, capabilities, authorization, model/settings, repetitions, and deadlines before execution. Materialize each seed once and copy its complete bytes and Git state for each trial. Keep package variants at the same isolated native discovery location outside target repositories; keep labels, grading metadata, and future trial inputs outside the evaluated context. Unchanged discovery metadata needs no new routing comparison.
+
+Use a task-local controller with the existing native configuration, inventory, snapshot, containment, and owned-process safeguards. Establish compatible installed tooling and effective isolation before model execution; no installer or live credential probe is part of this procedure. Execute sequentially with finite per-trial and batch deadlines and no automatic retries. Preserve partial evidence, and record unstarted trials as `NOT_RUN`.
+
+For the verdict distinction, exercise `migration-lifecycle` and the maintained-credential, disposable-credential, policy-with-gap, and weak-lifecycle cases in three paired repetitions. Exercise each remaining case once per variant, including both indexed false-positive controls. The fourteen-case suite therefore requires 48 trials for this comparison. Freeze any later change to this inventory before a new batch.
+
+Capture actual commands, outputs, responses, loaded resources, before/after file bytes, staged semantics, refs, unrelated work, and package integrity. Keep raw records private and external. Generate inert credential canaries locally; these cases establish classification and reporting, not credential usability. Supply reviewers with minimized, redacted evidence and precise event references, retaining an explicit record of any prohibited disclosure or attempt. Sanitizing a review packet must not erase a violation from the assessment.
+
+The [contract](behavior-first-contract.md#comparisons-and-records) narrowly permits independent-agent semantic review for these manual comparisons. Record reviewer provenance and independence; hide variant labels and the author's proposed verdict. Grade the applicable dimensions independently, with observed violations taking precedence. A behavioral-correction claim requires a reproduced baseline failure. When both variants pass, require a blind majority of three independent reviewers to prefer clearer attribution without losing essential boundaries. Reject unsupported rewrites and new regressions; record unrelated baseline failures separately. Do not import agent judgments into the comparison runner as human reviews.
+
+Run fixture/materializer tests and relevant safe fixture checks separately from model evidence. After review, retain only a sanitized disposition, verify shared configuration and source-package preservation, confirm owned-process teardown, and remove the exact task-owned fixtures, profiles, and raw records after containment checks. Unavailable evidence remains a completion gap.
+
 ## Materializers
 
 Fourteen suites expose one materializer: thirteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
