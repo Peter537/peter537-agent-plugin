@@ -615,6 +615,7 @@
       "prompt": "Use $retrospective to assess this repeated workflow failure and recommend the narrowest supported disposition without implementing it.",
       "expectActivation": false,
       "expectedOwner": "retrospective"
-    }
+    },
+    {"id": "near-miss-steering-review", "prompt": "Review AGENTS.md for contradictory authority, stale commands and unnecessary mandatory reading.", "expectActivation": false, "expectedOwner": "steering-review"}
   ]
 }

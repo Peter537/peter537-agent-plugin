@@ -109,6 +109,7 @@
       "explicitTrigger": "explicit-retrospective",
       "naturalLanguageTrigger": "implicit-same-request"
     },
+    {"skill": "steering-review", "explicitTrigger": "explicit-review", "naturalLanguageTrigger": "natural-review"},
     {
       "skill": "task-handoff",
       "explicitTrigger": "explicit-handoff",
@@ -469,6 +470,7 @@
         }
       ]
     },
+    {"id": "deep-code-audit--steering-review", "skills": ["deep-code-audit", "steering-review"], "directions": [{"from": "deep-code-audit", "to": "steering-review", "triggers": ["near-miss-steering-review"]}, {"from": "steering-review", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}]},
     {
       "id": "deep-code-audit--verify-change",
       "skills": ["deep-code-audit", "verify-change"],
@@ -508,6 +510,7 @@
         }
       ]
     },
+    {"id": "deep-planning--steering-review", "skills": ["deep-planning", "steering-review"], "directions": [{"from": "deep-planning", "to": "steering-review", "triggers": ["near-miss-steering-review"]}, {"from": "steering-review", "to": "deep-planning", "triggers": ["near-miss-planning"]}]},
     {
       "id": "deep-planning--task-handoff",
       "skills": [
@@ -625,6 +628,7 @@
         }
       ]
     },
+    {"id": "docs-audit--steering-review", "skills": ["docs-audit", "steering-review"], "directions": [{"from": "docs-audit", "to": "steering-review", "triggers": ["near-miss-steering-review"]}, {"from": "steering-review", "to": "docs-audit", "triggers": ["near-miss-docs-audit"]}]},
     {
       "id": "docs-audit--task-handoff",
       "skills": [
@@ -704,6 +708,7 @@
         {"from": "ui-design-and-polish", "to": "reduce-code-slop", "triggers": ["near-miss-code-simplification"]}
       ]
     },
+    {"id": "retrospective--steering-review", "skills": ["retrospective", "steering-review"], "directions": [{"from": "retrospective", "to": "steering-review", "triggers": ["near-miss-steering-review"]}, {"from": "steering-review", "to": "retrospective", "triggers": ["near-miss-retrospective"]}]},
     {
       "id": "retrospective--task-handoff",
       "skills": [
@@ -750,6 +755,8 @@
         }
       ]
     },
+    {"id": "steering-review--verification-context", "skills": ["steering-review", "verification-context"], "directions": [{"from": "steering-review", "to": "verification-context", "triggers": ["near-miss-verification-context"]}, {"from": "verification-context", "to": "steering-review", "triggers": ["near-miss-steering-review"]}]},
+    {"id": "steering-review--write-clearly", "skills": ["steering-review", "write-clearly"], "directions": [{"from": "steering-review", "to": "write-clearly", "triggers": ["near-miss-wording"]}, {"from": "write-clearly", "to": "steering-review", "triggers": ["near-miss-steering-review"]}]},
     {
       "id": "task-handoff--verification-context",
       "skills": [

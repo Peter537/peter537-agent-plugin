@@ -499,6 +499,7 @@
       "prompt": "Use $verification-context to create or update this repository's authoritative verification context from existing evidence.",
       "expectActivation": false,
       "expectedOwner": "verification-context"
-    }
+    },
+    {"id": "near-miss-steering-review", "prompt": "Review AGENTS.md for contradictory authority, stale commands and unnecessary mandatory reading.", "expectActivation": false, "expectedOwner": "steering-review"}
   ]
 }

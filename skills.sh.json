@@ -13,7 +13,7 @@
     },
     {
       "title": "Engineering quality",
-      "description": "Build verification paths, maintain verification context, investigate defects, verify completed changes, audit implementations, test value, and comments, simplify code, and retire obsolete surface safely.",
+      "description": "Review agent guidance, build verification paths, maintain verification context, investigate defects, verify completed changes, audit implementations, test value, and comments, simplify code, and retire obsolete surface safely.",
       "skills": [
         "deep-code-audit",
         "audit-tests",
@@ -24,7 +24,8 @@
         "comment-health",
         "prune-codebase",
         "reduce-code-slop",
-        "retrospective"
+        "retrospective",
+        "steering-review"
       ]
     },
     {

@@ -692,6 +692,7 @@
       "prompt": "Save a handoff at notes/current-task.md with the current scope, decisions, evidence limits, and next action.",
       "expectActivation": false,
       "expectedOwner": "task-handoff"
-    }
+    },
+    {"id": "near-miss-steering-review", "prompt": "Review AGENTS.md for contradictory authority, stale commands and unnecessary mandatory reading.", "expectActivation": false, "expectedOwner": "steering-review"}
   ]
 }

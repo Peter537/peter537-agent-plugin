@@ -390,6 +390,7 @@
       "prompt": "Fix the spelling error in this Python identifier and its references.",
       "expectActivation": false,
       "expectedOwner": "ordinary-implementation"
-    }
+    },
+    {"id": "near-miss-steering-review", "prompt": "Review AGENTS.md for contradictory authority, stale commands and unnecessary mandatory reading.", "expectActivation": false, "expectedOwner": "steering-review"}
   ]
 }

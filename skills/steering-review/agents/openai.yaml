@@ -1,0 +1,4 @@
+interface:
+  display_name: "Steering Review"
+  short_description: "Review agent instructions and fix authorized problems"
+  default_prompt: "Use $steering-review to review this agent guidance for consequential problems and recommend focused, evidence-backed changes without editing files."
