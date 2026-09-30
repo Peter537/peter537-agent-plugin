@@ -191,3 +191,7 @@ The [build-verification-harness protocol](build-verification-harness/README.md) 
 ## Focused instruction-review checks
 
 The [steering-review protocol](steering-review/README.md) covers four focused review/edit scenarios, limited routing, independent semantic review, and preserved state. Its personal-development exception does not replace broader release or distribution coverage.
+
+## Focused application-security checks
+
+The [deep-code-audit security procedure](deep-code-audit/README.md) maps existing coverage to three missing state-boundary scenarios, concrete remediation handoffs, eight focused audit trials, independent replay/review, and preservation checks. Its personal-development scope keeps full suites and broader release evidence separate.

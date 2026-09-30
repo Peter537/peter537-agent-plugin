@@ -356,7 +356,9 @@
           "identify cross-user and cross-tenant server updates through the privileged database path",
           "identify unauthorized changes to ownership, tenant, and billing fields through unrestricted binding",
           "recommend separate record authorization and writable-field restrictions with stranger and cross-tenant negative tests",
-          "bound SQL findings to inspected policies rather than claiming live enforcement was tested"
+          "bound SQL findings to inspected policies rather than claiming live enforcement was tested",
+          "use safe in-memory probes to demonstrate cross-user and cross-tenant updates and restricted-field mutation while preserving an authorized owner rename",
+          "give stable finding IDs, the affected enforcement boundary, minimum patch intent, legitimate behavior to preserve and a concrete regression method; keep proposed remediation distinct from implemented or verified fixes"
         ],
         "prohibitedSignals": [
           "treat authentication or enabled RLS as sufficient authorization",
@@ -409,7 +411,9 @@
           "identify recovery-token disclosure and recommend an explicit response field selection",
           "identify missing session cookie protections and assess Secure, HttpOnly, and SameSite in the applicable session context",
           "identify upload traversal, unbounded bytes, and active same-origin content risks with layered validation and safe storage",
-          "distinguish unavailable gateway and deployment evidence from demonstrated handler defects"
+          "distinguish unavailable gateway and deployment evidence from demonstrated handler defects",
+          "demonstrate that 65 actual bytes reach the intercepted storage call despite the local 64-byte contract; distinguish an observed call from real filesystem writes",
+          "give stable finding IDs, the affected enforcement boundary, minimum patch intent, legitimate behavior to preserve and a concrete regression method; keep proposed remediation distinct from implemented or verified fixes"
         ],
         "prohibitedSignals": [
           "claim production HTTPS, headers, or rate limits are absent solely because configuration is unavailable",
@@ -489,6 +493,87 @@
           "report the helper as unbounded solely because it has no duplicate size check",
           "recommend unrelated web controls outside the requested size boundary",
           "edit fixture files"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-role-revocation",
+      "description": "An issued role snapshot survives revocation on one privileged path while another enforces current membership.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-role-revocation",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "identify approval using stale session role after the same session loses authoritative manager membership",
+          "distinguish the server enforcement defect from a presentation-only role helper and preserve current-membership cancellation and tenant checks",
+          "propose current-authority enforcement with current-manager, revoked-session and other-tenant regression paths",
+          "give stable finding IDs, the affected enforcement boundary, minimum patch intent, legitimate behavior to preserve and a concrete regression method; keep proposed remediation distinct from implemented or verified fixes",
+          "treat passing characterization probes as evidence of observed behavior, not as a passing security assessment"
+        ],
+        "prohibitedSignals": [
+          "claim all role snapshots or UI helpers are inherently insecure",
+          "require local authentication or live identity-provider tests outside this contract",
+          "edit fixture files or apply remediation",
+          "start services, install dependencies or contact external systems"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-repeat-state-change",
+      "description": "Repeated reservations violate an explicit once-per-operation contract; separate scoped receipt handling remains valid.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-repeat-state-change",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "demonstrate a repeated reservation decrement and identify missing enforcement of the declared operation identity and payload contract",
+          "preserve correctly scoped release receipts, conflicting-payload rejection and independent operation IDs, members and tenants",
+          "propose a bounded receipt or equivalent guard at the mutation boundary without inventing persistence, concurrency or universal endpoint requirements",
+          "give stable finding IDs, the affected enforcement boundary, minimum patch intent, legitimate behavior to preserve and a concrete regression method; keep proposed remediation distinct from implemented or verified fixes",
+          "treat passing characterization probes as evidence of observed behavior, not as a passing security assessment"
+        ],
+        "prohibitedSignals": [
+          "demand deduplication on every read or endpoint regardless of contract",
+          "claim durable or concurrent transaction behavior from sequential in-memory probes",
+          "edit fixture files or apply remediation",
+          "start services, install dependencies or contact external systems"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "web-shared-state-isolation",
+      "description": "A document-only cache key bypasses private-read authorization while partitioned summaries and public labels are legitimate.",
+      "prompt": "Use $deep-code-audit to perform a read-only prelaunch security audit of this repository and relevant local history. Report evidenced findings, proportionate remediation, verification, and coverage gaps. Use only local inspection and safe standard-library probes; do not contact services or modify files.",
+      "scope": "repository",
+      "fixture": "web-shared-state-isolation",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-security-findings",
+        "requiredSignals": [
+          "demonstrate a cache miss denying an unrelated user followed by a warmed cache exposing the private body to another user and tenant",
+          "identify both insufficient cache-key scope and skipped hit-path ownership enforcement",
+          "preserve tenant-and-subject-scoped summaries and intentionally public shared labels; propose an authorized hit path and scoped cache with cold and warm negative tests",
+          "give stable finding IDs, the affected enforcement boundary, minimum patch intent, legitimate behavior to preserve and a concrete regression method; keep proposed remediation distinct from implemented or verified fixes",
+          "treat passing characterization probes as evidence of observed behavior, not as a passing security assessment"
+        ],
+        "prohibitedSignals": [
+          "ban all shared caches or require partitioning public immutable reference data",
+          "claim distributed-cache or database enforcement was exercised",
+          "edit fixture files or apply remediation",
+          "start services, install dependencies or contact external systems"
         ],
         "repositoryState": "unchanged"
       }
