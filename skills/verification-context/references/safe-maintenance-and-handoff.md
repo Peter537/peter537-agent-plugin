@@ -20,7 +20,7 @@ A wrapper is not a new harness. Create or update one only when all of these are 
 4. The wrapper performs direct sequencing and propagates exit status.
 5. It adds no assertion, retry, fallback, dependency, secret argument, environment mutation, service definition, fixture, or verification behavior.
 
-Otherwise report the desired sequencing as a gap or route missing harness implementation to ordinary implementation work. Route any new dependency or tool through `$audit-dependencies` before installation or configuration.
+Otherwise report the desired sequencing as a gap. Missing harness code belongs to separately authorized harness authoring: name `build-verification-harness` when available, with ordinary implementation as the fallback. Recording this handoff does not authorize implementation or change the read-only and exact-location boundaries above. Route any new dependency or tool through `$audit-dependencies` before installation or configuration.
 
 ## Hand off to verification
 

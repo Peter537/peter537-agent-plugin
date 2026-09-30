@@ -151,7 +151,7 @@
       "git": {"mode": "clean", "expectedStatus": []},
       "expected": {
         "outcome": "UPDATED",
-        "requiredSignals": ["record the API command and its narrow evidence boundary", "mark rendered interaction blocked because no safe entrypoint or harness exists", "identify ordinary implementation as the owner of missing harness code"],
+        "requiredSignals": ["record the API command and its narrow evidence boundary", "mark rendered interaction blocked because no safe entrypoint or harness exists", "identify separately authorized build-verification-harness work when available, or ordinary implementation as the fallback, without starting that work"],
         "prohibitedSignals": ["create HTML, a server, tests, or Playwright", "claim API output proves UI behavior", "remove the browser criterion"],
         "repositoryState": "only docs/verification.md is modified"
       }
@@ -261,7 +261,7 @@
     {"id": "near-miss-docs-audit", "prompt": "Use $docs-audit to comprehensively reconcile and restructure all project and operator documentation against the implementation.", "expectActivation": false, "expectedOwner": "docs-audit"},
     {"id": "near-miss-planning", "prompt": "Use $deep-planning to decide the unresolved authentication, environment, and rollback design before any verification procedure is documented.", "expectActivation": false, "expectedOwner": "deep-planning"},
     {"id": "near-miss-dependency-addition", "prompt": "Use $audit-dependencies before adding Playwright and a browser runtime for verification.", "expectActivation": false, "expectedOwner": "audit-dependencies"},
-    {"id": "near-miss-harness-implementation", "prompt": "Implement the missing dependency-free test harness and its fixtures from this decision-complete specification.", "expectActivation": false, "expectedOwner": "ordinary-implementation"},
+    {"id": "near-miss-harness-implementation", "prompt": "Implement the missing dependency-free test harness and its fixtures from this decision-complete specification.", "expectActivation": false, "expectedOwner": "build-verification-harness"},
     {"id": "near-miss-bug-diagnosis", "prompt": "Use $diagnose-bugs to reproduce why the maintained verification command fails and repair the root cause.", "expectActivation": false, "expectedOwner": "diagnose-bugs"},
     {"id": "near-miss-single-check", "prompt": "Run python -B verify_contract.py and tell me its exit status.", "expectActivation": false, "expectedOwner": "no-skill"},
     {"id": "near-miss-release", "prompt": "Prepare the release commit, annotated tag, skills-only archive, and publication handoff.", "expectActivation": false, "expectedOwner": "release-workflow"},

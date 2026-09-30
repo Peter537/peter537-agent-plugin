@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Verification Harness"
+  short_description: "Build meaningful verification and strengthen weak tests"
+  default_prompt: "Use $build-verification-harness to build the smallest missing proof of this established contract using the existing test infrastructure."

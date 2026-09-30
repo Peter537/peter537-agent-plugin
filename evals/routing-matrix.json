@@ -55,6 +55,11 @@
     },
     {"skill": "audit-tests", "explicitTrigger": "explicit-audit", "naturalLanguageTrigger": "natural-test-value"},
     {
+      "skill": "build-verification-harness",
+      "explicitTrigger": "explicit-harness",
+      "naturalLanguageTrigger": "natural-harness"
+    },
+    {
       "skill": "chatgpt-research",
       "explicitTrigger": "trigger-explicit-deep-research",
       "naturalLanguageTrigger": "trigger-standards-comparison"
@@ -211,10 +216,125 @@
         {"from": "verify-change", "to": "audit-dependencies", "triggers": ["near-miss-dependency-tool"]}
       ]
     },
+    {
+      "id": "audit-tests--build-verification-harness",
+      "skills": [
+        "audit-tests",
+        "build-verification-harness"
+      ],
+      "directions": [
+        {
+          "from": "audit-tests",
+          "to": "build-verification-harness",
+          "triggers": [
+            "near-miss-missing-verification"
+          ]
+        },
+        {
+          "from": "build-verification-harness",
+          "to": "audit-tests",
+          "triggers": [
+            "near-miss-test-value"
+          ]
+        }
+      ]
+    },
     {"id": "audit-tests--deep-code-audit", "skills": ["audit-tests", "deep-code-audit"], "directions": [{"from": "audit-tests", "to": "deep-code-audit", "triggers": ["near-miss-broad-audit"]}, {"from": "deep-code-audit", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
     {"id": "audit-tests--diagnose-bugs", "skills": ["audit-tests", "diagnose-bugs"], "directions": [{"from": "audit-tests", "to": "diagnose-bugs", "triggers": ["near-miss-flake"]}, {"from": "diagnose-bugs", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
     {"id": "audit-tests--prune-codebase", "skills": ["audit-tests", "prune-codebase"], "directions": [{"from": "audit-tests", "to": "prune-codebase", "triggers": ["near-miss-retirement"]}, {"from": "prune-codebase", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
     {"id": "audit-tests--verify-change", "skills": ["audit-tests", "verify-change"], "directions": [{"from": "audit-tests", "to": "verify-change", "triggers": ["near-miss-acceptance"]}, {"from": "verify-change", "to": "audit-tests", "triggers": ["near-miss-test-value"]}]},
+    {
+      "id": "build-verification-harness--diagnose-bugs",
+      "skills": [
+        "build-verification-harness",
+        "diagnose-bugs"
+      ],
+      "directions": [
+        {
+          "from": "build-verification-harness",
+          "to": "diagnose-bugs",
+          "triggers": [
+            "near-miss-diagnosis"
+          ]
+        },
+        {
+          "from": "diagnose-bugs",
+          "to": "build-verification-harness",
+          "triggers": [
+            "near-miss-harness-authoring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build-verification-harness--maui-blazor-browser",
+      "skills": [
+        "build-verification-harness",
+        "maui-blazor-browser"
+      ],
+      "directions": [
+        {
+          "from": "build-verification-harness",
+          "to": "maui-blazor-browser",
+          "triggers": [
+            "near-miss-maui"
+          ]
+        },
+        {
+          "from": "maui-blazor-browser",
+          "to": "build-verification-harness",
+          "triggers": [
+            "near-miss-harness-authoring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build-verification-harness--verification-context",
+      "skills": [
+        "build-verification-harness",
+        "verification-context"
+      ],
+      "directions": [
+        {
+          "from": "build-verification-harness",
+          "to": "verification-context",
+          "triggers": [
+            "near-miss-context"
+          ]
+        },
+        {
+          "from": "verification-context",
+          "to": "build-verification-harness",
+          "triggers": [
+            "near-miss-harness-implementation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "build-verification-harness--verify-change",
+      "skills": [
+        "build-verification-harness",
+        "verify-change"
+      ],
+      "directions": [
+        {
+          "from": "build-verification-harness",
+          "to": "verify-change",
+          "triggers": [
+            "near-miss-acceptance"
+          ]
+        },
+        {
+          "from": "verify-change",
+          "to": "build-verification-harness",
+          "triggers": [
+            "near-miss-harness-authoring"
+          ]
+        }
+      ]
+    },
     {
       "id": "chatgpt-research--deep-planning",
       "skills": ["chatgpt-research", "deep-planning"],

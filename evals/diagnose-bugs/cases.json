@@ -516,6 +516,7 @@
       "prompt": "Use $retrospective to assess this repeated workflow failure and recommend the narrowest supported disposition without implementing it.",
       "expectActivation": false,
       "expectedOwner": "retrospective"
-    }
+    },
+    {"id": "near-miss-harness-authoring", "prompt": "Build the smallest missing verification harness for this established persistence contract without repairing production behavior.", "expectActivation": false, "expectedOwner": "build-verification-harness"}
   ]
 }

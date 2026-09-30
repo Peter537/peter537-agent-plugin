@@ -168,7 +168,7 @@
       "id": "near-miss-missing-verification",
       "prompt": "Implement the already-specified missing response assertion in this existing verification harness.",
       "expectActivation": false,
-      "expectedOwner": "ordinary-implementation"
+      "expectedOwner": "build-verification-harness"
     },
     {
       "id": "near-miss-acceptance",

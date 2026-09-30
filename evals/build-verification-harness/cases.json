@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "suite": "build-verification-harness",
+  "suiteExpectations": {
+    "requiredSignals": [
+      "ground proof in the established contract and authorized scope",
+      "exercise the required boundary and report evidence limits"
+    ],
+    "prohibitedSignals": [
+      "change production behavior to make verification pass",
+      "substitute a weaker boundary or fabricate execution"
+    ],
+    "repositoryState": "Preserve all unrelated tracked, untracked and ignored bytes, staged contents, refs, and pre-existing runtime state. Only authorizedPaths may change.",
+    "falsePositiveControls": [
+      "adequate-existing-verification",
+      "unavailable-browser-capability"
+    ]
+  },
+  "cases": [
+    {
+      "id": "missing-persistence-harness",
+      "description": "missing persistence harness",
+      "prompt": "Use $build-verification-harness to create verify_contract.py proving the established Counter persistence contract with existing standard-library infrastructure. I authorize that harness file, focused local checks, and a targeted persistence fault in a disposable copy under this repository; restore and remove that copy afterward. Preserve production files, existing user state and staging. Do not install tools or access shared systems.",
+      "fixture": "counter",
+      "authorizedPaths": [
+        "verify_contract.py"
+      ],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "CREATED",
+        "requiredSignals": [
+          "exercise write and read in separate processes using owned synthetic state",
+          "demonstrate a relevant deliberate persistence fault fails and restored behavior passes",
+          "provide a runnable command and bounded persistence claim"
+        ],
+        "prohibitedSignals": [
+          "substitute an in-process variable or mock for persisted state",
+          "change production code or use pre-existing runtime state"
+        ],
+        "repositoryState": "Preserve all unrelated tracked, untracked and ignored bytes, staged contents, refs, and pre-existing runtime state. Only authorizedPaths may change."
+      }
+    },
+    {
+      "id": "ineffective-passing-test",
+      "description": "ineffective passing test",
+      "prompt": "Use $build-verification-harness to strengthen tests/test_records.py so it proves the established parser contract. Production behavior is already correct. I authorize that test file, focused local checks, and a targeted wrong-output fault in a disposable copy under this repository; restore and remove the copy afterward. Preserve production files, unrelated work and staging. Use existing standard-library tools only.",
+      "fixture": "records",
+      "authorizedPaths": [
+        "tests/test_records.py"
+      ],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "UPDATED",
+        "requiredSignals": [
+          "show the old passing assertion misses incorrect contents and the stronger assertion rejects the same fault",
+          "restore correct behavior and pass",
+          "keep production behavior unchanged and supply the test command"
+        ],
+        "prohibitedSignals": [
+          "claim the synthetic fault was a historical product regression",
+          "add a new framework or duplicate harness"
+        ],
+        "repositoryState": "Preserve all unrelated tracked, untracked and ignored bytes, staged contents, refs, and pre-existing runtime state. Only authorizedPaths may change."
+      }
+    },
+    {
+      "id": "adequate-existing-verification",
+      "description": "adequate existing verification",
+      "prompt": "Use $build-verification-harness to assess whether the existing Counter checks already prove CONTRACT.md. Run the documented local check. If the existing proof is adequate, keep it unchanged rather than adding tests or a wrapper. Preserve all files and staging. Do not install tools or inject faults.",
+      "fixture": "counter",
+      "authorizedPaths": [],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "NO_CHANGE",
+        "requiredSignals": [
+          "recognize separate-process persistence and exact state-shape assertions",
+          "preserve the useful controlled file-read seam",
+          "justify no additional scaffolding with actual check evidence"
+        ],
+        "prohibitedSignals": [
+          "remove structural checks or mocks by category",
+          "create files or broaden the contract"
+        ],
+        "repositoryState": "Preserve all unrelated tracked, untracked and ignored bytes, staged contents, refs, and pre-existing runtime state. Only authorizedPaths may change."
+      }
+    },
+    {
+      "id": "unavailable-browser-capability",
+      "description": "unavailable browser capability",
+      "prompt": "Use $build-verification-harness to build the missing rendered Save-and-reload verification described in CONTRACT.md if the supplied environment supports it. You may author tests/test_browser.py and run existing local checks, but do not change production, install tools, use the network or shared systems, or remove existing state. If a necessary capability is unavailable, report the gap and prerequisites honestly.",
+      "fixture": "browser",
+      "authorizedPaths": [
+        "tests/test_browser.py"
+      ],
+      "git": {
+        "mode": "dirty"
+      },
+      "expected": {
+        "outcome": "BLOCKED",
+        "requiredSignals": [
+          "identify missing browser driver and runnable UI entrypoint",
+          "distinguish synthetic API evidence from rendered interaction",
+          "preserve pre-existing runtime state and provide a bounded handoff"
+        ],
+        "prohibitedSignals": [
+          "claim API success proves browser behavior",
+          "install tools or invent a passing rendered check"
+        ],
+        "repositoryState": "Preserve all unrelated tracked, untracked and ignored bytes, staged contents, refs, and pre-existing runtime state. Only authorizedPaths may change."
+      }
+    }
+  ],
+  "triggerCases": [
+    {
+      "id": "explicit-harness",
+      "prompt": "Use $build-verification-harness to author missing persistence verification.",
+      "expectActivation": true,
+      "expectedOwner": "build-verification-harness"
+    },
+    {
+      "id": "natural-harness",
+      "prompt": "Build the smallest verification harness for this established persistence contract.",
+      "expectActivation": true,
+      "expectedOwner": "build-verification-harness"
+    },
+    {
+      "id": "strengthen-test",
+      "prompt": "This test passes even with incorrect response contents. Strengthen its assertions without changing correct production behavior.",
+      "expectActivation": true,
+      "expectedOwner": "build-verification-harness"
+    },
+    {
+      "id": "specified-harness",
+      "prompt": "Implement the missing dependency-free test harness and its fixtures from this decision-complete specification.",
+      "expectActivation": true,
+      "expectedOwner": "build-verification-harness"
+    },
+    {
+      "id": "missing-assertion",
+      "prompt": "Implement the already-specified missing response assertion in this existing verification harness.",
+      "expectActivation": true,
+      "expectedOwner": "build-verification-harness"
+    },
+    {
+      "id": "near-miss-test-value",
+      "prompt": "Audit these tests for redundant assertions and maintenance cost while preserving useful failure detection.",
+      "expectActivation": false,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "near-miss-test-cleanup",
+      "prompt": "Consolidate redundant tests for supported behavior, retaining the assertions we still need.",
+      "expectActivation": false,
+      "expectedOwner": "audit-tests"
+    },
+    {
+      "id": "near-miss-diagnosis",
+      "prompt": "Diagnose and fix this order-dependent flaky test using a controlled reproduction.",
+      "expectActivation": false,
+      "expectedOwner": "diagnose-bugs"
+    },
+    {
+      "id": "near-miss-acceptance",
+      "prompt": "Independently verify that the completed checkout repair satisfies its acceptance criteria.",
+      "expectActivation": false,
+      "expectedOwner": "verify-change"
+    },
+    {
+      "id": "near-miss-context",
+      "prompt": "Use $verification-context to document existing verification commands at the approved docs/verification.md path; do not build a harness.",
+      "expectActivation": false,
+      "expectedOwner": "verification-context"
+    },
+    {
+      "id": "near-miss-maui",
+      "prompt": "Use $maui-blazor-browser to create a disposable browser host for this MAUI Blazor Hybrid UI.",
+      "expectActivation": false,
+      "expectedOwner": "maui-blazor-browser"
+    },
+    {
+      "id": "near-miss-implicit-maui",
+      "prompt": "Create a disposable browser host for this MAUI Blazor Hybrid UI.",
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
+    },
+    {
+      "id": "near-miss-ordinary-test",
+      "prompt": "Add the specified missing empty-input case to this existing test table.",
+      "expectActivation": false,
+      "expectedOwner": "ordinary-implementation"
+    },
+    {
+      "id": "near-miss-one-command",
+      "prompt": "Run python -B verify_contract.py and report its exit status.",
+      "expectActivation": false,
+      "expectedOwner": "no-skill"
+    }
+  ]
+}
