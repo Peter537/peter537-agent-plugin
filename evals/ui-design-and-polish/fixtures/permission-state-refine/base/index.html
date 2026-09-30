@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Shipment review</title><link rel="stylesheet" href="styles.css"></head>
+<body><main>
+  <header><h1>Review shipment S-42</h1><p>Inspect temperature evidence before deciding whether to quarantine this shipment.</p></header>
+  <nav aria-label="Fixture permission state"><a href="?state=allowed">Decision permission</a><a href="?state=denied">Read-only permission</a></nav>
+  <section aria-labelledby="evidence-title"><h2 id="evidence-title">Temperature evidence</h2><p>Supplied synthetic reading: 9.2 °C. Shipment threshold: 8.0 °C.</p><details data-testid="read-evidence"><summary>Inspect source evidence</summary><p>Sensor TEST-04 recorded the reading at 14:32. This is synthetic fixture evidence.</p></details></section>
+  <section class="decision" aria-labelledby="decision-title"><h2 id="decision-title">Decision</h2>
+    <p id="permission-note" role="status" data-testid="permission-note"></p>
+    <button id="quarantine" type="button" aria-describedby="permission-note" data-testid="quarantine">Quarantine shipment</button>
+    <p id="decision-result" role="status" data-testid="decision-result">No decision recorded.</p>
+  </section>
+  <dialog id="confirmation" aria-labelledby="confirm-title"><h2 id="confirm-title">Quarantine S-42?</h2><p>This fixture records a local demonstration decision only.</p><button id="cancel" type="button">Cancel</button><button id="confirm" type="button">Confirm quarantine</button></dialog>
+</main><script src="app.js"></script></body></html>

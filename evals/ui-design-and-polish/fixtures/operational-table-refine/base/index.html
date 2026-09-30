@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Relay work queue</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <main>
+    <header><h1>Relay work queue</h1><p>Compare severity, owner and waiting time before opening a relay.</p></header>
+    <div class="toolbar">
+      <label for="filter">Owner <select id="filter" data-testid="owner-filter"><option value="all">All teams</option><option value="Relay">Relay</option><option value="Storage">Storage</option></select></label>
+      <button id="sort" data-testid="age-sort" type="button">Oldest first</button>
+      <p id="selection" role="status" data-testid="selection-status">No relay selected.</p>
+    </div>
+    <div class="table-scroll" role="region" aria-label="Relay comparison" tabindex="0">
+      <table><caption>Relays needing attention</caption><thead><tr><th scope="col">Select</th><th scope="col">Relay</th><th scope="col">Severity</th><th scope="col">Owner</th><th scope="col" id="age-heading" aria-sort="descending">Waiting (min)</th><th scope="col">Evidence</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
+    <section id="evidence" aria-labelledby="evidence-heading"><h2 id="evidence-heading">Selected evidence</h2><p data-testid="evidence-detail">Open a relay to inspect its supplied evidence.</p></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

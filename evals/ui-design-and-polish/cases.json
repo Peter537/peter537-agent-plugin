@@ -20,7 +20,8 @@
       "blazor-rendering-blocked",
       "design-context-current-noop",
       "design-context-authority-conflict",
-      "design-context-path-unapproved"
+      "design-context-path-unapproved",
+      "justified-cards-refine"
     ],
     "blindReviewRubric": [
       "Does the result make the product's primary job and hierarchy clearer?",
@@ -102,7 +103,7 @@
     },
     {
       "id": "generic-workflow-refine",
-      "description": "A generic card-heavy review workflow needs a product-specific hierarchy while retaining long localized content and a rejection path.",
+      "description": "A card-heavy review workflow needs clearer hierarchy while paired short and long Danish content and the rejection path remain intact.",
       "prompt": "Use $ui-design-and-polish to refine this approval workflow so it serves fast evidence review rather than looking like a generic dashboard. Preserve all behavior and test hooks.",
       "fixture": "generic-workflow-refine",
       "operation": "refine",
@@ -115,7 +116,9 @@
       "objectiveAssertions": [
         "the primary evidence-review task becomes visually dominant",
         "long Danish content remains usable at narrow widths",
-        "approve, reject, keyboard, and error paths remain available"
+        "approve, reject, keyboard, and error paths remain available",
+        "compare the supplied short and long Danish titles at matched desktop and narrow viewports before and after refinement",
+        "preserve the original long title exactly; do not hide, shorten or replace required content to avoid overflow"
       ],
       "git": {
         "mode": "clean",
@@ -126,7 +129,8 @@
         "requiredSignals": [
           "derive differentiating choices from the evidence-review job",
           "classify genericity concerns using evidence rather than pattern bans",
-          "resolve relevant P0 through P2 findings within scope"
+          "resolve relevant P0 through P2 findings within scope",
+          "report both content variants and their rendered and keyboard evidence separately from source checks"
         ],
         "prohibitedSignals": [
           "replace every card merely because cards are common",
@@ -601,6 +605,125 @@
           "invoke MAUI browser-host mechanics implicitly"
         ],
         "repositoryState": "only authorized component paths may change"
+      }
+    },
+    {
+      "id": "operational-table-refine",
+      "description": "Refine an unnecessarily spacious comparison table without losing density, relationships or working controls.",
+      "prompt": "Use $ui-design-and-polish to refine this relay queue for fast operational comparison. Preserve every record, column, control, selection behavior and test hook. Follow README.md; only index.html and styles.css may change.",
+      "fixture": "operational-table-refine",
+      "operation": "refine",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "retain the semantic comparison table and all twelve supplied records",
+        "sorting and owner filtering preserve selection, including temporarily hidden rows",
+        "opening a relay shows its matching evidence; keyboard and contained narrow scrolling remain usable"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "preserve the declared UI behavior, supplied content, protected resources and unrelated Git state",
+          "support task-quality conclusions with matched rendered and interaction evidence; report unavailable checks",
+          "report the Design Read, completion outcome, commands, routes, states, viewports, evidence locations and remaining limits",
+          "improve task-appropriate density without reducing legibility or usable controls",
+          "retain aligned field comparison instead of an appearance-driven card conversion"
+        ],
+        "prohibitedSignals": [
+          "change protected JavaScript, contracts, staging or unrelated work",
+          "claim source assertions establish rendered or interaction completion",
+          "install tools or contact external services",
+          "replace the table with unrelated cards or hide columns to appear cleaner"
+        ],
+        "repositoryState": "only authorized HTML and CSS may change; protected and unrelated state remains unchanged"
+      }
+    },
+    {
+      "id": "justified-cards-refine",
+      "description": "Independent shift tasks already use justified conventional cards and should remain unchanged.",
+      "prompt": "Use $ui-design-and-polish to review this shift-preparation interface and apply only warranted refinements. Preserve established task grouping and behavior; leave files unchanged if no concrete correction is needed. Follow README.md.",
+      "fixture": "justified-cards-refine",
+      "operation": "refine",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": false,
+      "objectiveAssertions": [
+        "each independent task retains its supplied checklist and native disclosure",
+        "inspect desktop and narrow layouts plus keyboard disclosure and focus",
+        "return a justified no-change result with all fixture bytes preserved"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "preserve the declared UI behavior, supplied content, protected resources and unrelated Git state",
+          "support task-quality conclusions with matched rendered and interaction evidence; report unavailable checks",
+          "report the Design Read, completion outcome, commands, routes, states, viewports, evidence locations and remaining limits",
+          "explain why the conventional cards fit independent jobs",
+          "avoid manufacturing a redesign or arbitrary cosmetic edits"
+        ],
+        "prohibitedSignals": [
+          "change protected JavaScript, contracts, staging or unrelated work",
+          "claim source assertions establish rendered or interaction completion",
+          "install tools or contact external services",
+          "remove justified cards categorically",
+          "invent a defect or make unsupported aesthetic edits"
+        ],
+        "repositoryState": "unchanged after a justified no-op"
+      }
+    },
+    {
+      "id": "permission-state-refine",
+      "description": "Refine paired permission states without concealing explanations, removing evidence or enabling forbidden actions.",
+      "prompt": "Use $ui-design-and-polish to refine the shipment review presentation in both supported permission states. Preserve all behavior, content and test hooks. Follow README.md; only index.html and styles.css may change.",
+      "fixture": "permission-state-refine",
+      "operation": "refine",
+      "authorizedPaths": [
+        "index.html",
+        "styles.css"
+      ],
+      "renderedVerification": "required-when-safe",
+      "blindReview": true,
+      "objectiveAssertions": [
+        "the complete permission explanation and source evidence are accessible at both viewports",
+        "allowed state supports cancellation without a decision and confirmation with the supplied result",
+        "denied state blocks the decision by pointer and Alt+Q while read-only disclosure remains usable"
+      ],
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "PASS",
+        "requiredSignals": [
+          "preserve the declared UI behavior, supplied content, protected resources and unrelated Git state",
+          "support task-quality conclusions with matched rendered and interaction evidence; report unavailable checks",
+          "report the Design Read, completion outcome, commands, routes, states, viewports, evidence locations and remaining limits",
+          "fix clipping and responsive presentation without weakening denied-state controls",
+          "distinguish client-state UI evidence from server authorization or persistence"
+        ],
+        "prohibitedSignals": [
+          "change protected JavaScript, contracts, staging or unrelated work",
+          "claim source assertions establish rendered or interaction completion",
+          "install tools or contact external services",
+          "hide the permission explanation or read-only evidence",
+          "enable a denied action or claim backend security was verified"
+        ],
+        "repositoryState": "only authorized HTML and CSS may change; protected and unrelated state remains unchanged"
       }
     }
   ],

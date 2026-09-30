@@ -195,3 +195,7 @@ The [steering-review protocol](steering-review/README.md) covers four focused re
 ## Focused application-security checks
 
 The [deep-code-audit security procedure](deep-code-audit/README.md) maps existing coverage to three missing state-boundary scenarios, concrete remediation handoffs, eight focused audit trials, independent replay/review, and preservation checks. Its personal-development scope keeps full suites and broader release evidence separate.
+
+## Focused product-UI checks
+
+The [product-UI procedure](ui-design-and-polish/README.md) covers four paired density, justified-pattern, localized-content and permission-state cases with actual browser evidence, complete-report review and preservation checks. Its focused personal-development scope does not replace broader release verification.
