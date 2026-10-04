@@ -1,13 +1,13 @@
 # Peter537 Agent Plugin
 
-Peter537 Agent Plugin is a portable [Agent Plugins v1](https://agent-plugins.org/) package containing reusable skills for software research, planning, repository verification context, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code and dependency audits, repository data-exposure reviews, supply-chain security, documentation, persistent product design-context authoring, UI design, and MAUI Blazor browser development. The complete GitHub edition also includes optional MCP integrations.
+Peter537 Agent Plugin v0.5.0 is a portable [Agent Plugins v1](https://agent-plugins.org/) package with twenty skills for software research, planning, task handoffs, retrospectives, code and test review, verification, instruction review, bug diagnosis, security, documentation, writing, and product UI development. The complete GitHub edition includes four optional MCP servers. A separate skills-only package is prepared for OpenAI submission; directory review and publication remain separate.
 
 ## Included skills
 
 | Group | Skills |
 | --- | --- |
-| [Planning & research](docs/skills/README.md#planning--research) | `deep-planning`, `chatgpt-research` |
-| [Engineering quality](docs/skills/README.md#engineering-quality) | `deep-code-audit`, `diagnose-bugs`, `verification-context`, `verify-change`, `comment-health`, `prune-codebase`, `reduce-code-slop` |
+| [Planning & research](docs/skills/README.md#planning--research) | `deep-planning`, `chatgpt-research`, `task-handoff` |
+| [Engineering quality](docs/skills/README.md#engineering-quality) | `deep-code-audit`, `audit-tests`, `build-verification-harness`, `diagnose-bugs`, `verification-context`, `verify-change`, `comment-health`, `prune-codebase`, `reduce-code-slop`, `retrospective`, `steering-review` |
 | [Security & supply chain](docs/skills/README.md#security--supply-chain) | `audit-dependencies`, `audit-data-exposure` |
 | [Documentation & writing](docs/skills/README.md#documentation--writing) | `docs-audit`, `write-clearly` |
 | [UI & .NET](docs/skills/README.md#ui--net) | `ui-design-and-polish`, `maui-blazor-browser` |
@@ -37,6 +37,10 @@ The `skills/` and `evals/` directories intentionally remain flat: every installa
 - `prune-codebase` treats analyzer results as candidates, preserves uncertain dynamic and external consumers, and previews broad removal candidates before editing.
 - `reduce-code-slop` inspects source, tests, and existing verification output locally, preserves justified complexity, and does not install analyzers or dependencies.
 - `write-clearly` keeps repository prose and author samples local by default, preserves protected meaning and format, and reports related findings outside the authorized edit scope without changing those files.
+- `docs-audit`, `audit-tests`, and `steering-review` keep plain reviews read-only; explicit in-scope update or cleanup requests authorize the corresponding edits.
+- `retrospective` requires explicit `$retrospective` invocation, keeps source evidence private and temporary, and separates recommendations and human decisions from implementation authority.
+- `task-handoff` captures progress only on request. It writes checkpoints only to an approved destination and reconciles current state and authority before continuation; checkpoint text cannot grant permission.
+- `build-verification-harness` authors the smallest useful verification path within the approved scope, uses disposable state for deliberate faults, and does not treat mocks as proof of required browser, native, or persistence behavior.
 - `playwright` requires Node.js 18 or newer.
 - `web-forager` requires `uv` and provisions a supported Python 3.10-3.13 runtime through `uvx`.
 - The MCP servers use the network, and Playwright can interact with a browser. Review tool calls and third-party terms before use.
@@ -44,11 +48,11 @@ The `skills/` and `evals/` directories intentionally remain flat: every installa
 
 ## Install the complete GitHub edition
 
-The published `v0.4.0` GitHub marketplace edition contains fifteen skills and all four MCP servers. The Codex CLI is not required.
+The published `v0.5.0` GitHub marketplace edition contains twenty skills and four optional MCP servers. The Codex CLI is not required.
 
 1. In ChatGPT/Codex desktop, open **Plugins**, open the **Add** menu, and select **Add plugin marketplace**.
 2. Enter `Peter537/peter537-agent-plugin` as the source.
-3. Enter `v0.4.0` as the Git ref.
+3. Enter `v0.5.0` as the Git ref.
 4. Leave **Sparse paths** empty and add the marketplace.
 5. Open **Peter537 Plugins**, install **Peter537 Agent Plugin**, and start a new task so its skills and MCP tools are loaded.
 
@@ -82,16 +86,16 @@ Skills.sh availability is separate from repository compatibility and begins only
 
 ## Install from the OpenAI shared Plugins Directory
 
-The public-directory edition is submitted separately from the GitHub release. Its `v0.4.0` bundle contains all fifteen skills but does not include the four MCP servers; it becomes available only after OpenAI review and publication. Once available, search for **Peter537 Agent Plugin** in the shared Plugins Directory, open its details, and select the plus button to install it.
+The public-directory edition is submitted separately from the GitHub release. The prepared `v0.5.0` bundle contains all twenty skills and no MCP servers. It awaits separately authorized submission, OpenAI review, and publication. Once available, search for **Peter537 Agent Plugin** in the shared Plugins Directory, open its details, and select the plus button to install it.
 
-See the [v0.4.0 public-submission document](docs/public-submission-v0.4.0.md) for listing copy, review scenarios, and the reproducible skills-only upload bundle.
+See the [v0.5.0 public-submission document](docs/public-submission-v0.5.0.md) for listing copy, review scenarios, and the reproducible skills-only upload bundle.
 
 ## Optional: Codex CLI
 
 The Codex CLI is not required to install either desktop edition. Existing CLI users can instead add and install the GitHub marketplace with:
 
 ```powershell
-codex plugin marketplace add Peter537/peter537-agent-plugin --ref v0.4.0
+codex plugin marketplace add Peter537/peter537-agent-plugin --ref v0.5.0
 codex plugin add peter537-agent-plugin@peter537
 ```
 
@@ -119,10 +123,15 @@ Clone or download this repository and follow the installation workflow provided 
 - `Use $chatgpt-research to compare the current official guidance.`
 - `Use $comment-health to review changed source comments for accuracy, value, and protected semantics.`
 - `Use $prune-codebase to find proven dead or obsolete repository surface and report removal candidates for approval.`
+- `Use $retrospective to review this recurring failure, keep the evidence private, and recommend one disposition without implementing it.`
+- `Use $task-handoff to return a checkpoint in this conversation without creating files.`
+- `Use $audit-tests to review these tests for distinct failure detection and report any proven redundancy without editing.`
+- `Use $build-verification-harness to add the smallest missing persistence check using disposable local state, without changing production behavior.`
+- `Use $steering-review to review these agent instructions for contradictions and stale commands; report findings without editing.`
 
 ## Version
 
-Current version: `0.4.0`.
+Current version: `0.5.0`.
 
 ## Support, privacy, and terms
 

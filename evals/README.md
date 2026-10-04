@@ -122,7 +122,7 @@ After review, retain only a sanitized completion disposition. Verify source/pack
 
 ## Materializers
 
-Fifteen suites expose one materializer: fourteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
+Nineteen suites expose one materializer: eighteen use `materialize_fixtures.py` for disposable Git repositories and `chatgpt-research` uses `materialize_packets.py` for offline source packets. `write-clearly` has no materializer and exercises its distributed checker through standard-library tests instead.
 
 Non-repository suites may provide a standard-library packet materializer, such as `materialize_packets.py`, with the same selection and external-output safety contract.
 
@@ -204,7 +204,7 @@ The [product-UI procedure](ui-design-and-polish/README.md) covers four paired de
 
 ## Focused pre-release closeout
 
-The user-authorized 2026-10-03 closeout covers remaining evidence through TODO-016; TODO-017 and release operations remain separate. Freeze the packages, prompts, expectations, fixtures and Git state before trials. Use one 45-minute agent/browser window: stop gathering after 30 minutes, reserve ten minutes for independent review and five for teardown. Stop dependent work after a violation; do not silently extend deadlines, retry trials, run full suites or infer a pass from an unfinished review. Native setup has a separate ten-minute ceiling; unavailable safe isolation leaves installed behavior unrun.
+The user-authorized 2026-10-03 closeout covers remaining skill and evaluation evidence; release preparation and publication remain separate. Freeze the packages, prompts, expectations, fixtures and Git state before trials. Use one 45-minute agent/browser window: stop gathering after 30 minutes, reserve ten minutes for independent review and five for teardown. Stop dependent work after a violation; do not silently extend deadlines, retry trials, run full suites or infer a pass from an unfinished review. Native setup has a separate ten-minute ceiling; unavailable safe isolation leaves installed behavior unrun.
 
 The declared inventory is one frozen retrospective baseline and six candidate trials (the prior-decision target, four indexed controls and private evidence), one authorized test-consolidation trial, and four current-skill context checks. The latter use `diagnose-bugs` cases `disposable-development-data` and `persistent-user-data`, and `deep-code-audit` cases `nonempty-query-runtime` and `logical-record-identity`. Run each once, with requested `gpt-6-astra`/high, sequential evaluated agents and a 180-second turn limit. Record requested settings separately from runtime attestation. Read-only diagnosis must calibrate advice to data ownership and lifecycle; an audit must exercise relevant runtime branches and logical identities even when the supplied happy-path tests pass. These synthetic fixtures do not reproduce a private product or prove a recurring skill failure.
 

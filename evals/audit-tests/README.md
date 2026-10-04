@@ -6,7 +6,7 @@ The two prevention cases live in the existing [diagnose-bugs suite](../diagnose-
 
 ## Focused personal-development protocol
 
-For TODO-012 the user authorized the following bounded inventory instead of full suites. Freeze current and candidate packages, discovery metadata, prompts, expectations, fixture identities and Git state, effective configuration, capabilities, and limits before model execution. Capture each seed once, then copy its complete bytes and Git state for each variant. Keep grading information, comparison labels, and raw records outside agent-readable context and workspaces.
+For audit-tests development the user authorized the following bounded inventory instead of full suites. Freeze current and candidate packages, discovery metadata, prompts, expectations, fixture identities and Git state, effective configuration, capabilities, and limits before model execution. Capture each seed once, then copy its complete bytes and Git state for each variant. Keep grading information, comparison labels, and raw records outside agent-readable context and workspaces.
 
 - Run each of the four audit cases once with the new package. The cleanup case explicitly authorizes one disposable quantity-boundary fault; the real production file must remain unchanged, a final surviving assertion must reject zero-invalid behavior, and restored behavior must pass.
 - Run one baseline/candidate pair for each prevention case, with the identical original prompt and fixture. Baseline uses the frozen existing diagnosis package; candidate differs only by the authoring sentence. Retain the change only with an observed reduction in unnecessary growth and preserved missing-assertion behavior. If both already perform adequately, reject the unsupported guidance change.
@@ -37,4 +37,4 @@ python -B evals/validate_repository_layout.py --strict-groups
 
 Also validate the changed packages and plugin, inspect resource links and metadata, run the exercised fixtures' safe local checks, and review the complete diff and final Git state. Full suites, canonical offline validation, repeated behavioral matrices, broader routing, and final installed-distribution coverage are deferred for this personal-development task. These exceptions do not remove the release gates.
 
-After review, remove only verified task-owned profiles, fixtures, controllers, evidence, and processes. Record the retained/rejected prevention decision, actual results, and deferred coverage in TODO-012. A required unresolved focused check leaves that item open.
+After review, remove only verified task-owned profiles, fixtures, controllers, evidence, and processes. The audit-tests maintainer records the retained/rejected prevention decision, actual results, and deferred coverage in the [versioned release verification record](../../docs/public-submission-v0.5.0.md#release-verification-record). A required unresolved focused check remains an explicit gap.

@@ -1,6 +1,6 @@
 # Focused product-UI comparisons
 
-TODO-016 adds paired task-quality evidence under the existing UI owner. Follow the [behavior-first contract](../behavior-first-contract.md) and [verification map](../../docs/verification.md). These cases use the unchanged distributed skill; they do not demonstrate a skill improvement merely by adding evaluations.
+This product-UI procedure adds paired task-quality evidence under the existing UI owner. Follow the [behavior-first contract](../behavior-first-contract.md) and [verification map](../../docs/verification.md). These cases use the unchanged distributed skill; they do not demonstrate a skill improvement merely by adding evaluations.
 
 ## Four exercised cases
 

@@ -4,7 +4,7 @@ These maintenance fixtures assess authoring useful proof, not independent accept
 
 ## Focused personal-development procedure
 
-The authorized TODO-013 inventory is four smoke cases, once each: missing persistence proof, a passing ineffective assertion, adequate existing proof, and unavailable rendered-browser capability. Run the fourteen declared `triggerCases` once per frozen baseline/candidate catalog, exposing each complete catalog and invocation policy while hiding expectations. Absence of the new skill in the baseline is an availability gap, not a regression. Existing owners must remain stable; explicit-only skills must not activate implicitly.
+The authorized harness-authoring inventory is four smoke cases, once each: missing persistence proof, a passing ineffective assertion, adequate existing proof, and unavailable rendered-browser capability. Run the fourteen declared `triggerCases` once per frozen baseline/candidate catalog, exposing each complete catalog and invocation policy while hiding expectations. Absence of the new skill in the baseline is an availability gap, not a regression. Existing owners must remain stable; explicit-only skills must not activate implicitly.
 
 Freeze packages, discovery metadata, prompts, expectations, fixture bytes and Git state, capabilities, and limits before execution. Materialize each seed once outside the checkout and copy complete bytes and Git state to a neutral disposable workspace. Supply an independent package copy; keep labels, grading records, and other packages outside the evaluated workspace/context. The no-op and unavailable-capability cases are false-positive controls.
 

@@ -4,7 +4,7 @@ The eight behavioral cases cover checkpoint capture, persistence, current contin
 
 ## Focused personal-development smoke protocol
 
-For TODO-011 the user selected two scenarios, once each, instead of broad comparisons. Freeze the packages, discovery metadata, prompts below, expectations, seed bytes and Git state, operator events, tool identity, effective configuration, and controller before execution. Keep expectations and future messages outside the evaluated workspace and context. Reuse the native preflight, snapshot, authority, and teardown safeguards in the [handoff protocol](../handoff-workflow.md).
+For task-handoff development the user selected two scenarios, once each, instead of broad comparisons. Freeze the packages, discovery metadata, prompts below, expectations, seed bytes and Git state, operator events, tool identity, effective configuration, and controller before execution. Keep expectations and future messages outside the evaluated workspace and context. Reuse the native preflight, snapshot, authority, and teardown safeguards in the [handoff protocol](../handoff-workflow.md).
 
 Use `gpt-6-astra` with high reasoning. Limit execution to four evaluated turns and one independent semantic review, 180 seconds per turn and 900 seconds total model execution, with no retries or extensions. Native setup troubleshooting is limited to ten minutes. Unavailable safe execution is a gap. Stop dependent turns after a violation; unexercised turns remain `NOT_RUN`. This bounded run does not replace general release verification.
 
@@ -38,7 +38,7 @@ Capture complete tool events, actual commands and outputs, responses, before/aft
 
 One independent agent may review the neutral evidence from these two manual checkpoint scenarios. Record reviewer identity, model/settings, independence, consequential judgments, limitations, and evidence references. This scoped exception includes fresh-context transfer; it is not human review and must not enter the comparison runner's human-review interface. Observed violations override favorable review. Keep the original runner and schemas unchanged.
 
-Remove only verified task-owned fixtures, profiles, processes, and raw evidence after review. Preserve supplied originals, the source checkout, and unrelated resources. Record the focused result and deferred broader routing/distribution evidence in TODO-011; an unrun or failed required smoke check leaves it open.
+Remove only verified task-owned fixtures, profiles, processes, and raw evidence after review. Preserve supplied originals, the source checkout, and unrelated resources. The task-handoff maintainer records focused results and deferred broader routing/distribution evidence in the [versioned release verification record](../../docs/public-submission-v0.5.0.md#release-verification-record). An unrun or failed required smoke check remains an explicit gap.
 
 ## Offline fixture checks
 

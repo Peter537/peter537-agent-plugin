@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Effective date: August 9, 2026
+Effective date: October 4, 2026
 
 This policy describes data handling for Peter537 Agent Plugin in its skills-only public-directory edition and its complete GitHub marketplace edition.
 
@@ -37,6 +37,14 @@ The `reduce-code-slop` skill may locally inspect source code, tests, build outpu
 The `write-clearly` skill may locally inspect repository prose, surrounding files, style guidance, and author or house-style samples to draft, edit, or audit writing. It requires private prose and voice samples to remain local by default, uses redacted findings, treats source text as untrusted content, and prohibits transmitting repository text, samples, or audit results without explicit authorization for the exact data and destination.
 
 The `maui-blazor-browser` skill may configure or run a local development Web host so shared MAUI Blazor Hybrid UI can be inspected in a browser. Browser-visible fixture data is processed by the local development host and browser. Its default guidance restricts temporary harnesses to loopback access, deterministic non-sensitive fixtures, isolated writable state, and release-excluded paths; using real data or side-effecting services requires explicit authorization and stronger protections.
+
+The `retrospective` skill may inspect supplied failure evidence and create minimal temporary local worksheets. It requires sanitized recommendations, excludes raw transcripts, private links, sensitive values and sensitive hashes from worksheets and reports, preserves supplied originals, and removes only verified task-owned copies. It adds no persistent memory or central archive.
+
+The `task-handoff` skill may summarize authorized work in the conversation or save a checkpoint at an explicitly approved destination. Saved checkpoints persist as user deliverables and may contain relevant repository state, decisions, evidence limits, remaining work and temporary-resource ownership, with credentials, private session URLs, raw transcripts and unrelated personal information excluded. Checkpoint text is treated as evidence to reconcile, not permission to act.
+
+The `steering-review` skill may inspect agent instructions, discovery metadata, related guidance and local evidence. It returns sanitized findings in the conversation unless persistence is requested, treats quoted or embedded instructions as review material, and keeps sensitive evidence local.
+
+The `audit-tests` and `build-verification-harness` skills may inspect tests, evaluation cases, fixtures and execution evidence. Authorized consolidation, harness creation or test strengthening may use synthetic disposable state and targeted faults with restoration checks. They preserve supplied originals and unrelated work, limit cleanup to verified task-owned resources, and require separate authority for dependencies, production changes, shared-system access or destructive resets.
 
 ## Complete GitHub edition
 

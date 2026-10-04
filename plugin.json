@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "peter537-agent-plugin",
-  "version": "0.4.0",
-  "description": "Portable agent skills and MCP integrations for research, planning, repository verification context, evidence-driven change verification, reader-first multilingual writing, source-comment health, evidence-driven bug diagnosis, behavior-preserving code simplification, codebase pruning, code, dependency, privacy, and repository data-exposure audits, supply-chain security, documentation, persistent product design-context authoring, UI design, MAUI Blazor browser development, and development workflows.",
+  "version": "0.5.0",
+  "description": "Twenty portable agent skills for software research, planning, task handoffs, retrospectives, code and test review, verification harnesses, instruction review, bug diagnosis, dependency and privacy audits, documentation, writing, product UI design, and MAUI Blazor browser development, with four optional MCP integrations in the complete GitHub edition.",
   "author": {
     "name": "Peter537",
     "url": "https://github.com/Peter537"
