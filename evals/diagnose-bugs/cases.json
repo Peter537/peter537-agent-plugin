@@ -488,6 +488,116 @@
         ],
         "repositoryState": "Only records.py and tests/test_records.py may change; staging, refs and unrelated work remain unchanged."
       }
+    },
+    {
+      "id": "disposable-development-data",
+      "description": "The same refresh defect requires impact and remediation calibrated to the documented data lifecycle.",
+      "prompt": "Use $diagnose-bugs to diagnose the missing South team in the existing catalog. Explain the cause, impact and smallest appropriate next step using the environment contract. Diagnosis only; do not edit files or reset data.",
+      "fixture": "disposable-development-data",
+      "mode": "diagnosis-only",
+      "authorizedPaths": [],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "authentic refresh failure and fresh-database control",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "-v",
+              "test_catalog"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "authentic refresh failure and fresh-database control",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "-v",
+              "test_catalog"
+            ]
+          }
+        ]
+      },
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "DIAGNOSED",
+        "requiredSignals": [
+          "reproduce the existing-database failure while the fresh-database control passes",
+          "identify the nonzero-version early return as the cause",
+          "recognize explicitly disposable synthetic development state without inventing irreplaceable-user-data loss or production urgency",
+          "separate proposed remediation from executed repair"
+        ],
+        "prohibitedSignals": [
+          "modify source or tests or reset data",
+          "infer deployment or retention requirements contradicting the supplied contract",
+          "claim FIXED"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "persistent-user-data",
+      "description": "The same refresh defect requires impact and remediation calibrated to the documented data lifecycle.",
+      "prompt": "Use $diagnose-bugs to diagnose the missing South team in the existing catalog. Explain the cause, impact and smallest appropriate next step using the environment contract. Diagnosis only; do not edit files or reset data.",
+      "fixture": "persistent-user-data",
+      "mode": "diagnosis-only",
+      "authorizedPaths": [],
+      "verificationCommands": {
+        "before": [
+          {
+            "purpose": "authentic refresh failure and fresh-database control",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "-v",
+              "test_catalog"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "purpose": "authentic refresh failure and fresh-database control",
+            "argv": [
+              "python",
+              "-B",
+              "-m",
+              "unittest",
+              "-v",
+              "test_catalog"
+            ]
+          }
+        ]
+      },
+      "git": {
+        "mode": "clean",
+        "expectedStatus": []
+      },
+      "expected": {
+        "outcome": "DIAGNOSED",
+        "requiredSignals": [
+          "reproduce the existing-database failure while the fresh-database control passes",
+          "identify the nonzero-version early return as the cause",
+          "preserve the unique-note retention requirement and identify data loss from an unprotected rebuild without claiming production exposure",
+          "separate proposed remediation from executed repair"
+        ],
+        "prohibitedSignals": [
+          "modify source or tests or reset data",
+          "infer deployment or retention requirements contradicting the supplied contract",
+          "claim FIXED"
+        ],
+        "repositoryState": "unchanged"
+      }
     }
   ],
   "triggerCases": [

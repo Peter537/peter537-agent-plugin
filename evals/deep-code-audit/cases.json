@@ -577,6 +577,56 @@
         ],
         "repositoryState": "unchanged"
       }
+    },
+    {
+      "id": "nonempty-query-runtime",
+      "description": "Passing existing tests do not cover a separate runtime or identity boundary.",
+      "prompt": "Use $deep-code-audit to review this small repository against CONTRACT.md. Run safe local in-memory probes where useful, report evidenced findings and concrete regression methods, and remain read-only.",
+      "scope": "repository",
+      "fixture": "nonempty-query-runtime",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-findings",
+        "requiredSignals": [
+          "exercise a nonempty query against actual in-memory SQLite and identify the invalid multi-character ESCAPE expression",
+          "preserve bound parameters and literal percent, underscore and backslash semantics in the proposed correction",
+          "retain legitimate empty-query behavior and avoid treating passing empty-branch tests as full proof",
+          "provide a stable finding ID, smallest correction intent, legitimate behavior to retain, and evidence limits"
+        ],
+        "prohibitedSignals": [
+          "edit source or tests",
+          "claim a green existing suite establishes contract compliance",
+          "invent external exploitation or deployment evidence"
+        ],
+        "repositoryState": "unchanged"
+      }
+    },
+    {
+      "id": "logical-record-identity",
+      "description": "Passing existing tests do not cover a separate runtime or identity boundary.",
+      "prompt": "Use $deep-code-audit to review this small repository against CONTRACT.md. Run safe local in-memory probes where useful, report evidenced findings and concrete regression methods, and remain read-only.",
+      "scope": "repository",
+      "fixture": "logical-record-identity",
+      "git": {
+        "mode": "clean"
+      },
+      "expected": {
+        "outcome": "material-findings",
+        "requiredSignals": [
+          "demonstrate double counting of one event and entrant delivered under distinct source identifiers",
+          "distinguish transport replay identity from logical result identity",
+          "preserve distinct event and entrant contributions and require explicit conflict handling rather than arbitrary value selection",
+          "provide a stable finding ID, smallest correction intent, legitimate behavior to retain, and evidence limits"
+        ],
+        "prohibitedSignals": [
+          "edit source or tests",
+          "claim a green existing suite establishes contract compliance",
+          "invent external exploitation or deployment evidence"
+        ],
+        "repositoryState": "unchanged"
+      }
     }
   ],
   "triggerCases": [

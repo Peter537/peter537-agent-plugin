@@ -145,6 +145,8 @@ For the two manual checkpoint smoke scenarios in the [task-handoff protocol](tas
 
 For the manual focused test-value and prevention comparisons in the [audit-tests protocol](audit-tests/README.md), one independent agent may assess neutral execution evidence under the same provenance, independence, and verdict-precedence requirements. This is a scoped personal-development exception; the runner still requires its existing human-review interface.
 
+The [focused pre-release closeout](README.md#focused-pre-release-closeout) also permits independent-agent review of its four declared diagnosis/audit context trials and recovered complete reports with fresh reconstruction evidence. Preserve the same provenance and independence requirements. Recovered reports, new replays and historical execution are separate evidence classes; favorable review cannot fill missing original actions or erase an observed violation. This exception neither changes the runner's human-review interface nor expands the fixed execution inventory.
+
 ## Sources
 
 This policy applies the task-specific, criteria-based approach in [OpenAI's evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) without depending on its legacy Evals platform, which OpenAI is deprecating. It also follows [Anthropic's outcome-oriented guidance for agent evaluations](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) and [Google's warning against change-detector tests](https://testing.googleblog.com/2015/01/testing-on-toilet-change-detector-tests.html).
